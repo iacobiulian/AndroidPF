@@ -93,7 +93,7 @@ public class AddExpenses extends AppCompatActivity {
         int id = item.getItemId();
 
         switch(id) {
-            case R.id.action_done:
+            case R.id.actionDone:
                 double money = 0.0;
                 try {
                     money = Double.valueOf(moneyAmountTV.getText().toString());
@@ -115,7 +115,7 @@ public class AddExpenses extends AppCompatActivity {
     //OnClick event for every number button (0-9)
     public void onClickNumber(View v) {
         Button button = (Button) v;
-        if(currentValue == BASE_VALUE)
+        if(currentValue.length() == 1 && currentValue.contains(BASE_VALUE))
             currentValue = "";
         currentValue += button.getText().toString().trim();
         updateTextView();

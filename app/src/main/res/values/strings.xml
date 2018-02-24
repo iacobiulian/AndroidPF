@@ -1,7 +1,9 @@
 <resources>
+    <string name="open">Open</string>
+    <string name="close">Close</string>
     <string name="app_name">Personal Finance</string>
-    <string name="action_settings">Settings</string>
-    <string name="action_exit">Exit</string>
+    <string name="settings">Settings</string>
+    <string name="exit">Exit</string>
     <string name="home">Home</string>
 
     <!-- TODO: Remove or change this placeholder text -->
@@ -11,4 +13,8 @@
     <string name="income">Income</string>
     <string name="expense">Expense</string>
     <string name="error">Error occured</string>
+    <string name="statistics">Statistics</string>
+    <string name="debts">Debts</string>
+    <string name="goals">Goals</string>
+    <string name="help">Help</string>
 </resources>
