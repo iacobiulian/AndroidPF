@@ -1,24 +1,29 @@
 package com.example.android.personalfinance_v01;
 
-import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.android.personalfinance_v01.MyClasses.Category;
+import com.example.android.personalfinance_v01.MyClasses.CategoryAdapter;
+import com.example.android.personalfinance_v01.MyClasses.MyUtils;
 
 public class AddExpenses extends AppCompatActivity {
 
     private static final String BASE_VALUE = "0";
 
     String currentValue = BASE_VALUE;
-    int intentCode;
 
     Toolbar toolbar;
+    Spinner spinner;
     TextView moneyAmountTV;
     TextView signTV;
     Button delBtn;
@@ -37,10 +42,31 @@ public class AddExpenses extends AppCompatActivity {
         moneyAmountTV = findViewById(R.id.moneyAmountTV);
 
         //Sign Operator TextView
-        intentCode = getIntent().getExtras().getInt("intentCode");
         signTV = findViewById(R.id.signTv);
-        if(intentCode == MyUtils.INCOME_ACTIVITY)
+        if(isIncomeActivity())
             signTV.setText(MyUtils.PLUS_SIGN);
+
+        //Spinner
+        spinner = findViewById(R.id.categorySpinner);
+        CategoryAdapter categoryAdapter;
+        if(isIncomeActivity()) {
+            categoryAdapter = new CategoryAdapter(this, MyUtils.getIncomeCategories());
+        } else {
+            categoryAdapter = new CategoryAdapter(this, MyUtils.getExpenseCategories());
+        }
+        spinner.setAdapter(categoryAdapter);
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                Category currentCategory = (Category) adapterView.getItemAtPosition(i);
+                Toast.makeText(AddExpenses.this, currentCategory.getName(), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+            }
+        });
 
         //Special buttons
         delBtn = findViewById(R.id.delBtn);
@@ -101,11 +127,11 @@ public class AddExpenses extends AppCompatActivity {
                     Toast.makeText(this, R.string.error, Toast.LENGTH_SHORT).show();
                     e.printStackTrace();
                 }
-                if(intentCode == MyUtils.INCOME_ACTIVITY)
+                if(isIncomeActivity())
                     MyUtils.moneyAmount += money;
                 else
                     MyUtils.moneyAmount -= money;
-                startMainActivity();
+                MyUtils.startActivity(AddExpenses.this, MainActivity.class);
                 break;
         }
 
@@ -121,9 +147,11 @@ public class AddExpenses extends AppCompatActivity {
         updateTextView();
     }
 
-    private void startMainActivity() {
-        Intent intent = new Intent(AddExpenses.this, MainActivity.class);
-        startActivity(intent);
+    /**
+     * @return TRUE for INCOME Activity and FALSE for EXPENSE Activity
+     */
+    private boolean isIncomeActivity() {
+        return getIntent().getExtras().getInt(MyUtils.INTENT_KEY) == MyUtils.INCOME_ACTIVITY;
     }
 
     private void updateTextView() {

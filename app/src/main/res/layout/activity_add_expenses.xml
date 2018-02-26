@@ -15,8 +15,15 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="2">
+        android:layout_height="0px"
+        android:layout_weight="1">
+
+        <Spinner
+            android:id="@+id/categorySpinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:elevation="16dp"
+            android:background="@color/spinnerBackground"/>
 
         <TextView
             android:id="@+id/moneyAmountTV"
@@ -41,18 +48,18 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
+        android:layout_height="0px"
+        android:layout_weight="2"
         android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0px"
             android:layout_weight="1"
             android:orientation="horizontal">
 
             <Button
-                android:layout_width="match_parent"
+                android:layout_width="0px"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:background="#595454"
@@ -62,7 +69,7 @@
                 android:textSize="36sp" />
 
             <Button
-                android:layout_width="match_parent"
+                android:layout_width="0px"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:background="#595454"
@@ -72,7 +79,7 @@
                 android:textSize="36sp" />
 
             <Button
-                android:layout_width="match_parent"
+                android:layout_width="0px"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:background="#595454"
@@ -85,12 +92,12 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0px"
             android:layout_weight="1"
             android:orientation="horizontal">
 
             <Button
-                android:layout_width="match_parent"
+                android:layout_width="0px"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:background="#595454"
@@ -100,7 +107,7 @@
                 android:textSize="36sp" />
 
             <Button
-                android:layout_width="match_parent"
+                android:layout_width="0px"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:background="#595454"
@@ -110,7 +117,7 @@
                 android:textSize="36sp" />
 
             <Button
-                android:layout_width="match_parent"
+                android:layout_width="0px"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:background="#595454"
@@ -123,12 +130,12 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0px"
             android:layout_weight="1"
             android:orientation="horizontal">
 
             <Button
-                android:layout_width="match_parent"
+                android:layout_width="0px"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:background="#595454"
@@ -138,7 +145,7 @@
                 android:textSize="36sp" />
 
             <Button
-                android:layout_width="match_parent"
+                android:layout_width="0px"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:background="#595454"
@@ -148,7 +155,7 @@
                 android:textSize="36sp" />
 
             <Button
-                android:layout_width="match_parent"
+                android:layout_width="0px"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:background="#595454"
@@ -161,13 +168,13 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0px"
             android:layout_weight="1"
             android:orientation="horizontal">
 
             <Button
                 android:id="@+id/delBtn"
-                android:layout_width="match_parent"
+                android:layout_width="0px"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:background="#595454"
@@ -176,7 +183,7 @@
                 android:textSize="36sp" />
 
             <Button
-                android:layout_width="match_parent"
+                android:layout_width="0px"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:background="#595454"
@@ -187,7 +194,7 @@
 
             <Button
                 android:id="@+id/commaBtn"
-                android:layout_width="match_parent"
+                android:layout_width="0px"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:background="#595454"

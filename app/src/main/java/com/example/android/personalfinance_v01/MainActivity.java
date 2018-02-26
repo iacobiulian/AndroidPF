@@ -1,6 +1,5 @@
 package com.example.android.personalfinance_v01;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -11,6 +10,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.android.personalfinance_v01.MyClasses.MyUtils;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -43,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
         fab_substract.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startExpensesActivity(-1);
+                MyUtils.startActivityWithCode(MainActivity.this, AddExpenses.class, MyUtils.EXPENSE_ACTIVITY);
             }
         });
 
@@ -51,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
         fab_add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startExpensesActivity(MyUtils.INCOME_ACTIVITY);
+                MyUtils.startActivityWithCode(MainActivity.this, AddExpenses.class, MyUtils.INCOME_ACTIVITY);
             }
         });
 
@@ -94,9 +95,4 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void startExpensesActivity(int intentCode) {
-        Intent intent =  new Intent(MainActivity.this, AddExpenses.class);
-        intent.putExtra("intentCode", intentCode);
-        startActivity(intent);
-    }
 }

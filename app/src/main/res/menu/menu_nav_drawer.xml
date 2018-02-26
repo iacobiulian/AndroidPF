@@ -3,24 +3,27 @@
 
     <item
         android:id="@+id/navMenuStats"
-        android:title="@string/statistics"
-        android:icon="@drawable/ic_statistics"/>
+        android:icon="@drawable/ic_statistics"
+        android:title="@string/statistics" />
 
     <item
         android:id="@+id/navMenuHistory"
+        android:icon="@drawable/ic_history"
         android:title="@string/history" />
 
     <item
         android:id="@+id/navMenuDebts"
-        android:title="@string/debts"
-        android:icon="@drawable/ic_debts"/>
+        android:icon="@drawable/ic_debts"
+        android:title="@string/debts" />
 
     <item
         android:id="@+id/navMenuGoals"
+        android:icon="@drawable/ic_goals"
         android:title="@string/goals" />
 
     <item
         android:id="@+id/navMenuHelp"
+        android:icon="@drawable/ic_help"
         android:title="@string/help" />
 
 </menu>
