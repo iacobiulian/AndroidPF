@@ -5,6 +5,11 @@
     <color name="colorAccent">#ff4081</color>
 
     <color name="textDark">#000000</color>
+    <color name="textGrey">#f7f7f7</color>
+    <color name="textWhite">#ffffff</color>
 
     <color name="spinnerBackground">#f7f9fc</color>
+
+    <color name="colorIncome">#16d42c</color>
+    <color name="colorExpense">#d6131d</color>
 </resources>

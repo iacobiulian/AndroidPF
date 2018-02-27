@@ -14,13 +14,21 @@ import android.widget.Toast;
 
 import com.example.android.personalfinance_v01.MyClasses.Category;
 import com.example.android.personalfinance_v01.MyClasses.CategoryAdapter;
+import com.example.android.personalfinance_v01.MyClasses.ExpenseIncome;
 import com.example.android.personalfinance_v01.MyClasses.MyUtils;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 public class AddExpenses extends AppCompatActivity {
 
     private static final String BASE_VALUE = "0";
 
     String currentValue = BASE_VALUE;
+
+    Category currentCategory;
 
     Toolbar toolbar;
     Spinner spinner;
@@ -59,8 +67,7 @@ public class AddExpenses extends AppCompatActivity {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                Category currentCategory = (Category) adapterView.getItemAtPosition(i);
-                Toast.makeText(AddExpenses.this, currentCategory.getName(), Toast.LENGTH_SHORT).show();
+                currentCategory = (Category) adapterView.getItemAtPosition(i);
             }
 
             @Override
@@ -120,18 +127,7 @@ public class AddExpenses extends AppCompatActivity {
 
         switch(id) {
             case R.id.actionDone:
-                double money = 0.0;
-                try {
-                    money = Double.valueOf(moneyAmountTV.getText().toString());
-                } catch(NumberFormatException e) {
-                    Toast.makeText(this, R.string.error, Toast.LENGTH_SHORT).show();
-                    e.printStackTrace();
-                }
-                if(isIncomeActivity())
-                    MyUtils.moneyAmount += money;
-                else
-                    MyUtils.moneyAmount -= money;
-                MyUtils.startActivity(AddExpenses.this, MainActivity.class);
+                createExpenseOrIncome();
                 break;
         }
 
@@ -156,5 +152,34 @@ public class AddExpenses extends AppCompatActivity {
 
     private void updateTextView() {
         moneyAmountTV.setText(currentValue);
+    }
+
+    /**
+     * Creates a new expense or income and adds it to the main list.
+     * Also starts the main activity.
+     */
+    private void createExpenseOrIncome() {
+        double money = 0.0;
+        try {
+            money = Double.valueOf(moneyAmountTV.getText().toString());
+        } catch(NumberFormatException e) {
+            Toast.makeText(this, R.string.error, Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        }
+
+        boolean type = isIncomeActivity() ? ExpenseIncome.TYPE_INCOME : ExpenseIncome.TYPE_EXPENSE;
+
+        ExpenseIncome expenseIncome =  new ExpenseIncome(money, type, currentCategory, getCurrentDateTime());
+        MyUtils.expenseIncomeList.add(expenseIncome);
+
+        if(isIncomeActivity())
+            MyUtils.moneyAmount += money;
+        else
+            MyUtils.moneyAmount -= money;
+        MyUtils.startActivity(AddExpenses.this, MainActivity.class);
+    }
+
+    private Date getCurrentDateTime() {
+        return Calendar.getInstance().getTime();
     }
 }

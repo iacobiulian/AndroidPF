@@ -23,7 +23,11 @@
             android:name=".AddExpenses"
             android:label=""
             android:parentActivityName=".MainActivity"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".HistoryActivity"
+            android:parentActivityName=".MainActivity"
+            android:label="@string/activityHistory"/>
     </application>
 
 </manifest>

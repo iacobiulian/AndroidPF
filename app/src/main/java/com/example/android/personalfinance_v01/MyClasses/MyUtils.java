@@ -5,6 +5,7 @@ import android.content.Intent;
 
 import com.example.android.personalfinance_v01.R;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +17,10 @@ public class MyUtils {
     public static final int INCOME_ACTIVITY = 1;
     public static final String PLUS_SIGN = "+";
     public static final int EXPENSE_ACTIVITY = 2;
+    public static final String MINUS_SIGN = "-";
     public static final String INTENT_KEY = "intentCode";
+
+    public static String CURRENCY_TYPE = "EUR";
 
     public static double moneyAmount = 5000;
 
@@ -38,6 +42,11 @@ public class MyUtils {
         incomeCategories.add(new Category("Sale", R.drawable.categ_wage));
         incomeCategories.add(new Category("Gambling", R.drawable.categ_free_time));
         return incomeCategories;
+    }
+
+    public static String formatDecimalTwoPlaces(double numberToFormat) {
+        DecimalFormat df = new DecimalFormat("0.00");
+        return df.format(numberToFormat);
     }
 
     public static void startActivity(Context fromActivity, Class toActivity) {

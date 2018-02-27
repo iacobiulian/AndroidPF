@@ -39,7 +39,7 @@ public class CategoryAdapter extends ArrayAdapter<Category> {
     private View initView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
 
         if(convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.category_spinner_item, parent, false);
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_category_spinner, parent, false);
         }
 
         Category currentCategory = getItem(position);

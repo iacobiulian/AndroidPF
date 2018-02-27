@@ -6,9 +6,9 @@ import java.util.Date;
  * Created by iacob on 26-Feb-18.
  */
 
-class ExpenseIncome {
+public class ExpenseIncome {
     public static final boolean TYPE_INCOME = true;
-    public static final boolean TYPE_EXPENSE = true;
+    public static final boolean TYPE_EXPENSE = false;
 
     double amount;
     boolean type;

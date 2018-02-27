@@ -1,6 +1,8 @@
 package com.example.android.personalfinance_v01;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -13,9 +15,12 @@ import android.widget.Toast;
 
 import com.example.android.personalfinance_v01.MyClasses.MyUtils;
 
+import java.text.DecimalFormat;
+
 public class MainActivity extends AppCompatActivity {
 
     DrawerLayout drawerLayout;
+    NavigationView navigationView;
     ActionBarDrawerToggle actionBarDrawerToggle;
 
     TextView cashAmountTextView;
@@ -39,6 +44,20 @@ public class MainActivity extends AppCompatActivity {
         actionBarDrawerToggle.syncState();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        //Drawer items onClicks
+        navigationView = findViewById(R.id.mainNavigationView);
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch(item.getItemId()) {
+                    case(R.id.navMenuHistory):
+                        MyUtils.startActivity(MainActivity.this, HistoryActivity.class);
+                        break;
+                }
+                return true;
+            }
+        });
+
         //Floating action buttons
         fab_substract = findViewById(R.id.fabSubstract);
         fab_substract.setOnClickListener(new View.OnClickListener() {
@@ -58,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
 
         //Text View
         cashAmountTextView = findViewById(R.id.cashAmountTv);
-        cashAmountTextView.setText(MyUtils.moneyAmount + "");
+        cashAmountTextView.setText(MyUtils.formatDecimalTwoPlaces(MyUtils.moneyAmount));
         cashAmountTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
