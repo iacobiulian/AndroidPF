@@ -18,5 +18,20 @@
     <string name="goals">Goals</string>
     <string name="help">Help</string>
     <string name="activityHistory">History</string>
+    <string name="accounts">Accounts</string>
+    <string name="account_name">Account name</string>
+    <string name="initial_balance">Initial balance</string>
+    <string name="currency">Currency</string>
+    <string name="createAccount">Create balance account</string>
+    <string name="editAccount">Edit account</string>
+
+    <string-array name="currenciesArr">
+
+        <item>RON</item>
+        <item>EUR</item>
+        <item>USD</item>
+        <item>GBP</item>
+
+    </string-array>
 
 </resources>

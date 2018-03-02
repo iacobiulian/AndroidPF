@@ -2,28 +2,33 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
+        android:id="@+id/navMenuAccounts"
+        android:icon="@drawable/nav_accounts"
+        android:title="@string/accounts" />
+
+    <item
         android:id="@+id/navMenuStats"
-        android:icon="@drawable/ic_statistics"
+        android:icon="@drawable/nav_statistics"
         android:title="@string/statistics" />
 
     <item
         android:id="@+id/navMenuHistory"
-        android:icon="@drawable/ic_history"
+        android:icon="@drawable/nav_history"
         android:title="@string/history" />
 
     <item
         android:id="@+id/navMenuDebts"
-        android:icon="@drawable/ic_debts"
+        android:icon="@drawable/nav_debts"
         android:title="@string/debts" />
 
     <item
         android:id="@+id/navMenuGoals"
-        android:icon="@drawable/ic_goals"
+        android:icon="@drawable/nav_goals"
         android:title="@string/goals" />
 
     <item
         android:id="@+id/navMenuHelp"
-        android:icon="@drawable/ic_help"
+        android:icon="@drawable/nav_help"
         android:title="@string/help" />
 
 </menu>

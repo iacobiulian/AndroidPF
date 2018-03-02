@@ -61,7 +61,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginRight="8dp"
-            android:src="@drawable/ic_goals" />
+            android:src="@drawable/nav_goals" />
 
         <TextView
             android:id="@+id/historyCategoryTv"

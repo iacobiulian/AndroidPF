@@ -3,6 +3,7 @@ package com.example.android.personalfinance_v01;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -10,12 +11,15 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.android.personalfinance_v01.MyClasses.BalanceAccountAdapter;
+import com.example.android.personalfinance_v01.MyClasses.BalanceAccountAdapterMain;
 import com.example.android.personalfinance_v01.MyClasses.MyUtils;
-
-import java.text.DecimalFormat;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -23,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
     NavigationView navigationView;
     ActionBarDrawerToggle actionBarDrawerToggle;
 
-    TextView cashAmountTextView;
+    ListView listView;
 
     com.github.clans.fab.FloatingActionButton fab_add;
     com.github.clans.fab.FloatingActionButton fab_substract;
@@ -53,6 +57,9 @@ public class MainActivity extends AppCompatActivity {
                     case(R.id.navMenuHistory):
                         MyUtils.startActivity(MainActivity.this, HistoryActivity.class);
                         break;
+                    case(R.id.navMenuAccounts):
+                        MyUtils.startActivity(MainActivity.this, AccountListActivity.class);
+                        break;
                 }
                 return true;
             }
@@ -63,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
         fab_substract.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                MyUtils.startActivityWithCode(MainActivity.this, AddExpenses.class, MyUtils.EXPENSE_ACTIVITY);
+                MyUtils.startActivityWithCode(MainActivity.this, AddExpensesActivity.class, MyUtils.EXPENSE_ACTIVITY);
             }
         });
 
@@ -71,17 +78,30 @@ public class MainActivity extends AppCompatActivity {
         fab_add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                MyUtils.startActivityWithCode(MainActivity.this, AddExpenses.class, MyUtils.INCOME_ACTIVITY);
+                MyUtils.startActivityWithCode(MainActivity.this, AddExpensesActivity.class, MyUtils.INCOME_ACTIVITY);
             }
         });
 
-        //Text View
-        cashAmountTextView = findViewById(R.id.cashAmountTv);
-        cashAmountTextView.setText(MyUtils.formatDecimalTwoPlaces(MyUtils.moneyAmount));
-        cashAmountTextView.setOnClickListener(new View.OnClickListener() {
+        //ListView
+        listView = findViewById(R.id.mainAccountListView);
+        BalanceAccountAdapterMain balanceAccountAdapter = new BalanceAccountAdapterMain(this, MyUtils.accountList);
+        listView.setAdapter(balanceAccountAdapter);
+        listView.setEmptyView(findViewById(R.id.mainAddAccountBtn));
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                view.setSelected(true);
+                MyUtils.setSelected(i);
+            }
+        });
+
+        //Add account button
+        Button button = findViewById(R.id.mainAddAccountBtn);
+        button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO: Add onClick to the Money TextView
+                MyUtils.startActivity(MainActivity.this, CreateAccountActivity.class);
             }
         });
     }

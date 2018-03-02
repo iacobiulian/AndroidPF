@@ -8,6 +8,22 @@
     tools:context="com.example.android.personalfinance_v01.MainActivity"
     tools:showIn="@layout/activity_main">
 
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/mainAddAccountBtn"
+        android:layout_alignParentTop="true"
+        android:layout_margin="32dp"
+        android:text="@string/createAccount"
+        android:visibility="gone" />
+
+    <ListView
+        android:id="@+id/mainAccountListView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp" />
+
     <TextView
         android:id="@+id/cashAmountTv"
         android:layout_width="match_parent"
@@ -15,6 +31,7 @@
         android:layout_alignParentTop="true"
         android:gravity="center_horizontal"
         android:text="1234"
-        android:textSize="@android:dimen/notification_large_icon_height" />
+        android:textSize="@android:dimen/notification_large_icon_height"
+        android:visibility="gone" />
 
 </RelativeLayout>

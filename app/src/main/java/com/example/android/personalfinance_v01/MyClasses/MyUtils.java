@@ -2,6 +2,8 @@ package com.example.android.personalfinance_v01.MyClasses;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 
 import com.example.android.personalfinance_v01.R;
 
@@ -22,7 +24,23 @@ public class MyUtils {
 
     public static String CURRENCY_TYPE = "EUR";
 
-    public static double moneyAmount = 5000;
+    public static ArrayList<BalanceAccount> accountList = new ArrayList<>();
+
+    public static void setSelected(int index) {
+        for(BalanceAccount item : accountList) {
+            item.setSelected(false);
+        }
+        accountList.get(index).setSelected(true);
+    }
+
+    @Nullable
+    public static BalanceAccount getSelected() {
+        for(BalanceAccount item : accountList) {
+            if(item.isSelected())
+                return item;
+        }
+        return null;
+    }
 
     public static ArrayList<ExpenseIncome> expenseIncomeList = new ArrayList<>();
 
@@ -50,13 +68,19 @@ public class MyUtils {
     }
 
     public static void startActivity(Context fromActivity, Class toActivity) {
-        Intent intent =  new Intent(fromActivity, toActivity);
+        Intent intent = new Intent(fromActivity, toActivity);
         fromActivity.startActivity(intent);
     }
 
     public static void startActivityWithCode(Context fromActivity, Class toActivity, int intentCode) {
-        Intent intent =  new Intent(fromActivity, toActivity);
+        Intent intent = new Intent(fromActivity, toActivity);
         intent.putExtra(MyUtils.INTENT_KEY, intentCode);
+        fromActivity.startActivity(intent);
+    }
+
+    public static void startActivityWithBundle(Context fromActivity, Class toActivity, Bundle bundle) {
+        Intent intent = new Intent(fromActivity, toActivity);
+        intent.putExtras(bundle);
         fromActivity.startActivity(intent);
     }
 }

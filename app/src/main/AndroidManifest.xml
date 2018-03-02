@@ -20,14 +20,23 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".AddExpenses"
+            android:name=".AddExpensesActivity"
             android:label=""
             android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".HistoryActivity"
-            android:parentActivityName=".MainActivity"
-            android:label="@string/activityHistory"/>
+            android:label="@string/activityHistory"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".AccountListActivity"
+            android:label="@string/accounts"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".CreateAccountActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:label="@string/createAccount"
+            android:parentActivityName=".AccountListActivity" />
     </application>
 
 </manifest>

@@ -17,12 +17,10 @@ import com.example.android.personalfinance_v01.MyClasses.CategoryAdapter;
 import com.example.android.personalfinance_v01.MyClasses.ExpenseIncome;
 import com.example.android.personalfinance_v01.MyClasses.MyUtils;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-public class AddExpenses extends AppCompatActivity {
+public class AddExpensesActivity extends AppCompatActivity {
 
     private static final String BASE_VALUE = "0";
 
@@ -116,7 +114,7 @@ public class AddExpenses extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_add_expenses, menu);
+        getMenuInflater().inflate(R.menu.menu_done, menu);
         return true;
     }
 
@@ -128,6 +126,7 @@ public class AddExpenses extends AppCompatActivity {
         switch(id) {
             case R.id.actionDone:
                 createExpenseOrIncome();
+                MyUtils.startActivity(AddExpensesActivity.this, MainActivity.class);
                 break;
         }
 
@@ -156,7 +155,6 @@ public class AddExpenses extends AppCompatActivity {
 
     /**
      * Creates a new expense or income and adds it to the main list.
-     * Also starts the main activity.
      */
     private void createExpenseOrIncome() {
         double money = 0.0;
@@ -173,10 +171,9 @@ public class AddExpenses extends AppCompatActivity {
         MyUtils.expenseIncomeList.add(expenseIncome);
 
         if(isIncomeActivity())
-            MyUtils.moneyAmount += money;
+            MyUtils.getSelected().addToBalance(money);
         else
-            MyUtils.moneyAmount -= money;
-        MyUtils.startActivity(AddExpenses.this, MainActivity.class);
+            MyUtils.getSelected().substractFromBalance(money);
     }
 
     private Date getCurrentDateTime() {
