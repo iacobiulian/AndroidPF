@@ -24,6 +24,7 @@
     <string name="currency">Currency</string>
     <string name="createAccount">Create balance account</string>
     <string name="editAccount">Edit account</string>
+    <string name="alphaNumericCharacters">abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789</string>
 
     <string-array name="currenciesArr">
 

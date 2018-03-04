@@ -1,7 +1,7 @@
 package com.example.android.personalfinance_v01;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -12,6 +12,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.android.personalfinance_v01.DataPersistance.DatabaseHelper;
+import com.example.android.personalfinance_v01.MyClasses.BalanceAccount;
 import com.example.android.personalfinance_v01.MyClasses.Category;
 import com.example.android.personalfinance_v01.MyClasses.CategoryAdapter;
 import com.example.android.personalfinance_v01.MyClasses.ExpenseIncome;
@@ -22,8 +24,7 @@ import java.util.Date;
 
 public class AddExpensesActivity extends AppCompatActivity {
 
-    private static final String BASE_VALUE = "0";
-
+    static final String BASE_VALUE = "0";
     String currentValue = BASE_VALUE;
 
     Category currentCategory;
@@ -49,13 +50,13 @@ public class AddExpensesActivity extends AppCompatActivity {
 
         //Sign Operator TextView
         signTV = findViewById(R.id.signTv);
-        if(isIncomeActivity())
+        if (isIncomeActivity())
             signTV.setText(MyUtils.PLUS_SIGN);
 
         //Spinner
         spinner = findViewById(R.id.categorySpinner);
         CategoryAdapter categoryAdapter;
-        if(isIncomeActivity()) {
+        if (isIncomeActivity()) {
             categoryAdapter = new CategoryAdapter(this, MyUtils.getIncomeCategories());
         } else {
             categoryAdapter = new CategoryAdapter(this, MyUtils.getExpenseCategories());
@@ -79,9 +80,9 @@ public class AddExpensesActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //Deletes the last character
-                if(currentValue.length() == 1 && !currentValue.contains(BASE_VALUE))
+                if (currentValue.length() == 1 && !currentValue.contains(BASE_VALUE))
                     currentValue = BASE_VALUE;
-                else if(currentValue.length() > 1)
+                else if (currentValue.length() > 1)
                     currentValue = currentValue.substring(0, currentValue.length() - 1);
                 updateTextView();
 
@@ -100,7 +101,7 @@ public class AddExpensesActivity extends AppCompatActivity {
         commaBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(!currentValue.contains(".")) {
+                if (!currentValue.contains(".")) {
                     currentValue += ".";
                     updateTextView();
                 }
@@ -120,10 +121,9 @@ public class AddExpensesActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         int id = item.getItemId();
 
-        switch(id) {
+        switch (id) {
             case R.id.actionDone:
                 createExpenseOrIncome();
                 MyUtils.startActivity(AddExpensesActivity.this, MainActivity.class);
@@ -136,7 +136,7 @@ public class AddExpensesActivity extends AppCompatActivity {
     //OnClick event for every number button (0-9)
     public void onClickNumber(View v) {
         Button button = (Button) v;
-        if(currentValue.length() == 1 && currentValue.contains(BASE_VALUE))
+        if (currentValue.length() == 1 && currentValue.contains(BASE_VALUE))
             currentValue = "";
         currentValue += button.getText().toString().trim();
         updateTextView();
@@ -146,7 +146,7 @@ public class AddExpensesActivity extends AppCompatActivity {
      * @return TRUE for INCOME Activity and FALSE for EXPENSE Activity
      */
     private boolean isIncomeActivity() {
-        return getIntent().getExtras().getInt(MyUtils.INTENT_KEY) == MyUtils.INCOME_ACTIVITY;
+        return getIntent().getExtras().getInt(MyUtils.INTENT_KEY) == ExpenseIncome.TYPE_INCOME;
     }
 
     private void updateTextView() {
@@ -160,20 +160,37 @@ public class AddExpensesActivity extends AppCompatActivity {
         double money = 0.0;
         try {
             money = Double.valueOf(moneyAmountTV.getText().toString());
-        } catch(NumberFormatException e) {
+        } catch (NumberFormatException e) {
             Toast.makeText(this, R.string.error, Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
 
-        boolean type = isIncomeActivity() ? ExpenseIncome.TYPE_INCOME : ExpenseIncome.TYPE_EXPENSE;
+        int type = isIncomeActivity() ? ExpenseIncome.TYPE_INCOME : ExpenseIncome.TYPE_EXPENSE;
 
-        ExpenseIncome expenseIncome =  new ExpenseIncome(money, type, currentCategory, getCurrentDateTime());
+        ExpenseIncome expenseIncome = new ExpenseIncome(money, type, currentCategory, getCurrentDateTime(), MyUtils.getSelected());
         MyUtils.expenseIncomeList.add(expenseIncome);
 
-        if(isIncomeActivity())
-            MyUtils.getSelected().addToBalance(money);
-        else
-            MyUtils.getSelected().substractFromBalance(money);
+        //Update the database
+        addOrSubstractMoneyFromAccount(money);
+    }
+
+    /**
+     * @param amount of money added or substracted
+     */
+    private void addOrSubstractMoneyFromAccount(double amount) {
+        BalanceAccount balanceAccount = MyUtils.getSelected();
+        DatabaseHelper databaseHelper = new DatabaseHelper(AddExpensesActivity.this);
+        int id = databaseHelper.getAccountID(balanceAccount);
+
+        double newBalanceAmount = 0.0;
+
+        if (isIncomeActivity()) {
+            newBalanceAmount = balanceAccount.getBalance() + amount;
+        } else {
+            newBalanceAmount = balanceAccount.getBalance() - amount;
+        }
+
+        databaseHelper.updateAccountBalanceAmount(id, newBalanceAmount);
     }
 
     private Date getCurrentDateTime() {

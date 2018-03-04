@@ -63,6 +63,9 @@ public class ExpenseIncomeAdapter extends ArrayAdapter<ExpenseIncome> {
         TextView categoryTv = convertView.findViewById(R.id.historyCategoryTv);
         categoryTv.setText(expenseIncome.getCategory().getName());
 
+        TextView accountTv = convertView.findViewById(R.id.historyAccountTv);
+        accountTv.setText(expenseIncome.getAccount().getName());
+
         TextView dateTimeTv = convertView.findViewById(R.id.historyDateTimeTv);
         DateFormat df = new SimpleDateFormat("EEE, d MMM yyyy, HH:mm");
         String date = df.format(expenseIncome.getDate());

@@ -10,6 +10,6 @@
 
     <color name="spinnerBackground">#f7f9fc</color>
 
-    <color name="colorIncome">#16d42c</color>
+    <color name="colorIncome">#17b62a</color>
     <color name="colorExpense">#d6131d</color>
 </resources>

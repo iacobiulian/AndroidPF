@@ -2,9 +2,11 @@ package com.example.android.personalfinance_v01.MyClasses;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
+import com.example.android.personalfinance_v01.DataPersistance.DatabaseHelper;
 import com.example.android.personalfinance_v01.R;
 
 import java.text.DecimalFormat;
@@ -16,30 +18,59 @@ import java.util.List;
  */
 
 public class MyUtils {
-    public static final int INCOME_ACTIVITY = 1;
     public static final String PLUS_SIGN = "+";
-    public static final int EXPENSE_ACTIVITY = 2;
     public static final String MINUS_SIGN = "-";
     public static final String INTENT_KEY = "intentCode";
 
     public static String CURRENCY_TYPE = "EUR";
 
+
+    //Global Balance Account list
     public static ArrayList<BalanceAccount> accountList = new ArrayList<>();
 
-    public static void setSelected(int index) {
-        for(BalanceAccount item : accountList) {
-            item.setSelected(false);
+    /**
+     * Puts the accounts from the database into the global accountList
+     * @param context
+     */
+    public static void getBalanceAccountsFromDatabase(Context context) {
+        accountList.clear();
+
+        DatabaseHelper databaseHelper = new DatabaseHelper(context);
+        Cursor accountData = databaseHelper.getAccountData();
+
+        while (accountData.moveToNext()) {
+            String name = accountData.getString(1);
+            double balance = accountData.getDouble(2);
+            String currency = accountData.getString(3);
+
+            BalanceAccount balanceAccount = new BalanceAccount(name, balance, currency);
+            if (MyUtils.accountList.isEmpty()) {
+                balanceAccount.setSelected(true);
+            }
+            MyUtils.accountList.add(balanceAccount);
         }
-        accountList.get(index).setSelected(true);
     }
 
+    /**
+     * @return selected BalanceAccount
+     */
     @Nullable
     public static BalanceAccount getSelected() {
-        for(BalanceAccount item : accountList) {
-            if(item.isSelected())
+        for (BalanceAccount item : accountList) {
+            if (item.isSelected())
                 return item;
         }
         return null;
+    }
+
+    /**
+     * @param index of the selected BalanceAccount
+     */
+    public static void setSelected(int index) {
+        for (BalanceAccount item : accountList) {
+            item.setSelected(false);
+        }
+        accountList.get(index).setSelected(true);
     }
 
     public static ArrayList<ExpenseIncome> expenseIncomeList = new ArrayList<>();
@@ -61,6 +92,8 @@ public class MyUtils {
         incomeCategories.add(new Category("Gambling", R.drawable.categ_free_time));
         return incomeCategories;
     }
+
+    //UTILITY FUNCTIONS
 
     public static String formatDecimalTwoPlaces(double numberToFormat) {
         DecimalFormat df = new DecimalFormat("0.00");

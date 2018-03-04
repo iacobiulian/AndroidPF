@@ -11,6 +11,7 @@ import android.widget.Spinner;
 import android.support.v7.widget.Toolbar;
 import android.widget.Toast;
 
+import com.example.android.personalfinance_v01.DataPersistance.DatabaseHelper;
 import com.example.android.personalfinance_v01.MyClasses.BalanceAccount;
 import com.example.android.personalfinance_v01.MyClasses.MyUtils;
 
@@ -21,7 +22,7 @@ public class CreateAccountActivity extends AppCompatActivity {
     //Becomes true if we are editing an existing account instead of creating a new one
     boolean isEditActivity = false;
     //Index in the account list of the account we are editing
-    int indexForEdit = -1;
+    int idForEdit = -1;
 
     EditText nameEt;
     EditText balanceEt;
@@ -64,12 +65,12 @@ public class CreateAccountActivity extends AppCompatActivity {
 
         int id = item.getItemId();
 
-        switch(id) {
+        switch (id) {
             case R.id.actionDone:
-                if(!isEditActivity) {
-                    createBalanceAccount();
+                if (!isEditActivity) {
+                    insertIntoDb();
                 } else {
-                    editBalanceAccount(MyUtils.accountList.get(indexForEdit));
+                    updateDb();
                 }
                 MyUtils.startActivity(CreateAccountActivity.this, AccountListActivity.class);
                 break;
@@ -78,10 +79,14 @@ public class CreateAccountActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+
+    /**
+     * Executes only if we are editing an existing account
+     */
     private void populateEditTexts() {
-        if(getIntent().getExtras() != null) {
+        if (getIntent().getExtras() != null) {
             isEditActivity = true;
-            indexForEdit = getIntent().getExtras().getInt("indexForEdit");
+            idForEdit = getIntent().getExtras().getInt("idForEdit");
 
             getSupportActionBar().setTitle(R.string.editAccount);
 
@@ -92,11 +97,14 @@ public class CreateAccountActivity extends AppCompatActivity {
         }
     }
 
-    private void createBalanceAccount() {
+    /**
+     * @return a new BalanceAccount based on user input. null if user input is bad
+     */
+    private BalanceAccount createBalanceAccount() {
         String name = nameEt.getText().toString().trim();
 
         double balance = -1;
-        try{
+        try {
             balance = Double.valueOf(balanceEt.getText().toString());
         } catch (NumberFormatException e) {
             e.printStackTrace();
@@ -104,30 +112,44 @@ public class CreateAccountActivity extends AppCompatActivity {
 
         String currency = spinner.getSelectedItem().toString();
 
-        if(!TextUtils.isEmpty(name) && balance != -1) {
-            BalanceAccount balanceAccount = new BalanceAccount(name, balance, currency);
-            if(MyUtils.accountList.isEmpty())
-                balanceAccount.setSelected(true);
-            MyUtils.accountList.add(balanceAccount);
+        //Input validation
+        if (!TextUtils.isEmpty(name) && balance != -1) {
+            return new BalanceAccount(name, balance, currency);
+        }
+
+        return null;
+    }
+
+    /**
+     * IF WE CREATE A NEW ACCOUNT
+     */
+    private void insertIntoDb() {
+        BalanceAccount balanceAccount = createBalanceAccount();
+
+        if (balanceAccount != null) {
+            DatabaseHelper databaseHelper = new DatabaseHelper(CreateAccountActivity.this);
+            boolean inserted = databaseHelper.addAccountData(createBalanceAccount());
+
+            if (inserted)
+                Toast.makeText(this, "INSERTED", Toast.LENGTH_SHORT).show();
+            else
+                Toast.makeText(this, "NOT INSERTED", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "BAD ACCOUNT INPUT", Toast.LENGTH_SHORT).show();
         }
     }
 
-    private void editBalanceAccount(BalanceAccount accountForEdit) {
-        String name = nameEt.getText().toString().trim();
+    /**
+     * IF WE UPDATE AN EXISTING ACCOUNT
+     */
+    private void updateDb() {
+        BalanceAccount balanceAccount = createBalanceAccount();
 
-        double balance = -1;
-        try{
-            balance = Double.valueOf(balanceEt.getText().toString());
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
-        }
-
-        String currency = spinner.getSelectedItem().toString();
-
-        if(!TextUtils.isEmpty(name) && balance != -1) {
-            accountForEdit.setName(name);
-            accountForEdit.setBalance(balance);
-            accountForEdit.setCurrency(currency);
+        if (balanceAccount != null) {
+            DatabaseHelper databaseHelper = new DatabaseHelper(CreateAccountActivity.this);
+            databaseHelper.updateAccount(idForEdit, balanceAccount);
+        } else {
+            Toast.makeText(this, "BAD ACCOUNT INPUT", Toast.LENGTH_SHORT).show();
         }
     }
 }

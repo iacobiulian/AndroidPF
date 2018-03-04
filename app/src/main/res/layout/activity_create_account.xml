@@ -26,12 +26,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="2dp"
+            android:labelFor="@id/createAccNameEt"
             android:text="@string/account_name" />
 
         <EditText
             android:id="@+id/createAccNameEt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:digits="@string/alphaNumericCharacters"
             android:inputType="text" />
 
     </LinearLayout>
@@ -46,6 +48,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="2dp"
+            android:labelFor="@id/createAccBalanceEt"
             android:text="@string/initial_balance" />
 
         <EditText
@@ -66,12 +69,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="2dp"
+            android:labelFor="@id/createAccSpinner"
             android:text="@string/currency" />
 
         <Spinner
             android:id="@+id/createAccSpinner"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content" />
 
     </LinearLayout>
 
