@@ -1,14 +1,14 @@
 package com.example.android.personalfinance_v01;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.support.v7.widget.Toolbar;
 import android.widget.Toast;
 
 import com.example.android.personalfinance_v01.DataPersistance.DatabaseHelper;
@@ -50,7 +50,9 @@ public class CreateAccountActivity extends AppCompatActivity {
 
         populateEditTexts();
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
     }
 
     @Override
@@ -68,7 +70,7 @@ public class CreateAccountActivity extends AppCompatActivity {
         switch (id) {
             case R.id.actionDone:
                 if (!isEditActivity) {
-                    insertIntoDb();
+                    insertAccountIntoDb();
                 } else {
                     updateDb();
                 }
@@ -88,12 +90,16 @@ public class CreateAccountActivity extends AppCompatActivity {
             isEditActivity = true;
             idForEdit = getIntent().getExtras().getInt("idForEdit");
 
-            getSupportActionBar().setTitle(R.string.editAccount);
+            if (getSupportActionBar() != null) {
+                getSupportActionBar().setTitle(R.string.editAccount);
+            }
 
             BalanceAccount balanceAccount = (BalanceAccount) getIntent().getExtras().getSerializable("accountForEdit");
-            nameEt.setText(balanceAccount.getName());
-            balanceEt.setText(balanceAccount.getBalance() + "");
-            spinner.setSelection(Arrays.asList(getResources().getStringArray(R.array.currenciesArr)).indexOf(balanceAccount.getCurrency()));
+            if (balanceAccount != null) {
+                nameEt.setText(balanceAccount.getName());
+                balanceEt.setText(balanceAccount.getBalanceString());
+                spinner.setSelection(Arrays.asList(getResources().getStringArray(R.array.currenciesArr)).indexOf(balanceAccount.getCurrency()));
+            }
         }
     }
 
@@ -123,19 +129,19 @@ public class CreateAccountActivity extends AppCompatActivity {
     /**
      * IF WE CREATE A NEW ACCOUNT
      */
-    private void insertIntoDb() {
+    private void insertAccountIntoDb() {
         BalanceAccount balanceAccount = createBalanceAccount();
 
         if (balanceAccount != null) {
             DatabaseHelper databaseHelper = new DatabaseHelper(CreateAccountActivity.this);
-            boolean inserted = databaseHelper.addAccountData(createBalanceAccount());
+            boolean inserted = databaseHelper.addAccountData(balanceAccount);
 
             if (inserted)
-                Toast.makeText(this, "INSERTED", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.account_added, Toast.LENGTH_SHORT).show();
             else
-                Toast.makeText(this, "NOT INSERTED", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.error_account_create, Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(this, "BAD ACCOUNT INPUT", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.error_account_create, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -149,7 +155,7 @@ public class CreateAccountActivity extends AppCompatActivity {
             DatabaseHelper databaseHelper = new DatabaseHelper(CreateAccountActivity.this);
             databaseHelper.updateAccount(idForEdit, balanceAccount);
         } else {
-            Toast.makeText(this, "BAD ACCOUNT INPUT", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.error_account_update, Toast.LENGTH_SHORT).show();
         }
     }
 }

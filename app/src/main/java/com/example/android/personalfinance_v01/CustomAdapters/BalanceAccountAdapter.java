@@ -1,4 +1,4 @@
-package com.example.android.personalfinance_v01.MyClasses;
+package com.example.android.personalfinance_v01.CustomAdapters;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -9,12 +9,14 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import com.example.android.personalfinance_v01.MyClasses.BalanceAccount;
+import com.example.android.personalfinance_v01.MyClasses.MyUtils;
 import com.example.android.personalfinance_v01.R;
 
 import java.util.List;
 
 /**
- * Created by iacob on 28-Feb-18.
+ * Created by iacob on 28-Feb
  */
 
 public class BalanceAccountAdapter extends ArrayAdapter<BalanceAccount> {
@@ -33,14 +35,16 @@ public class BalanceAccountAdapter extends ArrayAdapter<BalanceAccount> {
 
         BalanceAccount currentAccount = getItem(position);
 
-        TextView nameTv = convertView.findViewById(R.id.itemBalAccName);
-        nameTv.setText(currentAccount.getName());
+        if(currentAccount != null) {
+            TextView nameTv = convertView.findViewById(R.id.itemBalAccName);
+            nameTv.setText(currentAccount.getName());
 
-        TextView currencyTv = convertView.findViewById(R.id.itemBalAccCurrency);
-        currencyTv.setText(currentAccount.getCurrency());
+            TextView currencyTv = convertView.findViewById(R.id.itemBalAccCurrency);
+            currencyTv.setText(currentAccount.getCurrency());
 
-        TextView balanceTv = convertView.findViewById(R.id.itemBalAccBalance);
-        balanceTv.setText(MyUtils.formatDecimalTwoPlaces(currentAccount.getBalance()));
+            TextView balanceTv = convertView.findViewById(R.id.itemBalAccBalance);
+            balanceTv.setText(MyUtils.formatDecimalTwoPlaces(currentAccount.getBalance()));
+        }
 
         return convertView;
     }

@@ -3,14 +3,14 @@ package com.example.android.personalfinance_v01.MyClasses;
 import java.io.Serializable;
 
 /**
- * Created by iacob on 28-Feb-18.
+ * Created by iacob on 28-Feb
  */
 
 public class BalanceAccount implements Serializable {
     private String name;
     private double balance;
     private String currency;
-    boolean selected;
+    private boolean selected;
 
     public BalanceAccount(String name, double balance, String currency) {
         this.name = name;
@@ -31,23 +31,19 @@ public class BalanceAccount implements Serializable {
         return balance;
     }
 
-    public void setBalance(double balance) {
-        this.balance = balance;
+    public String getBalanceString() {
+        return this.balance + "";
     }
 
     public String getCurrency() {
         return currency;
     }
 
-    public void setCurrency(String currency) {
-        this.currency = currency;
-    }
-
-    public boolean isSelected() {
+    boolean isSelected() {
         return selected;
     }
 
-    public void setSelected(boolean selected) {
+    void setSelected(boolean selected) {
         this.selected = selected;
     }
 

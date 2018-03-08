@@ -15,11 +15,10 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.example.android.personalfinance_v01.CustomAdapters.BalanceAccountAdapterMain;
 import com.example.android.personalfinance_v01.MyClasses.ExpenseIncome;
-import com.github.clans.fab.FloatingActionButton;
-
-import com.example.android.personalfinance_v01.MyClasses.BalanceAccountAdapterMain;
 import com.example.android.personalfinance_v01.MyClasses.MyUtils;
+import com.github.clans.fab.FloatingActionButton;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -72,7 +71,8 @@ public class MainActivity extends AppCompatActivity {
 
         //Set the first listview view as 'selected'
         //If you do this in onCreate() you get a nullptr exception
-        listView.getChildAt(listView.getFirstVisiblePosition()).setSelected(true);
+        if (listView.getChildAt(listView.getFirstVisiblePosition()) != null)
+            listView.getChildAt(listView.getFirstVisiblePosition()).setSelected(true);
 
         return true;
     }
@@ -102,7 +102,9 @@ public class MainActivity extends AppCompatActivity {
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close);
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
     }
 
     private void initDrawerItems() {

@@ -12,15 +12,14 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.android.personalfinance_v01.CustomAdapters.CategoryAdapter;
 import com.example.android.personalfinance_v01.DataPersistance.DatabaseHelper;
 import com.example.android.personalfinance_v01.MyClasses.BalanceAccount;
 import com.example.android.personalfinance_v01.MyClasses.Category;
-import com.example.android.personalfinance_v01.MyClasses.CategoryAdapter;
 import com.example.android.personalfinance_v01.MyClasses.ExpenseIncome;
 import com.example.android.personalfinance_v01.MyClasses.MyUtils;
 
 import java.util.Calendar;
-import java.util.Date;
 
 public class AddExpensesActivity extends AppCompatActivity {
 
@@ -50,11 +49,46 @@ public class AddExpensesActivity extends AppCompatActivity {
 
         //Sign Operator TextView
         signTV = findViewById(R.id.signTv);
-        if (isIncomeActivity())
+        if (isIncomeActivity()) {
             signTV.setText(MyUtils.PLUS_SIGN);
+        }
 
         //Spinner
+        initSpinner();
+
+        //Special buttons
+        initSpecialButtons();
+
+        //Back button on the toolbar
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_done, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        switch (id) {
+            case R.id.actionDone:
+                insertExpenseIncomeIntoDb();
+                MyUtils.startActivity(AddExpensesActivity.this, MainActivity.class);
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void initSpinner() {
         spinner = findViewById(R.id.categorySpinner);
+
         CategoryAdapter categoryAdapter;
         if (isIncomeActivity()) {
             categoryAdapter = new CategoryAdapter(this, MyUtils.getIncomeCategories());
@@ -73,8 +107,9 @@ public class AddExpensesActivity extends AppCompatActivity {
             public void onNothingSelected(AdapterView<?> adapterView) {
             }
         });
+    }
 
-        //Special buttons
+    private void initSpecialButtons() {
         delBtn = findViewById(R.id.delBtn);
         delBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -107,30 +142,6 @@ public class AddExpensesActivity extends AppCompatActivity {
                 }
             }
         });
-
-        //Back button on the toolbar
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_done, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        switch (id) {
-            case R.id.actionDone:
-                createExpenseOrIncome();
-                MyUtils.startActivity(AddExpensesActivity.this, MainActivity.class);
-                break;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     //OnClick event for every number button (0-9)
@@ -154,46 +165,61 @@ public class AddExpensesActivity extends AppCompatActivity {
     }
 
     /**
-     * Creates a new expense or income and adds it to the main list.
+     * @return new expense or income based on user inputs.
      */
-    private void createExpenseOrIncome() {
+    private ExpenseIncome createExpenseOrIncome() {
         double money = 0.0;
         try {
             money = Double.valueOf(moneyAmountTV.getText().toString());
         } catch (NumberFormatException e) {
-            Toast.makeText(this, R.string.error, Toast.LENGTH_SHORT).show();
+            //This should never happen
             e.printStackTrace();
         }
 
+        //Update the account we are substracting/adding money from
+        addOrSubstractMoneyFromAccount(MyUtils.getSelectedAccount(), money);
+
         int type = isIncomeActivity() ? ExpenseIncome.TYPE_INCOME : ExpenseIncome.TYPE_EXPENSE;
+        return new ExpenseIncome(money, type, currentCategory, getCurrentDateTime(), MyUtils.getSelectedAccount());
+    }
 
-        ExpenseIncome expenseIncome = new ExpenseIncome(money, type, currentCategory, getCurrentDateTime(), MyUtils.getSelected());
-        MyUtils.expenseIncomeList.add(expenseIncome);
+    /**
+     * Adds the new expense/income to the database
+     */
+    private void insertExpenseIncomeIntoDb() {
+        ExpenseIncome expenseIncome = createExpenseOrIncome();
 
-        //Update the database
-        addOrSubstractMoneyFromAccount(money);
+        DatabaseHelper databaseHelper = new DatabaseHelper(AddExpensesActivity.this);
+        boolean inserted = databaseHelper.addExpenseIncomeData(expenseIncome);
+
+        if (!inserted)
+            Toast.makeText(this, R.string.record_created, Toast.LENGTH_SHORT).show();
     }
 
     /**
      * @param amount of money added or substracted
      */
-    private void addOrSubstractMoneyFromAccount(double amount) {
-        BalanceAccount balanceAccount = MyUtils.getSelected();
+    private void addOrSubstractMoneyFromAccount(BalanceAccount balanceAccount, double amount) {
         DatabaseHelper databaseHelper = new DatabaseHelper(AddExpensesActivity.this);
         int id = databaseHelper.getAccountID(balanceAccount);
 
-        double newBalanceAmount = 0.0;
+        double newBalanceAmount;
 
         if (isIncomeActivity()) {
             newBalanceAmount = balanceAccount.getBalance() + amount;
+            balanceAccount.addToBalance(amount);
         } else {
             newBalanceAmount = balanceAccount.getBalance() - amount;
+            balanceAccount.substractFromBalance(amount);
         }
 
         databaseHelper.updateAccountBalanceAmount(id, newBalanceAmount);
     }
 
-    private Date getCurrentDateTime() {
-        return Calendar.getInstance().getTime();
+    /**
+     * @return current unix time
+     */
+    private long getCurrentDateTime() {
+        return Calendar.getInstance().getTime().getTime();
     }
 }

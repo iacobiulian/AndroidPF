@@ -1,7 +1,9 @@
 package com.example.android.personalfinance_v01.DataPersistance;
-
 import android.provider.BaseColumns;
 
+/**
+ * Database related names/values are stored here
+ */
 
 public final class DatabaseContract {
     private DatabaseContract() {}

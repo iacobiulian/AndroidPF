@@ -1,22 +1,20 @@
 package com.example.android.personalfinance_v01.MyClasses;
 
-import java.util.Date;
-
 /**
- * Created by iacob on 26-Feb-18.
+ * Created by iacob on 26-Feb
  */
 
 public class ExpenseIncome {
     public static final int TYPE_INCOME = 1;
     public static final int TYPE_EXPENSE = 2;
 
-    double amount;
-    int type;
-    Category category;
-    Date date;
-    BalanceAccount account;
+    private double amount;
+    private int type;
+    private Category category;
+    private long date;
+    private BalanceAccount account;
 
-    public ExpenseIncome(double amount, int type, Category category, Date date, BalanceAccount account) {
+    public ExpenseIncome(double amount, int type, Category category, long date, BalanceAccount account) {
         this.amount = amount;
         this.type = type;
         this.category = category;
@@ -28,11 +26,7 @@ public class ExpenseIncome {
         return amount;
     }
 
-    public void setAmount(double amount) {
-        this.amount = amount;
-    }
-
-    public int isType() {
+    public int getType() {
         return type;
     }
 
@@ -44,23 +38,11 @@ public class ExpenseIncome {
         return category;
     }
 
-    public void setCategory(Category category) {
-        this.category = category;
-    }
-
-    public Date getDate() {
+    public long getDate() {
         return date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
     }
 
     public BalanceAccount getAccount() {
         return account;
-    }
-
-    public void setAccount(BalanceAccount account) {
-        this.account = account;
     }
 }

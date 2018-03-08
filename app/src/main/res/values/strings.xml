@@ -25,6 +25,13 @@
     <string name="createAccount">Create balance account</string>
     <string name="editAccount">Edit account</string>
     <string name="alphaNumericCharacters">abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789</string>
+    <string name="account_not_found">Account not found</string>
+    <string name="account_added">Account created</string>
+    <string name="error_account_create">Error creating account</string>
+    <string name="error_account_update">Error updating account</string>
+    <string name="record_created">Record created</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
 
     <string-array name="currenciesArr">
 

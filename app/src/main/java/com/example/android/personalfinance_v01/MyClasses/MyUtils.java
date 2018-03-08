@@ -9,12 +9,15 @@ import android.support.annotation.Nullable;
 import com.example.android.personalfinance_v01.DataPersistance.DatabaseHelper;
 import com.example.android.personalfinance_v01.R;
 
+import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
- * Created by iacob on 21-Feb-18.
+ * Created by iacob on 21 Feb
  */
 
 public class MyUtils {
@@ -22,15 +25,14 @@ public class MyUtils {
     public static final String MINUS_SIGN = "-";
     public static final String INTENT_KEY = "intentCode";
 
-    public static String CURRENCY_TYPE = "EUR";
-
-
     //Global Balance Account list
     public static ArrayList<BalanceAccount> accountList = new ArrayList<>();
+    //Global expense/income list
+    public static ArrayList<ExpenseIncome> expenseIncomeList = new ArrayList<>();
 
     /**
-     * Puts the accounts from the database into the global accountList
-     * @param context
+     * Fetches the accounts from the database into the global accountList
+     * @param context Activity context
      */
     public static void getBalanceAccountsFromDatabase(Context context) {
         accountList.clear();
@@ -49,13 +51,17 @@ public class MyUtils {
             }
             MyUtils.accountList.add(balanceAccount);
         }
+
+        if (!accountData.isClosed()) {
+            accountData.close();
+        }
     }
 
     /**
      * @return selected BalanceAccount
      */
     @Nullable
-    public static BalanceAccount getSelected() {
+    public static BalanceAccount getSelectedAccount() {
         for (BalanceAccount item : accountList) {
             if (item.isSelected())
                 return item;
@@ -73,7 +79,43 @@ public class MyUtils {
         accountList.get(index).setSelected(true);
     }
 
-    public static ArrayList<ExpenseIncome> expenseIncomeList = new ArrayList<>();
+    /**
+     * Fetches the expenses/incomes from the database into the global expenseIncomeList
+     * @param context Activity context
+     */
+    public static void getExpenseIncomeFromDatabase(Context context) {
+        expenseIncomeList.clear();
+
+        DatabaseHelper databaseHelper = new DatabaseHelper(context);
+        Cursor expenseIncomeData = databaseHelper.getExpenseIncomeData();
+
+        while (expenseIncomeData.moveToNext()) {
+            double balance = expenseIncomeData.getDouble(1);
+            int type = expenseIncomeData.getInt(2);
+            String categoryName = expenseIncomeData.getString(3);
+            long date = expenseIncomeData.getLong(4);
+            int accountId = expenseIncomeData.getInt(5);
+
+            BalanceAccount balanceAccount = databaseHelper.getBalanceAccount(accountId);
+
+            Category category;
+            if (type == ExpenseIncome.TYPE_INCOME) {
+                category = searchIncomeCategoryList(categoryName);
+            } else {
+                category = searchExpenseCategoryList(categoryName);
+            }
+
+            ExpenseIncome expenseIncome = new ExpenseIncome(balance, type, category, date, balanceAccount);
+
+            MyUtils.expenseIncomeList.add(expenseIncome);
+        }
+
+        if (!expenseIncomeData.isClosed()) {
+            expenseIncomeData.close();
+        }
+    }
+
+    //region Categories
 
     public static List<Category> getExpenseCategories() {
         List<Category> expenseCategories = new ArrayList<>();
@@ -82,6 +124,15 @@ public class MyUtils {
         expenseCategories.add(new Category("Housing", R.drawable.categ_housing));
         expenseCategories.add(new Category("Transport", R.drawable.categ_transport));
         return expenseCategories;
+    }
+
+    private static Category searchExpenseCategoryList(String categoryName) {
+        for (Category item : getExpenseCategories()) {
+            if (item.getName().equals(categoryName)) {
+                return item;
+            }
+        }
+        return null;
     }
 
     public static List<Category> getIncomeCategories() {
@@ -93,11 +144,26 @@ public class MyUtils {
         return incomeCategories;
     }
 
-    //UTILITY FUNCTIONS
+    private static Category searchIncomeCategoryList(String categoryName) {
+        for (Category item : getIncomeCategories()) {
+            if (item.getName().equals(categoryName)) {
+                return item;
+            }
+        }
+        return null;
+    }
+    //endregion
+
+    //region Utility functions
 
     public static String formatDecimalTwoPlaces(double numberToFormat) {
         DecimalFormat df = new DecimalFormat("0.00");
         return df.format(numberToFormat);
+    }
+
+    public static String formatDate(long unixTime) {
+        DateFormat df = new SimpleDateFormat("EEE, d MMM yyyy, HH:mm", Locale.ENGLISH);
+        return df.format(unixTime);
     }
 
     public static void startActivity(Context fromActivity, Class toActivity) {
@@ -116,4 +182,5 @@ public class MyUtils {
         intent.putExtras(bundle);
         fromActivity.startActivity(intent);
     }
+    //endregion
 }
