@@ -34,9 +34,18 @@
             android:parentActivityName=".MainActivity" />
         <activity
             android:name=".CreateAccountActivity"
-            android:theme="@style/AppTheme.NoActionBar"
             android:label="@string/createAccount"
-            android:parentActivityName=".AccountListActivity" />
+            android:parentActivityName=".AccountListActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".DebtListActivity"
+            android:label="@string/debts"
+            android:parentActivityName=".MainActivity"/>
+        <activity
+            android:name=".CreateDebtActivity"
+            android:label="@string/createDebt"
+            android:parentActivityName=".DebtListActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 
 </manifest>

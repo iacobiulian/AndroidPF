@@ -22,7 +22,7 @@ public class AccountListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_account_list);
+        setContentView(R.layout.activity_list_account);
 
         //Floating action button
         fab = findViewById(R.id.accountListFab);
@@ -57,6 +57,7 @@ public class AccountListActivity extends AppCompatActivity {
                             case R.id.accountListMenuDelete:
                                 deleteBalanceAccount(adapterView, i);
                                 balanceAccountAdapter.notifyDataSetChanged();
+                                recreate();
                                 break;
                         }
                         return false;

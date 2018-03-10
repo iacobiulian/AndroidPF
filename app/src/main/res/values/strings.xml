@@ -32,14 +32,16 @@
     <string name="record_created">Record created</string>
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
-
-    <string-array name="currenciesArr">
-
-        <item>RON</item>
-        <item>EUR</item>
-        <item>USD</item>
-        <item>GBP</item>
-
-    </string-array>
+    <string name="list_empty_add_items">The list is empty. Click the + button to add a new entry</string>
+    <string name="line"><![CDATA[--->]]></string>
+    <string name="me">Me</string>
+    <string name="startDate">Start date:</string>
+    <string name="endDate">End date:</string>
+    <string name="createDebt">Add Debt</string>
+    <string name="type">Type</string>
+    <string name="amount">Amount</string>
+    <string name="toFrom">To/From</string>
+    <string name="debt_added">Debt created</string>
+    <string name="error_debt">Error adding debt</string>
 
 </resources>

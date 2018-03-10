@@ -38,7 +38,7 @@ public class AddExpensesActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_expenses);
+        setContentView(R.layout.activity_create_expenses_income);
 
         //Toolbar
         toolbar = findViewById(R.id.toolbarAddExp);
@@ -180,7 +180,7 @@ public class AddExpensesActivity extends AppCompatActivity {
         addOrSubstractMoneyFromAccount(MyUtils.getSelectedAccount(), money);
 
         int type = isIncomeActivity() ? ExpenseIncome.TYPE_INCOME : ExpenseIncome.TYPE_EXPENSE;
-        return new ExpenseIncome(money, type, currentCategory, getCurrentDateTime(), MyUtils.getSelectedAccount());
+        return new ExpenseIncome(money, type, currentCategory, MyUtils.getCurrentDateTime(), MyUtils.getSelectedAccount());
     }
 
     /**
@@ -214,12 +214,5 @@ public class AddExpensesActivity extends AppCompatActivity {
         }
 
         databaseHelper.updateAccountBalanceAmount(id, newBalanceAmount);
-    }
-
-    /**
-     * @return current unix time
-     */
-    private long getCurrentDateTime() {
-        return Calendar.getInstance().getTime().getTime();
     }
 }

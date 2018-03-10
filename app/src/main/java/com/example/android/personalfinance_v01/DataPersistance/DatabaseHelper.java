@@ -8,8 +8,10 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import com.example.android.personalfinance_v01.DataPersistance.DatabaseContract.BalanceAccountEntry;
+import com.example.android.personalfinance_v01.DataPersistance.DatabaseContract.DebtEntry;
 import com.example.android.personalfinance_v01.DataPersistance.DatabaseContract.ExpenseIncomeEntry;
 import com.example.android.personalfinance_v01.MyClasses.BalanceAccount;
+import com.example.android.personalfinance_v01.MyClasses.Debt;
 import com.example.android.personalfinance_v01.MyClasses.ExpenseIncome;
 
 /**
@@ -39,16 +41,29 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + ExpenseIncomeEntry.COLUMN_DATE_CREATED + " INTEGER, "
                 + ExpenseIncomeEntry.COLUMN_ACCOUNT_ID + " INTEGER);";
 
+        String createTableDebts = "CREATE TABLE " + DebtEntry.TABLE_NAME + "("
+                + DebtEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + DebtEntry.COLUMN_TYPE + " INTEGER, "
+                + DebtEntry.COLUMN_PAYEE + " TEXT, "
+                + DebtEntry.COLUMN_AMOUNT + " REAL, "
+                + DebtEntry.COLUMN_AMOUNT_PAID + " REAL, "
+                + DebtEntry.COLUMN_CLOSED + " INTEGER, "
+                + DebtEntry.COLUMN_DATE_CREATED + " INTEGER, "
+                + DebtEntry.COLUMN_DATE_DUE + " INTEGER);";
+
         sqLiteDatabase.execSQL(createTableBalanceAccount);
         sqLiteDatabase.execSQL(createTableExpenseIncome);
+        sqLiteDatabase.execSQL(createTableDebts);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
         String dropBalanceAccount = "DROP TABLE IF EXISTS " + BalanceAccountEntry.TABLE_NAME + ";";
         String dropExpenseIncome = "DROP TABLE IF EXISTS " + ExpenseIncomeEntry.TABLE_NAME + ";";
+        String dropDebt = "DROP TABLE IF EXISTS " + DebtEntry.TABLE_NAME + ";";
         sqLiteDatabase.execSQL(dropBalanceAccount);
         sqLiteDatabase.execSQL(dropExpenseIncome);
+        sqLiteDatabase.execSQL(dropDebt);
         onCreate(sqLiteDatabase);
     }
 
@@ -165,7 +180,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
     // endregion
 
-    //region expenseIncomeDatabaseMethods
+    //region Expense/Income Database Methods
 
     /**
      * @param expenseIncome added to the database
@@ -226,6 +241,132 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + ExpenseIncomeEntry._ID + " = '" + id + "';";
         db.execSQL(deleteQuery);
     }
+    //endregion
+
+    //region Debt Database Methods
+
+    /**
+     * @param debt Account added to the database
+     * @return true if insertion was successful and false otherwise
+     */
+    public boolean addDebtData(Debt debt) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues debtContentValues = new ContentValues();
+        debtContentValues.put(DebtEntry.COLUMN_TYPE, debt.getType());
+        debtContentValues.put(DebtEntry.COLUMN_PAYEE, debt.getPayee());
+        debtContentValues.put(DebtEntry.COLUMN_AMOUNT, debt.getAmount());
+        debtContentValues.put(DebtEntry.COLUMN_AMOUNT_PAID, debt.getAmountPaidBack());
+        debtContentValues.put(DebtEntry.COLUMN_CLOSED, debt.isClosed());
+        debtContentValues.put(DebtEntry.COLUMN_DATE_CREATED, debt.getCreationDate());
+        debtContentValues.put(DebtEntry.COLUMN_DATE_DUE, debt.getPaybackDate());
+
+        long result = db.insert(DebtEntry.TABLE_NAME, null, debtContentValues);
+
+        return (result != -1);
+    }
+
+    /**
+     * @return Cursor containing all the debt data from the database
+     */
+    public Cursor getDebtData() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String selectQuery = "SELECT * FROM " + DebtEntry.TABLE_NAME + ";";
+        return db.rawQuery(selectQuery, null);
+    }
+
+    /**
+     * @param searchedDebt Debt searched
+     * @return id of the searchedDebt
+     */
+    public int getDebtID(Debt searchedDebt) {
+        String selectQuery = "SELECT " + DebtEntry._ID + " FROM " + DebtEntry.TABLE_NAME +
+                " WHERE " + DebtEntry.COLUMN_PAYEE + " = '" + searchedDebt.getPayee() + "' AND "
+                + DebtEntry.COLUMN_DATE_DUE + " = '" + searchedDebt.getPaybackDate() + "';";
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        int searchedId = -1;
+        if (cursor.moveToFirst()) {
+            searchedId = cursor.getInt(0);
+        }
+        cursor.close();
+
+        return searchedId;
+    }
+
+    /**
+     * @param id of the searched debt
+     * @return searched Debt
+     */
+    public Debt getDebt(int id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String selectQuery = "SELECT * FROM " + DebtEntry.TABLE_NAME + " WHERE "
+                + DebtEntry._ID + " = '" + id + "';";
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        Debt debt = null;
+
+        if (cursor.moveToFirst()) {
+            int type = cursor.getInt(1);
+            String payee = cursor.getString(2);
+            double amount = cursor.getDouble(3);
+            double amountPaid = cursor.getDouble(4);
+            int closed = cursor.getInt(5);
+            long dateCreated = cursor.getLong(6);
+            long dateDue = cursor.getLong(7);
+
+            debt = new Debt(type, payee, amount, amountPaid, closed, dateCreated, dateDue);
+        }
+
+        if (!cursor.isClosed()) {
+            cursor.close();
+        }
+
+        return debt;
+    }
+
+    /**
+     * @param debtId      Database id of the debt being updated
+     * @param updatedDebt Debt containing updated data
+     */
+    public void updateDebt(int debtId, Debt updatedDebt) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String updateQuery = "UPDATE " + DebtEntry.TABLE_NAME + " SET "
+                + DebtEntry.COLUMN_TYPE + " = '" + updatedDebt.getType() + "', "
+                + DebtEntry.COLUMN_PAYEE + " = '" + updatedDebt.getPayee() + "', "
+                + DebtEntry.COLUMN_AMOUNT + " = '" + updatedDebt.getAmount() + "', "
+                + DebtEntry.COLUMN_AMOUNT_PAID + " = '" + updatedDebt.getAmountPaidBack() + "', "
+                + DebtEntry.COLUMN_CLOSED + " = '" + updatedDebt.isClosed() + "', "
+                + DebtEntry.COLUMN_DATE_CREATED + " = '" + updatedDebt.getCreationDate() + "', "
+                + DebtEntry.COLUMN_DATE_DUE + " = '" + updatedDebt.getPaybackDate() + "' "
+                + "WHERE " + DebtEntry._ID + " = '" + debtId + "';";
+        db.execSQL(updateQuery);
+    }
+
+    /**
+     * @param debtId  Database id of the debt being updated
+     * @param newAmountPaid Paid amount
+     */
+    public void updateDebtAmount(int debtId, double newAmountPaid) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String updateQuery = "UPDATE " + DebtEntry.TABLE_NAME + " SET "
+                + DebtEntry.COLUMN_AMOUNT_PAID + " = '" + newAmountPaid + "' "
+                + "WHERE " + BalanceAccountEntry._ID + " = '" + debtId + "';";
+        db.execSQL(updateQuery);
+    }
+
+    /**
+     * @param id Database id of the account being deleted
+     */
+    public void deleteDebt(int id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String deleteQuery = "DELETE FROM " + DebtEntry.TABLE_NAME + " WHERE "
+                + DebtEntry._ID + " = '" + id + "';";
+        db.execSQL(deleteQuery);
+    }
+
     //endregion
 }
 

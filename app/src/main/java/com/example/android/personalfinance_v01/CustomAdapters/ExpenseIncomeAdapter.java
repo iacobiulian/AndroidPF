@@ -32,7 +32,7 @@ public class ExpenseIncomeAdapter extends ArrayAdapter<ExpenseIncome> {
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_history, parent, false);
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_expense_income_history, parent, false);
         }
 
         ExpenseIncome expenseIncome = getItem(position);
@@ -75,7 +75,7 @@ public class ExpenseIncomeAdapter extends ArrayAdapter<ExpenseIncome> {
             categoryTv.setText(expenseIncome.getCategory().getName());
 
             TextView dateTimeTv = convertView.findViewById(R.id.historyDateTimeTv);
-            String date = MyUtils.formatDate(expenseIncome.getDate());
+            String date = MyUtils.formatDateWithTime(expenseIncome.getDate());
             dateTimeTv.setText(date);
         }
 

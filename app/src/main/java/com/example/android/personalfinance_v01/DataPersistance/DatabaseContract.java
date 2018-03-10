@@ -9,7 +9,7 @@ public final class DatabaseContract {
     private DatabaseContract() {}
 
     public static final String DATABASE_NAME = "personal_finance.db";
-    public static final int DATABASE_VERSION = 1;
+    public static final int DATABASE_VERSION = 2;
 
     public final static class BalanceAccountEntry implements BaseColumns {
         public static final String TABLE_NAME = "balance_accounts";
@@ -29,5 +29,18 @@ public final class DatabaseContract {
         public static final String COLUMN_CATEGORY = "category";
         public static final String COLUMN_DATE_CREATED = "date_created";
         public static final String COLUMN_ACCOUNT_ID = "balance_account_id";
+    }
+
+    public final static class DebtEntry implements BaseColumns {
+        public static final String TABLE_NAME = "debts";
+
+        public static final String _ID = BaseColumns._ID;
+        public static final String COLUMN_TYPE = "type";
+        public static final String COLUMN_PAYEE = "payee";
+        public static final String COLUMN_AMOUNT = "amount_initial";
+        public static final String COLUMN_AMOUNT_PAID = "amount_paid";
+        public static final String COLUMN_CLOSED = "closed";
+        public static final String COLUMN_DATE_CREATED = "date_created";
+        public static final String COLUMN_DATE_DUE = "date_due";
     }
 }

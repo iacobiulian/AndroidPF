@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.android.personalfinance_v01.DataPersistance.DatabaseHelper;
 import com.example.android.personalfinance_v01.R;
@@ -13,6 +15,7 @@ import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -29,28 +32,69 @@ public class MyUtils {
     public static ArrayList<BalanceAccount> accountList = new ArrayList<>();
     //Global expense/income list
     public static ArrayList<ExpenseIncome> expenseIncomeList = new ArrayList<>();
+    //Global debt list
+    public static ArrayList<Debt> debtList = new ArrayList<>();
+
+    public static List<BalanceAccount> parseAccountCursor(Cursor cursor) {
+
+        ArrayList<BalanceAccount> list = new ArrayList<>();
+
+        while (cursor.moveToNext()) {
+            String name = cursor.getString(1);
+            double balance = cursor.getDouble(2);
+            String currency = cursor.getString(3);
+
+            list.add(new BalanceAccount(name, balance, currency));
+        }
+
+        return list;
+    }
+
+    public static List<Debt> parseDebtCursor(Cursor cursor) {
+
+        ArrayList<Debt> list = new ArrayList<>();
+
+        while (cursor.moveToNext()) {
+            int type = cursor.getInt(1);
+            String payee = cursor.getString(2);
+            double amount = cursor.getDouble(3);
+            double amountPaid = cursor.getDouble(4);
+            int closed = cursor.getInt(5);
+            long dateCreated = cursor.getLong(6);
+            long dateDue = cursor.getLong(7);
+
+            list.add(new Debt(type, payee, amount, amountPaid, closed, dateCreated, dateDue));
+        }
+
+        return list;
+    }
+
+    /**
+     * Fetches the debts from the database into the global debtList
+     * @param context Activity context
+     */
+    public static void getDebtsFromDatabase(Context context) {
+        DatabaseHelper databaseHelper = new DatabaseHelper(context);
+        Cursor debtData = databaseHelper.getDebtData();
+
+        debtList.clear();
+        debtList = new ArrayList<>(parseDebtCursor(debtData));
+
+        if(!debtData.isClosed()) {
+            debtData.close();
+        }
+    }
 
     /**
      * Fetches the accounts from the database into the global accountList
      * @param context Activity context
      */
     public static void getBalanceAccountsFromDatabase(Context context) {
-        accountList.clear();
-
         DatabaseHelper databaseHelper = new DatabaseHelper(context);
         Cursor accountData = databaseHelper.getAccountData();
 
-        while (accountData.moveToNext()) {
-            String name = accountData.getString(1);
-            double balance = accountData.getDouble(2);
-            String currency = accountData.getString(3);
-
-            BalanceAccount balanceAccount = new BalanceAccount(name, balance, currency);
-            if (MyUtils.accountList.isEmpty()) {
-                balanceAccount.setSelected(true);
-            }
-            MyUtils.accountList.add(balanceAccount);
-        }
+        accountList.clear();
+        accountList = new ArrayList<>(parseAccountCursor(accountData));
 
         if (!accountData.isClosed()) {
             accountData.close();
@@ -161,9 +205,35 @@ public class MyUtils {
         return df.format(numberToFormat);
     }
 
-    public static String formatDate(long unixTime) {
+    /**
+     * @return current unix time
+     */
+    public static long getCurrentDateTime() {
+        return Calendar.getInstance().getTime().getTime();
+    }
+
+    public static String formatDateWithTime(long unixTime) {
         DateFormat df = new SimpleDateFormat("EEE, d MMM yyyy, HH:mm", Locale.ENGLISH);
         return df.format(unixTime);
+    }
+
+    public static String formatDateWithoutTime(long unixTime) {
+        DateFormat df = new SimpleDateFormat("EEE, d MMM yyyy", Locale.ENGLISH);
+        return df.format(unixTime);
+    }
+
+    public static void makeToast(Context context, String message) {
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+    }
+
+    public static double getDoubleFromEditText(EditText editText) {
+        double value = -1.0;
+        try {
+            value = Double.parseDouble(editText.getText().toString());
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
+        return value;
     }
 
     public static void startActivity(Context fromActivity, Class toActivity) {
