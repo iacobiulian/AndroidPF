@@ -43,5 +43,17 @@
     <string name="toFrom">To/From</string>
     <string name="debt_added">Debt created</string>
     <string name="error_debt">Error adding debt</string>
+    <string name="payDebtAmount">Pay amount</string>
+    <string name="closeDebt">Close debt</string>
+    <string name="submit">Submit</string>
+    <string name="addGoal">Add Goal</string>
+    <string name="name">Name</string>
+    <string name="target_amount">Target amount</string>
+    <string name="saved_amount">Saved already</string>
+    <string name="targetDate">Target date</string>
+    <string name="goalAdded">Goal added</string>
+    <string name="errorGoal">Error adding goal</string>
+    <string name="addSavedAmount">Add saved amount</string>
+    <string name="goalReached">Set goal as reached</string>
 
 </resources>

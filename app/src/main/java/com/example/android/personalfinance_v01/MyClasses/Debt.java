@@ -13,13 +13,13 @@ public class Debt {
     public static final int CLOSED = 1;
     public static final int NOT_CLOSED = 0;
 
-    int type;
-    String payee;
-    double amount;
-    double amountPaidBack;
-    int closed;
-    long creationDate;
-    long paybackDate;
+    private int type;
+    private String payee;
+    private double amount;
+    private double amountPaidBack;
+    private int closed;
+    private long creationDate;
+    private long paybackDate;
 
     public Debt(int type, String payee, double amount, long creationDate, long paybackDate) {
         this.type = type;
@@ -31,7 +31,7 @@ public class Debt {
         this.paybackDate = paybackDate;
     }
 
-    public Debt(int type, String payee, double amount, double amountPaidBack, int closed, long creationDate, long paybackDate) {
+    Debt(int type, String payee, double amount, double amountPaidBack, int closed, long creationDate, long paybackDate) {
         this.type = type;
         this.payee = payee;
         this.amount = amount;
@@ -69,23 +69,7 @@ public class Debt {
         return paybackDate;
     }
 
-    public void setAmountPaidBack(double amountPaidBack) {
-        this.amountPaidBack = amountPaidBack;
-    }
-
-    public void setClosed(int closed) {
-        this.closed = closed;
-    }
-
     public boolean isValid() {
-        if (this.amount <= 0.0 || TextUtils.isEmpty(this.payee)) {
-            return false;
-        }
-
-        return true;
-    }
-
-    public double amountRemainingToBePaid() {
-        return this.amount - this.amountPaidBack;
+        return !(this.amount <= 0.0 || TextUtils.isEmpty(this.payee));
     }
 }

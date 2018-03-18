@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.android.personalfinance_v01.AccountListActivity">
+
+    <ListView
+        android:id="@+id/goalListView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <ImageView
+        android:id="@+id/goalListEmptyView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="@string/list_empty_add_items"
+        android:src="@drawable/ic_plus"
+        android:visibility="gone" />
+
+    <com.github.clans.fab.FloatingActionButton
+        android:id="@+id/goalListFab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="16dp"
+        android:src="@drawable/fab_add"
+        fab:fab_size="normal" />
+
+</RelativeLayout>

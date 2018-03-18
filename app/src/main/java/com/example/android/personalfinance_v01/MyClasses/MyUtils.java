@@ -34,6 +34,8 @@ public class MyUtils {
     public static ArrayList<ExpenseIncome> expenseIncomeList = new ArrayList<>();
     //Global debt list
     public static ArrayList<Debt> debtList = new ArrayList<>();
+    //Global Goal list
+    public static ArrayList<Goal> goalList = new ArrayList<>();
 
     public static List<BalanceAccount> parseAccountCursor(Cursor cursor) {
 
@@ -50,7 +52,35 @@ public class MyUtils {
         return list;
     }
 
-    public static List<Debt> parseDebtCursor(Cursor cursor) {
+    private static List<ExpenseIncome> parseExpenseIncomeCursor(Cursor cursor, Context context) {
+        ArrayList<ExpenseIncome> list = new ArrayList<>();
+        DatabaseHelper databaseHelper = new DatabaseHelper(context);
+
+        while (cursor.moveToNext()) {
+            double balance = cursor.getDouble(1);
+            int type = cursor.getInt(2);
+            String categoryName = cursor.getString(3);
+            long date = cursor.getLong(4);
+            int accountId = cursor.getInt(5);
+
+            BalanceAccount balanceAccount = databaseHelper.getBalanceAccount(accountId);
+
+            Category category;
+            if (type == ExpenseIncome.TYPE_INCOME) {
+                category = searchIncomeCategoryList(categoryName);
+            } else {
+                category = searchExpenseCategoryList(categoryName);
+            }
+
+            ExpenseIncome expenseIncome = new ExpenseIncome(balance, type, category, date, balanceAccount);
+
+            list.add(expenseIncome);
+        }
+
+        return list;
+    }
+
+    private static List<Debt> parseDebtCursor(Cursor cursor) {
 
         ArrayList<Debt> list = new ArrayList<>();
 
@@ -69,24 +99,27 @@ public class MyUtils {
         return list;
     }
 
-    /**
-     * Fetches the debts from the database into the global debtList
-     * @param context Activity context
-     */
-    public static void getDebtsFromDatabase(Context context) {
-        DatabaseHelper databaseHelper = new DatabaseHelper(context);
-        Cursor debtData = databaseHelper.getDebtData();
+    private static List<Goal> parseGoalCursor(Cursor cursor) {
 
-        debtList.clear();
-        debtList = new ArrayList<>(parseDebtCursor(debtData));
+        ArrayList<Goal> list = new ArrayList<>();
 
-        if(!debtData.isClosed()) {
-            debtData.close();
+        while (cursor.moveToNext()) {
+            String name = cursor.getString(1);
+            double targetAmount = cursor.getDouble(2);
+            double savedAmount = cursor.getDouble(3);
+            long targetDate = cursor.getLong(4);
+            int status = cursor.getInt(5);
+
+
+            list.add(new Goal(name, targetAmount, savedAmount, targetDate, status));
         }
+
+        return list;
     }
 
     /**
      * Fetches the accounts from the database into the global accountList
+     *
      * @param context Activity context
      */
     public static void getBalanceAccountsFromDatabase(Context context) {
@@ -94,7 +127,9 @@ public class MyUtils {
         Cursor accountData = databaseHelper.getAccountData();
 
         accountList.clear();
-        accountList = new ArrayList<>(parseAccountCursor(accountData));
+        accountList.addAll(parseAccountCursor(accountData));
+
+        MyUtils.setSelected(0);
 
         if (!accountData.isClosed()) {
             accountData.close();
@@ -117,6 +152,10 @@ public class MyUtils {
      * @param index of the selected BalanceAccount
      */
     public static void setSelected(int index) {
+        if (accountList.isEmpty()) {
+            return;
+        }
+
         for (BalanceAccount item : accountList) {
             item.setSelected(false);
         }
@@ -125,39 +164,55 @@ public class MyUtils {
 
     /**
      * Fetches the expenses/incomes from the database into the global expenseIncomeList
+     *
      * @param context Activity context
      */
     public static void getExpenseIncomeFromDatabase(Context context) {
-        expenseIncomeList.clear();
-
         DatabaseHelper databaseHelper = new DatabaseHelper(context);
         Cursor expenseIncomeData = databaseHelper.getExpenseIncomeData();
 
-        while (expenseIncomeData.moveToNext()) {
-            double balance = expenseIncomeData.getDouble(1);
-            int type = expenseIncomeData.getInt(2);
-            String categoryName = expenseIncomeData.getString(3);
-            long date = expenseIncomeData.getLong(4);
-            int accountId = expenseIncomeData.getInt(5);
-
-            BalanceAccount balanceAccount = databaseHelper.getBalanceAccount(accountId);
-
-            Category category;
-            if (type == ExpenseIncome.TYPE_INCOME) {
-                category = searchIncomeCategoryList(categoryName);
-            } else {
-                category = searchExpenseCategoryList(categoryName);
-            }
-
-            ExpenseIncome expenseIncome = new ExpenseIncome(balance, type, category, date, balanceAccount);
-
-            MyUtils.expenseIncomeList.add(expenseIncome);
-        }
+        expenseIncomeList.clear();
+        expenseIncomeList.addAll(parseExpenseIncomeCursor(expenseIncomeData, context));
 
         if (!expenseIncomeData.isClosed()) {
             expenseIncomeData.close();
         }
     }
+
+    /**
+     * Fetches the debts from the database into the global debtList
+     *
+     * @param context Activity context
+     */
+    public static void getDebtsFromDatabase(Context context) {
+        DatabaseHelper databaseHelper = new DatabaseHelper(context);
+        Cursor debtData = databaseHelper.getDebtData();
+
+        debtList.clear();
+        debtList.addAll(parseDebtCursor(debtData));
+
+        if (!debtData.isClosed()) {
+            debtData.close();
+        }
+    }
+
+    /**
+     * Fetches the goals from the database into the global goalList
+     *
+     * @param context Activity context
+     */
+    public static void getGoalsFromDatabase(Context context) {
+        DatabaseHelper databaseHelper = new DatabaseHelper(context);
+        Cursor goalData = databaseHelper.getGoalData();
+
+        goalList.clear();
+        goalList.addAll(parseGoalCursor(goalData));
+
+        if (!goalData.isClosed()) {
+            goalData.close();
+        }
+    }
+
 
     //region Categories
 

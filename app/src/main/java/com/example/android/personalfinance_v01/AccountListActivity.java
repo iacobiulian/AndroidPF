@@ -57,7 +57,6 @@ public class AccountListActivity extends AppCompatActivity {
                             case R.id.accountListMenuDelete:
                                 deleteBalanceAccount(adapterView, i);
                                 balanceAccountAdapter.notifyDataSetChanged();
-                                recreate();
                                 break;
                         }
                         return false;

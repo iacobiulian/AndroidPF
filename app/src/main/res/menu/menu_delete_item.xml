@@ -4,6 +4,6 @@
     tools:context="com.example.android.personalfinance_v01.MainActivity">
 
     <item
-        android:id="@+id/expenseIncomeListMenuDelete"
+        android:id="@+id/menuDelete"
         android:title="@string/delete" />
 </menu>

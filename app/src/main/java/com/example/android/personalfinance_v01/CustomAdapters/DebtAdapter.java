@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.android.personalfinance_v01.MyClasses.Debt;
@@ -49,19 +50,30 @@ public class DebtAdapter extends ArrayAdapter<Debt> {
             }
 
             TextView initialAmountTv = convertView.findViewById(R.id.itemDebtInitialAmountTv);
-            initialAmountTv.setText(formatDecimalTwoPlaces(currentDebt.getAmount()));
+            initialAmountTv.setText("Initial: " + formatDecimalTwoPlaces(currentDebt.getAmount()));
 
             TextView paidBackAmountTv = convertView.findViewById(R.id.itemDebtPaidBackAmountTv);
-            paidBackAmountTv.setText(formatDecimalTwoPlaces(currentDebt.getAmountPaidBack()));
+            paidBackAmountTv.setText("Paid: " + formatDecimalTwoPlaces(currentDebt.getAmountPaidBack()));
 
             TextView remainingAmountTv = convertView.findViewById(R.id.itemDebtRemainingAmountTv);
-            remainingAmountTv.setText(formatDecimalTwoPlaces(currentDebt.getAmount() - currentDebt.getAmountPaidBack()));
+            remainingAmountTv.setText("Remaining: " + formatDecimalTwoPlaces(currentDebt.getAmount() - currentDebt.getAmountPaidBack()));
 
             TextView startDate = convertView.findViewById(R.id.itemDebtStartDateTv);
             startDate.setText("Start date: " + formatDateWithoutTime(currentDebt.getCreationDate()));
 
             TextView dueDate = convertView.findViewById(R.id.itemDebtEndDateTv);
-            dueDate.setText("End date: " + formatDateWithoutTime(currentDebt.getPaybackDate()));
+            dueDate.setText("Due date: " + formatDateWithoutTime(currentDebt.getPaybackDate()));
+
+            TextView closed = convertView.findViewById(R.id.itemDebtClosed);
+            if(currentDebt.isClosed() == Debt.CLOSED) {
+                closed.setText("Closed");
+            } else if(currentDebt.isClosed() == Debt.NOT_CLOSED) {
+                closed.setText("Open");
+            }
+
+            ProgressBar progressBar = convertView.findViewById(R.id.itemDebtProgressBar);
+            int percentage = (int) (currentDebt.getAmountPaidBack() * 100/currentDebt.getAmount());
+            progressBar.setProgress(percentage);
         }
 
         return convertView;

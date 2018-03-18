@@ -7,7 +7,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -36,8 +35,8 @@ public class CreateDebtActivity extends AppCompatActivity {
     int type;
     double amount;
     String payee;
-    long startDate;
-    long endDate;
+    long startDate = MyUtils.getCurrentDateTime();
+    long endDate = MyUtils.getCurrentDateTime();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -37,7 +37,7 @@ public class HistoryActivity extends AppCompatActivity {
                     @Override
                     public boolean onMenuItemClick(MenuItem menuItem) {
                         switch (menuItem.getItemId()) {
-                            case R.id.accountListMenuEdit:
+                            case R.id.menuDelete:
                                 deleteExpenseIncome(adapterView, i);
                                 expenseIncomeAdapter.notifyDataSetChanged();
                                 break;
@@ -56,5 +56,7 @@ public class HistoryActivity extends AppCompatActivity {
         DatabaseHelper databaseHelper =  new DatabaseHelper(HistoryActivity.this);
 
         databaseHelper.deleteExpenseIncome(databaseHelper.getExpenseIncomeID(expenseIncome));
+
+        MyUtils.getExpenseIncomeFromDatabase(HistoryActivity.this);
     }
 }

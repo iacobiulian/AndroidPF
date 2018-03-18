@@ -11,7 +11,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
-            android:label="@string/home"
+            android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -40,12 +40,21 @@
         <activity
             android:name=".DebtListActivity"
             android:label="@string/debts"
-            android:parentActivityName=".MainActivity"/>
+            android:parentActivityName=".MainActivity" />
         <activity
             android:name=".CreateDebtActivity"
             android:label="@string/createDebt"
             android:parentActivityName=".DebtListActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".GoalListActivity"
+            android:label="@string/goals"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".AddGoalActivity"
+            android:label="@string/addGoal"
+            android:parentActivityName=".DebtListActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

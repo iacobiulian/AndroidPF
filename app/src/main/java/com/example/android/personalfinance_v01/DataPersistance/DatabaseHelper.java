@@ -10,9 +10,14 @@ import android.util.Log;
 import com.example.android.personalfinance_v01.DataPersistance.DatabaseContract.BalanceAccountEntry;
 import com.example.android.personalfinance_v01.DataPersistance.DatabaseContract.DebtEntry;
 import com.example.android.personalfinance_v01.DataPersistance.DatabaseContract.ExpenseIncomeEntry;
+import com.example.android.personalfinance_v01.DataPersistance.DatabaseContract.GoalEntry;
 import com.example.android.personalfinance_v01.MyClasses.BalanceAccount;
 import com.example.android.personalfinance_v01.MyClasses.Debt;
 import com.example.android.personalfinance_v01.MyClasses.ExpenseIncome;
+import com.example.android.personalfinance_v01.MyClasses.Goal;
+import com.example.android.personalfinance_v01.MyClasses.MyUtils;
+
+import java.util.ArrayList;
 
 /**
  * Created by iacob on 03-Mar-18.
@@ -51,9 +56,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + DebtEntry.COLUMN_DATE_CREATED + " INTEGER, "
                 + DebtEntry.COLUMN_DATE_DUE + " INTEGER);";
 
+        String createTableGoals = "CREATE TABLE " + GoalEntry.TABLE_NAME + "("
+                + GoalEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + GoalEntry.COLUMN_GOAL_NAME + " TEXT, "
+                + GoalEntry.COLUMN_TARGET_AMOUNT + " REAL, "
+                + GoalEntry.COLUMN_SAVED_AMOUNT + " REAL, "
+                + GoalEntry.COLUMN_TARGET_DATE + " INTEGER, "
+                + GoalEntry.COLUMN_STATUS + " INTEGER);";
+
         sqLiteDatabase.execSQL(createTableBalanceAccount);
         sqLiteDatabase.execSQL(createTableExpenseIncome);
         sqLiteDatabase.execSQL(createTableDebts);
+        sqLiteDatabase.execSQL(createTableGoals);
     }
 
     @Override
@@ -61,9 +75,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         String dropBalanceAccount = "DROP TABLE IF EXISTS " + BalanceAccountEntry.TABLE_NAME + ";";
         String dropExpenseIncome = "DROP TABLE IF EXISTS " + ExpenseIncomeEntry.TABLE_NAME + ";";
         String dropDebt = "DROP TABLE IF EXISTS " + DebtEntry.TABLE_NAME + ";";
+        String dropGoal = "DROP TABLE IF EXISTS " + GoalEntry.TABLE_NAME + ";";
         sqLiteDatabase.execSQL(dropBalanceAccount);
         sqLiteDatabase.execSQL(dropExpenseIncome);
         sqLiteDatabase.execSQL(dropDebt);
+        sqLiteDatabase.execSQL(dropGoal);
         onCreate(sqLiteDatabase);
     }
 
@@ -127,13 +143,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery(selectQuery, null);
 
         BalanceAccount balanceAccount = null;
+        ArrayList<BalanceAccount> list = (ArrayList<BalanceAccount>) MyUtils.parseAccountCursor(cursor);
 
-        if (cursor.moveToFirst()) {
-            String name = cursor.getString(1);
-            double balance = cursor.getDouble(2);
-            String currency = cursor.getString(3);
-
-            balanceAccount = new BalanceAccount(name, balance, currency);
+        if (!list.isEmpty()) {
+            balanceAccount = list.get(0);
         }
 
         if (!cursor.isClosed()) {
@@ -246,7 +259,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     //region Debt Database Methods
 
     /**
-     * @param debt Account added to the database
+     * @param debt added to the database
      * @return true if insertion was successful and false otherwise
      */
     public boolean addDebtData(Debt debt) {
@@ -297,63 +310,25 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     /**
-     * @param id of the searched debt
-     * @return searched Debt
+     * @param debtId Database id of the debt being updated
      */
-    public Debt getDebt(int id) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        String selectQuery = "SELECT * FROM " + DebtEntry.TABLE_NAME + " WHERE "
-                + DebtEntry._ID + " = '" + id + "';";
-        Cursor cursor = db.rawQuery(selectQuery, null);
-
-        Debt debt = null;
-
-        if (cursor.moveToFirst()) {
-            int type = cursor.getInt(1);
-            String payee = cursor.getString(2);
-            double amount = cursor.getDouble(3);
-            double amountPaid = cursor.getDouble(4);
-            int closed = cursor.getInt(5);
-            long dateCreated = cursor.getLong(6);
-            long dateDue = cursor.getLong(7);
-
-            debt = new Debt(type, payee, amount, amountPaid, closed, dateCreated, dateDue);
-        }
-
-        if (!cursor.isClosed()) {
-            cursor.close();
-        }
-
-        return debt;
-    }
-
-    /**
-     * @param debtId      Database id of the debt being updated
-     * @param updatedDebt Debt containing updated data
-     */
-    public void updateDebt(int debtId, Debt updatedDebt) {
+    public void updateDebtClose(int debtId) {
         SQLiteDatabase db = this.getWritableDatabase();
         String updateQuery = "UPDATE " + DebtEntry.TABLE_NAME + " SET "
-                + DebtEntry.COLUMN_TYPE + " = '" + updatedDebt.getType() + "', "
-                + DebtEntry.COLUMN_PAYEE + " = '" + updatedDebt.getPayee() + "', "
-                + DebtEntry.COLUMN_AMOUNT + " = '" + updatedDebt.getAmount() + "', "
-                + DebtEntry.COLUMN_AMOUNT_PAID + " = '" + updatedDebt.getAmountPaidBack() + "', "
-                + DebtEntry.COLUMN_CLOSED + " = '" + updatedDebt.isClosed() + "', "
-                + DebtEntry.COLUMN_DATE_CREATED + " = '" + updatedDebt.getCreationDate() + "', "
-                + DebtEntry.COLUMN_DATE_DUE + " = '" + updatedDebt.getPaybackDate() + "' "
+                + DebtEntry.COLUMN_CLOSED + " = '" + Debt.CLOSED + "' "
                 + "WHERE " + DebtEntry._ID + " = '" + debtId + "';";
         db.execSQL(updateQuery);
     }
 
     /**
-     * @param debtId  Database id of the debt being updated
+     * @param debtId        Database id of the debt being updated
      * @param newAmountPaid Paid amount
      */
     public void updateDebtAmount(int debtId, double newAmountPaid) {
         SQLiteDatabase db = this.getWritableDatabase();
         String updateQuery = "UPDATE " + DebtEntry.TABLE_NAME + " SET "
                 + DebtEntry.COLUMN_AMOUNT_PAID + " = '" + newAmountPaid + "' "
-                + "WHERE " + BalanceAccountEntry._ID + " = '" + debtId + "';";
+                + "WHERE " + DebtEntry._ID + " = '" + debtId + "';";
         db.execSQL(updateQuery);
     }
 
@@ -364,6 +339,93 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         String deleteQuery = "DELETE FROM " + DebtEntry.TABLE_NAME + " WHERE "
                 + DebtEntry._ID + " = '" + id + "';";
+        db.execSQL(deleteQuery);
+    }
+
+    //endregion
+
+    //region Goal Database Methods
+
+    /**
+     * @param goal added to the database
+     * @return true if insertion was successful and false otherwise
+     */
+    public boolean addGoalData(Goal goal) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues goalContentValues = new ContentValues();
+        goalContentValues.put(GoalEntry.COLUMN_GOAL_NAME, goal.getName());
+        goalContentValues.put(GoalEntry.COLUMN_TARGET_AMOUNT, goal.getGoalAmount());
+        goalContentValues.put(GoalEntry.COLUMN_SAVED_AMOUNT, goal.getSavedAmount());
+        goalContentValues.put(GoalEntry.COLUMN_TARGET_DATE, goal.getTargetDate());
+        goalContentValues.put(GoalEntry.COLUMN_STATUS, goal.getStatus());
+
+        long result = db.insert(GoalEntry.TABLE_NAME, null, goalContentValues);
+
+        return (result != -1);
+    }
+
+    /**
+     * @return Cursor containing all the goal data from the database
+     */
+    public Cursor getGoalData() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String selectQuery = "SELECT * FROM " + GoalEntry.TABLE_NAME + ";";
+        return db.rawQuery(selectQuery, null);
+    }
+
+    /**
+     * @param searchedGoal Goal searched
+     * @return id of the searchedGoal
+     */
+    public int getGoalId(Goal searchedGoal) {
+        //TODO: IMPROVE THE SEARCH
+        String selectQuery = "SELECT " + GoalEntry._ID + " FROM " + GoalEntry.TABLE_NAME +
+                " WHERE " + GoalEntry.COLUMN_GOAL_NAME + " = '" + searchedGoal.getName() + "' AND "
+                + GoalEntry.COLUMN_TARGET_DATE + " = '" + searchedGoal.getTargetDate() + "';";
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        int searchedId = -1;
+        if (cursor.moveToFirst()) {
+            searchedId = cursor.getInt(0);
+        }
+        cursor.close();
+
+        return searchedId;
+    }
+
+    /**
+     * @param goalId Database id of the goal being updated
+     */
+    public void updateGoalReached(int goalId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String updateQuery = "UPDATE " + GoalEntry.TABLE_NAME + " SET "
+                + GoalEntry.COLUMN_STATUS + " = '" + Goal.REACHED + "' "
+                + "WHERE " + GoalEntry._ID + " = '" + goalId + "';";
+        db.execSQL(updateQuery);
+    }
+
+    /**
+     * @param goalId        Database id of the goal being updated
+     * @param newSavedAmount Updated saved amount
+     */
+    public void updateGoalSavedAmount(int goalId, double newSavedAmount) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String updateQuery = "UPDATE " + GoalEntry.TABLE_NAME + " SET "
+                + GoalEntry.COLUMN_SAVED_AMOUNT + " = '" + newSavedAmount + "' "
+                + "WHERE " + GoalEntry._ID + " = '" + goalId + "';";
+        db.execSQL(updateQuery);
+    }
+
+    /**
+     * @param id Database id of the goal being deleted
+     */
+    public void deleteGoal(int id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String deleteQuery = "DELETE FROM " + GoalEntry.TABLE_NAME + " WHERE "
+                + GoalEntry._ID + " = '" + id + "';";
         db.execSQL(deleteQuery);
     }
 
