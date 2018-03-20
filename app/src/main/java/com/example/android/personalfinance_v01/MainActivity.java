@@ -136,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
         fab_substract.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                MyUtils.startActivityWithCode(MainActivity.this, AddExpensesActivity.class, ExpenseIncome.TYPE_EXPENSE);
+                MyUtils.startActivityWithCode(MainActivity.this, AddExpIncomeTabbedActivity.class, ExpenseIncome.TYPE_EXPENSE);
             }
         });
 
@@ -144,7 +144,7 @@ public class MainActivity extends AppCompatActivity {
         fab_add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                MyUtils.startActivityWithCode(MainActivity.this, AddExpensesActivity.class, ExpenseIncome.TYPE_INCOME);
+                MyUtils.startActivityWithCode(MainActivity.this, AddExpIncomeTabbedActivity.class, ExpenseIncome.TYPE_INCOME);
             }
         });
     }

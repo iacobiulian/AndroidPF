@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_margin="8dp"
     android:background="@color/textGrey"
     android:orientation="vertical"
@@ -18,9 +19,9 @@
             android:id="@+id/historySignTv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="8dp"
+            android:layout_marginEnd="8dp"
             android:gravity="center_vertical"
-            android:text="!"
+            tools:text="-"
             android:textColor="@color/textDark"
             android:textSize="@dimen/category_text" />
 
@@ -29,7 +30,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:text="140"
+            tools:text="140"
             android:textColor="@color/textDark"
             android:textSize="@dimen/category_text" />
 
@@ -37,10 +38,9 @@
             android:id="@+id/historyCurrencyTypeTv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
             android:gravity="center_vertical"
-            android:text="Currency"
+            tools:text="Currency"
             android:textColor="@color/textDark"
             android:textSize="@dimen/category_text" />
 
@@ -51,7 +51,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="4dp"
-        android:text="Account not found"
+        tools:text="Account not found"
         android:textColor="@color/textDark"
         android:textSize="16sp" />
 
@@ -67,7 +67,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginRight="8dp"
+            android:layout_marginEnd="8dp"
             android:src="@drawable/nav_goals" />
 
         <TextView
@@ -75,7 +75,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:text="Free time"
+            tools:text="Free time"
             android:textColor="@color/textDark"
             android:textSize="16sp" />
 
@@ -87,6 +87,6 @@
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:padding="4dp"
-        android:text="Wed, 18 June, 2002, 15:44"
+        tools:text="Wed, 18 June, 2002, 15:44"
         android:textColor="@color/textDark" />
 </LinearLayout>

@@ -1,17 +1,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
-
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbarAddExp"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:popupTheme="@style/AppTheme.PopupOverlay" />
+    android:orientation="vertical"
+    tools:ignore="HardcodedText">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -30,7 +22,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:text="0"
             android:textSize="48sp" />
 
@@ -39,8 +31,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_marginRight="12dp"
-            android:layout_toLeftOf="@id/fragmentExpenseMoneyAmountTV"
+            android:layout_marginEnd="12dp"
+            android:layout_toStartOf="@id/fragmentExpenseMoneyAmountTV"
             android:text="-"
             android:textSize="48sp" />
 
@@ -60,31 +52,31 @@
             android:orientation="horizontal">
 
             <Button
+                android:id="@+id/fragmentExpenseBtn1"
                 android:layout_width="0px"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="#595454"
-                android:onClick="onClickNumber"
+                android:background="@color/colorExpIncomeBtn"
                 android:text="1"
                 android:textColor="#ffffff"
                 android:textSize="36sp" />
 
             <Button
+                android:id="@+id/fragmentExpenseBtn2"
                 android:layout_width="0px"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="#595454"
-                android:onClick="onClickNumber"
+                android:background="@color/colorExpIncomeBtn"
                 android:text="2"
                 android:textColor="#ffffff"
                 android:textSize="36sp" />
 
             <Button
+                android:id="@+id/fragmentExpenseBtn3"
                 android:layout_width="0px"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="#595454"
-                android:onClick="onClickNumber"
+                android:background="@color/colorExpIncomeBtn"
                 android:text="3"
                 android:textColor="#ffffff"
                 android:textSize="36sp" />
@@ -98,31 +90,31 @@
             android:orientation="horizontal">
 
             <Button
+                android:id="@+id/fragmentExpenseBtn4"
                 android:layout_width="0px"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="#595454"
-                android:onClick="onClickNumber"
+                android:background="@color/colorExpIncomeBtn"
                 android:text="4"
                 android:textColor="#ffffff"
                 android:textSize="36sp" />
 
             <Button
+                android:id="@+id/fragmentExpenseBtn5"
                 android:layout_width="0px"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="#595454"
-                android:onClick="onClickNumber"
+                android:background="@color/colorExpIncomeBtn"
                 android:text="5"
                 android:textColor="#ffffff"
                 android:textSize="36sp" />
 
             <Button
+                android:id="@+id/fragmentExpenseBtn6"
                 android:layout_width="0px"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="#595454"
-                android:onClick="onClickNumber"
+                android:background="@color/colorExpIncomeBtn"
                 android:text="6"
                 android:textColor="#ffffff"
                 android:textSize="36sp" />
@@ -136,31 +128,31 @@
             android:orientation="horizontal">
 
             <Button
+                android:id="@+id/fragmentExpenseBtn7"
                 android:layout_width="0px"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="#595454"
-                android:onClick="onClickNumber"
+                android:background="@color/colorExpIncomeBtn"
                 android:text="7"
                 android:textColor="#ffffff"
                 android:textSize="36sp" />
 
             <Button
+                android:id="@+id/fragmentExpenseBtn8"
                 android:layout_width="0px"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="#595454"
-                android:onClick="onClickNumber"
+                android:background="@color/colorExpIncomeBtn"
                 android:text="8"
                 android:textColor="#ffffff"
                 android:textSize="36sp" />
 
             <Button
+                android:id="@+id/fragmentExpenseBtn9"
                 android:layout_width="0px"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="#595454"
-                android:onClick="onClickNumber"
+                android:background="@color/colorExpIncomeBtn"
                 android:text="9"
                 android:textColor="#ffffff"
                 android:textSize="36sp" />
@@ -178,17 +170,17 @@
                 android:layout_width="0px"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="#595454"
+                android:background="@color/colorExpIncomeBtn"
                 android:text="DEL"
                 android:textColor="#ffffff"
                 android:textSize="36sp" />
 
             <Button
+                android:id="@+id/fragmentExpenseBtn0"
                 android:layout_width="0px"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="#595454"
-                android:onClick="onClickNumber"
+                android:background="@color/colorExpIncomeBtn"
                 android:text="0"
                 android:textColor="#ffffff"
                 android:textSize="36sp" />
@@ -198,7 +190,7 @@
                 android:layout_width="0px"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="#595454"
+                android:background="@color/colorExpIncomeBtn"
                 android:text="."
                 android:textColor="#ffffff"
                 android:textSize="36sp" />
