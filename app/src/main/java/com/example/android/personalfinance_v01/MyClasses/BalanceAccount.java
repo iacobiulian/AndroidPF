@@ -1,5 +1,7 @@
 package com.example.android.personalfinance_v01.MyClasses;
 
+import android.text.TextUtils;
+
 import java.io.Serializable;
 
 /**
@@ -53,5 +55,24 @@ public class BalanceAccount implements Serializable {
 
     public void addToBalance(double amount) {
         this.balance += amount;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+
+        if (obj == this) {
+            return true;
+        }
+
+        if (!(obj instanceof BalanceAccount)) {
+            return false;
+        }
+
+        // typecast o to Complex so that we can compare data members
+        BalanceAccount balanceAccount = (BalanceAccount) obj;
+
+        // Compare the data members and return accordingly
+        return Double.compare(this.getBalance(), balanceAccount.getBalance()) == 0
+                && TextUtils.equals(this.getName(), balanceAccount.getName()) && TextUtils.equals(this.getCurrency(), balanceAccount.getCurrency());
     }
 }

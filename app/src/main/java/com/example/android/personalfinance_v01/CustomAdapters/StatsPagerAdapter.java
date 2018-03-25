@@ -8,21 +8,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by iacob on 18-Mar
+ * Created by iacob on 20-Mar
  */
 
-public class SectionsPageAdapter extends FragmentPagerAdapter {
+public class StatsPagerAdapter extends FragmentPagerAdapter {
 
     private final List<Fragment> fragmentList = new ArrayList<>();
     private final List<String> fragmentTitleList = new ArrayList<>();
 
+    public StatsPagerAdapter(FragmentManager fm) {
+        super(fm);
+    }
+
     public void addFragment(Fragment fragment, String title) {
         fragmentList.add(fragment);
         fragmentTitleList.add(title);
-    }
-
-    public SectionsPageAdapter(FragmentManager fm) {
-        super(fm);
     }
 
     @Override
@@ -39,6 +39,4 @@ public class SectionsPageAdapter extends FragmentPagerAdapter {
     public int getCount() {
         return fragmentList.size();
     }
-
-
 }

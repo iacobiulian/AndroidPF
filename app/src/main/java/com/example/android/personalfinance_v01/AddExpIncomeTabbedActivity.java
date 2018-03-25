@@ -1,6 +1,5 @@
 package com.example.android.personalfinance_v01;
 
-import android.app.Fragment;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 
@@ -9,20 +8,13 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.android.personalfinance_v01.CustomAdapters.CategoryAdapter;
-import com.example.android.personalfinance_v01.CustomAdapters.SectionsPageAdapter;
+import com.example.android.personalfinance_v01.CustomAdapters.AddExpIncomePagerAdapter;
 import com.example.android.personalfinance_v01.DataPersistance.DatabaseHelper;
 import com.example.android.personalfinance_v01.Fragments.AddExpenseFragment;
 import com.example.android.personalfinance_v01.Fragments.AddIncomeFragment;
 import com.example.android.personalfinance_v01.MyClasses.BalanceAccount;
-import com.example.android.personalfinance_v01.MyClasses.Category;
 import com.example.android.personalfinance_v01.MyClasses.ExpenseIncome;
 import com.example.android.personalfinance_v01.MyClasses.MyUtils;
 
@@ -92,7 +84,7 @@ public class AddExpIncomeTabbedActivity extends AppCompatActivity {
         expenseFragment = new AddExpenseFragment();
         incomeFragment =  new AddIncomeFragment();
 
-        SectionsPageAdapter adapter =  new SectionsPageAdapter(getSupportFragmentManager());
+        AddExpIncomePagerAdapter adapter =  new AddExpIncomePagerAdapter(getSupportFragmentManager());
         adapter.addFragment(expenseFragment, "Add expense");
         adapter.addFragment(incomeFragment, "Add income");
         viewPager.setAdapter(adapter);

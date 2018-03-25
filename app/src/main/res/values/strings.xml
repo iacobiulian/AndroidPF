@@ -61,5 +61,7 @@
     <string name="action_settings">Settings</string>
     <string name="section_format">Hello World from section: %1$d</string>
     <string name="addExpenseIncome">Add expense or income</string>
+    <string name="charts">Charts</string>
+    <string name="no_data">No data to display</string>
 
 </resources>

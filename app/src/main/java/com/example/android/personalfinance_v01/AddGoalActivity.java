@@ -44,6 +44,10 @@ public class AddGoalActivity extends AppCompatActivity {
         initViews();
 
         initDatePicker();
+
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
     }
 
     @Override

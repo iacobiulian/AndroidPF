@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/dialogDateRadioGroup"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <RadioButton
+        android:id="@+id/dialogDateRadioBtnAll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:text="All" />
+
+    <RadioButton
+        android:id="@+id/dialogDateRadioBtnDat"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:text="Day" />
+
+    <RadioButton
+        android:id="@+id/dialogDateRadioBtnWeek"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:text="Week" />
+
+    <RadioButton
+        android:id="@+id/dialogDateRadioBtnMonth"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:text="Month" />
+
+    <RadioButton
+        android:id="@+id/dialogDateRadioBtnYear"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:text="Year" />
+
+    <RadioButton
+        android:id="@+id/dialogDateRadioBtnCustom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Custom" />
+
+</RadioGroup>

@@ -119,6 +119,9 @@ public class MainActivity extends AppCompatActivity {
                     case (R.id.navMenuAccounts):
                         MyUtils.startActivity(MainActivity.this, AccountListActivity.class);
                         break;
+                    case (R.id.navMenuStats):
+                        MyUtils.startActivity(MainActivity.this, ChartsActivity.class);
+                        break;
                     case (R.id.navMenuDebts):
                         MyUtils.startActivity(MainActivity.this, DebtListActivity.class);
                         break;

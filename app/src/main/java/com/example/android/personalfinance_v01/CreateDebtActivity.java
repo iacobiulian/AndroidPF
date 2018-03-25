@@ -51,6 +51,10 @@ public class CreateDebtActivity extends AppCompatActivity {
         initSpinner();
 
         initDatePickers();
+
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
     }
 
     @Override

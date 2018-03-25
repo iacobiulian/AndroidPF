@@ -14,4 +14,8 @@
 
     <color name="colorIncome">#17b62a</color>
     <color name="colorExpense">#d6131d</color>
+
+    <color name="darkYellow">#d5ae9f02</color>
+    <color name="darkCyan">#d500beae</color>
+    <color name="darkGreen">#d5085c04</color>
 </resources>

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="com.example.android.personalfinance_v01.AddExpIncomeTabbedActivity">
+    tools:context="com.example.android.personalfinance_v01.ChartsActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -19,23 +19,29 @@
             android:theme="@style/AppTheme.AppBarOverlay">
 
             <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbarAddExpIncTabbed"
+                android:id="@+id/chartsToolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                app:title="@string/addExpenseIncome"
                 android:background="?attr/colorPrimary"
                 android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-                app:popupTheme="@style/AppTheme.PopupOverlay" />
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+
+                <Spinner
+                    android:id="@+id/chartsAccountSpinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+            </android.support.v7.widget.Toolbar>
 
             <android.support.design.widget.TabLayout
-                android:id="@+id/addExpIncTabLayout"
+                android:id="@+id/chartsTabLayout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
 
         </android.support.design.widget.AppBarLayout>
 
         <android.support.v4.view.ViewPager
-            android:id="@+id/addExpIncViewPager"
+            android:id="@+id/chartsViewPager"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 

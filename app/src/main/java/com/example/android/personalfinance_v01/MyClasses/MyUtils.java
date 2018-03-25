@@ -259,6 +259,11 @@ public class MyUtils {
 
     //region Utility functions
 
+    public static String formatDecimalOnePlace(double numberToFormat) {
+        DecimalFormat df = new DecimalFormat("0.0");
+        return df.format(numberToFormat);
+    }
+
     public static String formatDecimalTwoPlaces(double numberToFormat) {
         DecimalFormat df = new DecimalFormat("0.00");
         return df.format(numberToFormat);
@@ -271,6 +276,12 @@ public class MyUtils {
         return Calendar.getInstance().getTime().getTime();
     }
 
+    public static long subtractDaysFromCurrentDateTime(int days) {
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DAY_OF_YEAR, -days);
+        return cal.getTime().getTime();
+    }
+
     public static String formatDateWithTime(long unixTime) {
         DateFormat df = new SimpleDateFormat("EEE, d MMM yyyy, HH:mm", Locale.ENGLISH);
         return df.format(unixTime);
@@ -279,6 +290,10 @@ public class MyUtils {
     public static String formatDateWithoutTime(long unixTime) {
         DateFormat df = new SimpleDateFormat("EEE, d MMM yyyy", Locale.ENGLISH);
         return df.format(unixTime);
+    }
+
+    public static float returnFloat(double d) {
+        return (float) d;
     }
 
     public static void makeToast(Context context, String message) {
