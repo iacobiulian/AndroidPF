@@ -20,14 +20,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".AddExpensesActivity"
+            android:name=".HistoryActivity"
             android:label=""
             android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".HistoryActivity"
-            android:label="@string/activityHistory"
-            android:parentActivityName=".MainActivity" />
         <activity
             android:name=".AccountListActivity"
             android:label="@string/accounts"

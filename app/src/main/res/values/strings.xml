@@ -12,7 +12,7 @@
     <string name="new_transaction">New transaction</string>
     <string name="income">Income</string>
     <string name="expense">Expense</string>
-    <string name="error">Error occured</string>
+    <string name="error">Error occurred</string>
     <string name="statistics">Statistics</string>
     <string name="debts">Debts</string>
     <string name="goals">Goals</string>
@@ -63,5 +63,8 @@
     <string name="addExpenseIncome">Add expense or income</string>
     <string name="charts">Charts</string>
     <string name="no_data">No data to display</string>
+    <string name="unselect">Unselect all</string>
+    <string name="selectAll">Select all</string>
+    <string name="save">Save</string>
 
 </resources>

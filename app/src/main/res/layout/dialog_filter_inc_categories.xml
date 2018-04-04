@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:padding="16dp"
+    android:orientation="vertical">
+
+    <CheckBox
+        android:id="@+id/dialogFilterIncCheckBox1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="Test" />
+
+    <CheckBox
+        android:id="@+id/dialogFilterIncCheckBox2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="Test" />
+
+    <CheckBox
+        android:id="@+id/dialogFilterIncCheckBox3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="Test" />
+
+    <CheckBox
+        android:id="@+id/dialogFilterIncCheckBox4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="Test" />
+
+    <Button
+        android:id="@+id/dialogFilterIncUnselectBtn"
+        android:text="@string/unselect"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/dialogFilterIncSelectBtn"
+        android:text="@string/selectAll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/dialogFilterIncSaveBtn"
+        android:text="@string/save"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>

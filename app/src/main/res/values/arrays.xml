@@ -13,4 +13,14 @@
         <item>GBP</item>
 
     </string-array>
+
+    <string-array name="timeArray">
+
+        <item>Day</item>
+        <item>Week</item>
+        <item>Month</item>
+        <item>Year</item>
+        <item>All time</item>
+
+    </string-array>
 </resources>

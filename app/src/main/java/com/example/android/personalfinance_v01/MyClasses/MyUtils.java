@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.provider.CalendarContract;
 import android.support.annotation.Nullable;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -14,8 +15,11 @@ import com.example.android.personalfinance_v01.R;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -55,8 +59,10 @@ public class MyUtils {
     private static List<ExpenseIncome> parseExpenseIncomeCursor(Cursor cursor, Context context) {
         ArrayList<ExpenseIncome> list = new ArrayList<>();
         DatabaseHelper databaseHelper = new DatabaseHelper(context);
+        if(!cursor.moveToLast())
+            return list;
 
-        while (cursor.moveToNext()) {
+        while (cursor.moveToPrevious()) {
             double balance = cursor.getDouble(1);
             int type = cursor.getInt(2);
             String categoryName = cursor.getString(3);
@@ -229,6 +235,15 @@ public class MyUtils {
         return expenseCategories;
     }
 
+    public static HashMap<String, Boolean> getExpCategoriesMap() {
+        HashMap<String, Boolean> hashMap =  new HashMap<>();
+        for (Category item : getExpenseCategories()) {
+            hashMap.put(item.getName(), true);
+        }
+
+        return hashMap;
+    }
+
     private static Category searchExpenseCategoryList(String categoryName) {
         for (Category item : getExpenseCategories()) {
             if (item.getName().equals(categoryName)) {
@@ -245,6 +260,15 @@ public class MyUtils {
         incomeCategories.add(new Category("Sale", R.drawable.categ_wage));
         incomeCategories.add(new Category("Gambling", R.drawable.categ_gambling));
         return incomeCategories;
+    }
+
+    public static HashMap<String, Boolean> getIncCategoriesMap() {
+        HashMap<String, Boolean> hashMap =  new HashMap<>();
+        for (Category item : getIncomeCategories()) {
+            hashMap.put(item.getName(), true);
+        }
+
+        return hashMap;
     }
 
     private static Category searchIncomeCategoryList(String categoryName) {

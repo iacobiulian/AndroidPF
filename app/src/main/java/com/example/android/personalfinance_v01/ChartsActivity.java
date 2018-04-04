@@ -11,6 +11,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -28,6 +30,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.Map;
 
 public class ChartsActivity extends AppCompatActivity {
 
@@ -65,8 +68,6 @@ public class ChartsActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_calendar, menu);
 
-        //updateCharts();
-
         return true;
     }
 
@@ -76,27 +77,37 @@ public class ChartsActivity extends AppCompatActivity {
 
         switch (id) {
             case R.id.actionCalendar:
-                View dialogView = getLayoutInflater().inflate(R.layout.dialog_choose_date, null);
-                AlertDialog alertDialog = initAlertDialog(dialogView);
-                initAlertDialogButtons(dialogView, alertDialog);
-                alertDialog.show();
+                View dateDialogView = getLayoutInflater().inflate(R.layout.dialog_choose_date, null);
+                AlertDialog dateAlertDialog = initDateAlertDialog(dateDialogView);
+                initDateAlertDialogButtons(dateDialogView, dateAlertDialog);
+                dateAlertDialog.show();
                 break;
             case R.id.actionFilter:
-                MyUtils.makeToast(this, "Filter clicked");
+                if(viewPager.getCurrentItem() == 0) {
+                    View filterCategDialogView = getLayoutInflater().inflate(R.layout.dialog_filter_exp_categories, null);
+                    AlertDialog filterCategAlertDialog = initFilterCategAlertDialog(filterCategDialogView);
+                    initFilterExpCategAlertDialogButtons(filterCategDialogView, filterCategAlertDialog, chartsFilter);
+                    filterCategAlertDialog.show();
+                } else {
+                    View filterCategDialogView = getLayoutInflater().inflate(R.layout.dialog_filter_inc_categories, null);
+                    AlertDialog filterCategAlertDialog = initFilterCategAlertDialog(filterCategDialogView);
+                    initFilterIncCategAlertDialogButtons(filterCategDialogView, filterCategAlertDialog, chartsFilter);
+                    filterCategAlertDialog.show();
+                }
                 break;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    private AlertDialog initAlertDialog(View dialogView) {
+    private AlertDialog initDateAlertDialog(View dialogView) {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ChartsActivity.this);
         alertDialogBuilder.setView(dialogView);
 
         return alertDialogBuilder.create();
     }
 
-    private void initAlertDialogButtons(View dialogView, final AlertDialog alertDialog) {
+    private void initDateAlertDialogButtons(View dialogView, final AlertDialog alertDialog) {
         RadioGroup radioGroup = dialogView.findViewById(R.id.dialogDateRadioGroup);
         radioGroup.check(radioGroup.getChildAt(chartsFilter.radioButtonIndex).getId());
 
@@ -202,6 +213,123 @@ public class ChartsActivity extends AppCompatActivity {
         datePickerDialog.show();
     }
 
+    private AlertDialog initFilterCategAlertDialog(View dialogView) {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ChartsActivity.this);
+        alertDialogBuilder.setView(dialogView);
+
+        return alertDialogBuilder.create();
+    }
+
+    private void initFilterExpCategAlertDialogButtons(View dialogView, final AlertDialog alertDialog, final ChartsFilter chartsFilter) {
+        final ArrayList<CheckBox> cbList = new ArrayList<>();
+        CheckBox cb1 = dialogView.findViewById(R.id.dialogFilterExpCheckBox1);
+        cbList.add(cb1);
+        CheckBox cb2 = dialogView.findViewById(R.id.dialogFilterExpCheckBox2);
+        cbList.add(cb2);
+        CheckBox cb3 = dialogView.findViewById(R.id.dialogFilterExpCheckBox3);
+        cbList.add(cb3);
+        CheckBox cb4 = dialogView.findViewById(R.id.dialogFilterExpCheckBox4);
+        cbList.add(cb4);
+        CheckBox cb5 = dialogView.findViewById(R.id.dialogFilterExpCheckBox5);
+        cbList.add(cb5);
+        CheckBox cb6 = dialogView.findViewById(R.id.dialogFilterExpCheckBox6);
+        cbList.add(cb6);
+        CheckBox cb7 = dialogView.findViewById(R.id.dialogFilterExpCheckBox7);
+        cbList.add(cb7);
+        CheckBox cb8 = dialogView.findViewById(R.id.dialogFilterExpCheckBox8);
+        cbList.add(cb8);
+
+        int i = 0;
+        for (Map.Entry<String, Boolean> e : chartsFilter.expCategoryMap.entrySet()) {
+            cbList.get(i).setText(e.getKey());
+            cbList.get(i).setChecked(e.getValue());
+            i++;
+        }
+
+        Button saveBtn = dialogView.findViewById(R.id.dialogFilterExpSaveBtn);
+        saveBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                for (CheckBox item : cbList) {
+                    chartsFilter.expCategoryMap.put(item.getText().toString(), item.isChecked());
+                    updateExpenseChart();
+                    alertDialog.dismiss();
+                }
+            }
+        });
+
+        Button selectAllBtn = dialogView.findViewById(R.id.dialogFilterExpSelectBtn);
+        selectAllBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                for (CheckBox item : cbList) {
+                    item.setChecked(true);
+                }
+            }
+        });
+
+        Button unSelectAllBtn = dialogView.findViewById(R.id.dialogFilterExpUnselectBtn);
+        unSelectAllBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                for (CheckBox item : cbList) {
+                    item.setChecked(false);
+                }
+            }
+        });
+    }
+
+    private void initFilterIncCategAlertDialogButtons(View dialogView, final AlertDialog alertDialog, final ChartsFilter chartsFilter) {
+        final ArrayList<CheckBox> cbList = new ArrayList<>();
+        CheckBox cb1 = dialogView.findViewById(R.id.dialogFilterIncCheckBox1);
+        cbList.add(cb1);
+        CheckBox cb2 = dialogView.findViewById(R.id.dialogFilterIncCheckBox2);
+        cbList.add(cb2);
+        CheckBox cb3 = dialogView.findViewById(R.id.dialogFilterIncCheckBox3);
+        cbList.add(cb3);
+        CheckBox cb4 = dialogView.findViewById(R.id.dialogFilterIncCheckBox4);
+        cbList.add(cb4);
+
+        int i = 0;
+        for (Map.Entry<String, Boolean> e : chartsFilter.incCategoryMap.entrySet()) {
+            cbList.get(i).setText(e.getKey());
+            cbList.get(i).setChecked(e.getValue());
+            i++;
+        }
+
+        Button saveBtn = dialogView.findViewById(R.id.dialogFilterIncSaveBtn);
+        saveBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                for (CheckBox item : cbList) {
+                    chartsFilter.incCategoryMap.put(item.getText().toString(), item.isChecked());
+                    updateIncomeChart();
+                    alertDialog.dismiss();
+                }
+            }
+        });
+
+        Button selectAllBtn = dialogView.findViewById(R.id.dialogFilterIncSelectBtn);
+        selectAllBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                for (CheckBox item : cbList) {
+                    item.setChecked(true);
+                }
+            }
+        });
+
+        Button unSelectAllBtn = dialogView.findViewById(R.id.dialogFilterIncUnselectBtn);
+        unSelectAllBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                for (CheckBox item : cbList) {
+                    item.setChecked(false);
+                }
+            }
+        });
+    }
+
     private void initSpinner() {
         spinner = findViewById(R.id.chartsAccountSpinner);
 
@@ -249,7 +377,7 @@ public class ChartsActivity extends AppCompatActivity {
 
             @Override
             public void onPageSelected(int position) {
-                if(!expenseStatsFragment.isAdded()) {
+                if (!expenseStatsFragment.isAdded()) {
                     return;
                 }
 
@@ -312,9 +440,11 @@ public class ChartsActivity extends AppCompatActivity {
     private class ChartsFilter {
         BalanceAccount balanceAccount; //spinner account (acc1, acc2, all acc etc..)
         int radioButtonIndex; //time radio button (all, day, week, month, year, custom)
-        long startDate; //if  custom date date start
-        long endDate; //if custom date date end
+        long startDate; //if  custom date, date start
+        long endDate; //if custom date, date end
         int expenseIncomeType;
+        HashMap<String, Boolean> expCategoryMap;
+        HashMap<String, Boolean> incCategoryMap;
 
         ChartsFilter(BalanceAccount balanceAccount, int radioButtonIndex) {
             this.balanceAccount = balanceAccount;
@@ -322,6 +452,12 @@ public class ChartsActivity extends AppCompatActivity {
             this.startDate = 0;
             this.endDate = MyUtils.getCurrentDateTime();
             expenseIncomeType = ExpenseIncome.TYPE_EXPENSE;
+
+            expCategoryMap = new HashMap<>();
+            expCategoryMap.putAll(MyUtils.getExpCategoriesMap());
+
+            incCategoryMap = new HashMap<>();
+            incCategoryMap.putAll(MyUtils.getIncCategoriesMap());
         }
 
         public int getExpenseIncomeType() {
@@ -379,6 +515,17 @@ public class ChartsActivity extends AppCompatActivity {
             if (item.getType() != this.expenseIncomeType) {
                 return false;
             }
+
+            if(this.expenseIncomeType == ExpenseIncome.TYPE_EXPENSE) {
+                if (!this.expCategoryMap.get(item.getCategory().getName())) {
+                    return false;
+                }
+            } else {
+                if (!this.incCategoryMap.get(item.getCategory().getName())) {
+                    return false;
+                }
+            }
+
 
             if (item.getDate() < this.startDate || item.getDate() > this.endDate) {
                 return false;
