@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/selector_account"
+    android:baselineAligned="false"
     android:orientation="horizontal"
     android:padding="16dp">
 
@@ -17,14 +19,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="4dp"
-            android:text="Name" />
+            tools:text="Name" />
 
         <TextView
             android:id="@+id/itemBalAccMainCurrency"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="4dp"
-            android:text="EUR" />
+            android:layout_marginEnd="4dp"
+            tools:text="EUR" />
 
     </LinearLayout>
 
@@ -39,7 +41,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:text="1500.00" />
+            tools:text="1500.00" />
 
     </RelativeLayout>
 

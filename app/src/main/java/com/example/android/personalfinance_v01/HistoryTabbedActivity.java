@@ -21,8 +21,8 @@ import android.widget.Spinner;
 
 import com.example.android.personalfinance_v01.CustomAdapters.BalanceAccountSpinnerAdapter;
 import com.example.android.personalfinance_v01.CustomAdapters.ExpenseIncomePagerAdapter;
-import com.example.android.personalfinance_v01.Fragments.ExpenseStatsFragment;
-import com.example.android.personalfinance_v01.Fragments.IncomeStatsFragment;
+import com.example.android.personalfinance_v01.Fragments.HistoryExpenseFragment;
+import com.example.android.personalfinance_v01.Fragments.HistoryIncomeFragment;
 import com.example.android.personalfinance_v01.MyClasses.BalanceAccount;
 import com.example.android.personalfinance_v01.MyClasses.ExpenseIncome;
 import com.example.android.personalfinance_v01.MyClasses.ExpenseIncomeFilter;
@@ -31,35 +31,37 @@ import com.example.android.personalfinance_v01.MyClasses.MyUtils;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
-import java.util.HashMap;
 import java.util.Map;
 
-public class ChartsActivity extends AppCompatActivity {
+public class HistoryTabbedActivity extends AppCompatActivity {
 
-    public static BalanceAccount ALL_ACCOUNTS_OPTION = new BalanceAccount("All accounts", 0.0, "");
-    private ExpenseIncomeFilter chartsFilter = new ExpenseIncomeFilter(ALL_ACCOUNTS_OPTION, 0);
-    private ViewPager viewPager;
-    private ExpenseStatsFragment expenseStatsFragment;
-    private IncomeStatsFragment incomeStatsFragment;
+    private static BalanceAccount ALL_ACCOUNTS_OPTION = new BalanceAccount("All accounts", 0.0, "");
     private LinearLayout linearLayout;
+    private ViewPager viewPager;
+    private HistoryExpenseFragment expenseHistoryFragment;
+    private HistoryIncomeFragment incomeHistoryFragment;
+    private ExpenseIncomeFilter chartsFilter = new ExpenseIncomeFilter(ALL_ACCOUNTS_OPTION, 0);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_charts);
+        setContentView(R.layout.activity_history_tabbed);
 
-        linearLayout = findViewById(R.id.chartsLinLay);
-        MyUtils.getExpenseIncomeFromDatabase(ChartsActivity.this);
+        linearLayout = findViewById(R.id.historyLinLay);
 
-        viewPager = findViewById(R.id.chartsViewPager);
-        initViewPager(viewPager);
+        expenseHistoryFragment = new HistoryExpenseFragment();
+        incomeHistoryFragment = new HistoryIncomeFragment();
 
-        TabLayout tabLayout = findViewById(R.id.chartsTabLayout);
-        tabLayout.setupWithViewPager(viewPager);
+        MyUtils.getExpenseIncomeFromDatabase(HistoryTabbedActivity.this);
 
         initToolbar();
-
         initSpinner();
+
+        viewPager = findViewById(R.id.historyViewPager);
+        initViewPager(viewPager);
+
+        TabLayout tabLayout = findViewById(R.id.historyTabLayout);
+        tabLayout.setupWithViewPager(viewPager);
     }
 
     @Override
@@ -99,7 +101,7 @@ public class ChartsActivity extends AppCompatActivity {
     }
 
     private AlertDialog initDateAlertDialog(View dialogView) {
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ChartsActivity.this);
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(HistoryTabbedActivity.this);
         alertDialogBuilder.setView(dialogView);
 
         return alertDialogBuilder.create();
@@ -117,7 +119,6 @@ public class ChartsActivity extends AppCompatActivity {
                 int radioButtonID = radioGroup.getCheckedRadioButtonId();
                 RadioButton radioButton = radioGroup.findViewById(radioButtonID);
                 int selectedIndex = radioGroup.indexOfChild(radioButton);
-                MyUtils.makeToast(getApplicationContext(), "Index: " + selectedIndex);
                 long currentTime = MyUtils.getCurrentDateTime();
                 switch (selectedIndex) {
                     case 0:
@@ -150,7 +151,7 @@ public class ChartsActivity extends AppCompatActivity {
                         break;
                 }
 
-                updateCharts();
+                updateLists();
 
                 alertDialog.dismiss();
             }
@@ -177,7 +178,7 @@ public class ChartsActivity extends AppCompatActivity {
                     }
                 };
 
-                DatePickerDialog datePickerDialog = new DatePickerDialog(ChartsActivity.this, android.R.style.Theme_Holo_Dialog_MinWidth,
+                DatePickerDialog datePickerDialog = new DatePickerDialog(HistoryTabbedActivity.this, android.R.style.Theme_Holo_Dialog_MinWidth,
                         dateSetListener, year, month, day);
                 datePickerDialog.setTitle("Start Date");
                 datePickerDialog.show();
@@ -198,21 +199,21 @@ public class ChartsActivity extends AppCompatActivity {
                 chartsFilter.setEndDate(calendar.getTimeInMillis() + oneDay);
 
                 if (chartsFilter.isBadCustomDate()) {
-                    MyUtils.makeToast(ChartsActivity.this, "Start date can not be after end date");
+                    MyUtils.makeToast(HistoryTabbedActivity.this, "Start date can not be after end date");
                 }
 
-                updateCharts();
+                updateLists();
             }
         };
 
-        DatePickerDialog datePickerDialog = new DatePickerDialog(ChartsActivity.this, android.R.style.Theme_Holo_Dialog_MinWidth,
+        DatePickerDialog datePickerDialog = new DatePickerDialog(HistoryTabbedActivity.this, android.R.style.Theme_Holo_Dialog_MinWidth,
                 dateSetListener, year, month, day);
         datePickerDialog.setTitle("End Date");
         datePickerDialog.show();
     }
 
     private AlertDialog initFilterCategAlertDialog(View dialogView) {
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ChartsActivity.this);
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(HistoryTabbedActivity.this);
         alertDialogBuilder.setView(dialogView);
 
         return alertDialogBuilder.create();
@@ -250,7 +251,7 @@ public class ChartsActivity extends AppCompatActivity {
             public void onClick(View view) {
                 for (CheckBox item : cbList) {
                     chartsFilter.getExpCategoryMap().put(item.getText().toString(), item.isChecked());
-                    updateExpenseChart();
+                    updateExpenseList();
                     alertDialog.dismiss();
                 }
             }
@@ -301,7 +302,7 @@ public class ChartsActivity extends AppCompatActivity {
             public void onClick(View view) {
                 for (CheckBox item : cbList) {
                     chartsFilter.getIncCategoryMap().put(item.getText().toString(), item.isChecked());
-                    updateIncomeChart();
+                    updateIncomeList();
                     alertDialog.dismiss();
                 }
             }
@@ -328,8 +329,17 @@ public class ChartsActivity extends AppCompatActivity {
         });
     }
 
+    private void initToolbar() {
+        Toolbar toolbar = findViewById(R.id.historyToolbar);
+        setSupportActionBar(toolbar);
+
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+    }
+
     private void initSpinner() {
-        Spinner spinner = findViewById(R.id.chartsAccountSpinner);
+        Spinner spinner = findViewById(R.id.historySpinner);
 
         BalanceAccountSpinnerAdapter balanceAccountSpinnerAdapter = new BalanceAccountSpinnerAdapter(this, MyUtils.accountList);
         balanceAccountSpinnerAdapter.add(ALL_ACCOUNTS_OPTION);
@@ -340,7 +350,7 @@ public class ChartsActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 chartsFilter.setBalanceAccount((BalanceAccount) adapterView.getItemAtPosition(i));
-                updateCharts();
+                updateLists();
             }
 
             @Override
@@ -349,22 +359,10 @@ public class ChartsActivity extends AppCompatActivity {
         });
     }
 
-    private void initToolbar() {
-        Toolbar toolbar = findViewById(R.id.chartsToolbar);
-        setSupportActionBar(toolbar);
-
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
-    }
-
     private void initViewPager(ViewPager viewPager) {
-        expenseStatsFragment = new ExpenseStatsFragment();
-        incomeStatsFragment = new IncomeStatsFragment();
-
         ExpenseIncomePagerAdapter adapter = new ExpenseIncomePagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(expenseStatsFragment, "Expenses");
-        adapter.addFragment(incomeStatsFragment, "Income");
+        adapter.addFragment(expenseHistoryFragment, "Expense History");
+        adapter.addFragment(incomeHistoryFragment, "Income History");
         viewPager.setAdapter(adapter);
 
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -375,16 +373,16 @@ public class ChartsActivity extends AppCompatActivity {
 
             @Override
             public void onPageSelected(int position) {
-                if (!expenseStatsFragment.isAdded()) {
+                if (!expenseHistoryFragment.isAdded()) {
                     return;
                 }
 
                 if (position == 0) {
                     chartsFilter.setExpenseIncomeType(ExpenseIncome.TYPE_EXPENSE);
-                    updateCharts();
+                    updateExpenseList();
                 } else {
                     chartsFilter.setExpenseIncomeType(ExpenseIncome.TYPE_INCOME);
-                    updateCharts();
+                    updateIncomeList();
                 }
             }
 
@@ -403,36 +401,21 @@ public class ChartsActivity extends AppCompatActivity {
             }
         }
 
+        MyUtils.makeToast(this, "Showing " + filteredList.size() + " items");
+
         return filteredList;
     }
 
-    private HashMap<String, Double> fromListToMap(ArrayList<ExpenseIncome> expenseIncomeList) {
-        HashMap<String, Double> hashMap = new HashMap<>();
-
-        for (ExpenseIncome item : expenseIncomeList) {
-            String key = item.getCategory().getName();
-            double value = item.getAmount();
-
-            if (hashMap.containsKey(key)) {
-                value += hashMap.get(key);
-            }
-            hashMap.put(key, value);
-        }
-
-        return hashMap;
+    public void updateLists() {
+        updateExpenseList();
+        updateIncomeList();
     }
 
-    public void updateExpenseChart() {
-        expenseStatsFragment.setPieChartValues(fromListToMap(filterExpenseIncomeList(MyUtils.expenseIncomeList, chartsFilter)));
+    public void updateExpenseList() {
+        expenseHistoryFragment.updateListView(filterExpenseIncomeList(MyUtils.expenseIncomeList, chartsFilter));
     }
 
-    public void updateIncomeChart() {
-        incomeStatsFragment.setPieChartValues(fromListToMap(filterExpenseIncomeList(MyUtils.expenseIncomeList, chartsFilter)));
+    public void updateIncomeList() {
+        incomeHistoryFragment.updateListView(filterExpenseIncomeList(MyUtils.expenseIncomeList, chartsFilter));
     }
-
-    public void updateCharts() {
-        expenseStatsFragment.setPieChartValues(fromListToMap(filterExpenseIncomeList(MyUtils.expenseIncomeList, chartsFilter)));
-        incomeStatsFragment.setPieChartValues(fromListToMap(filterExpenseIncomeList(MyUtils.expenseIncomeList, chartsFilter)));
-    }
-
 }

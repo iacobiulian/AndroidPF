@@ -10,7 +10,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.example.android.personalfinance_v01.CustomAdapters.AddExpIncomePagerAdapter;
+import com.example.android.personalfinance_v01.CustomAdapters.ExpenseIncomePagerAdapter;
 import com.example.android.personalfinance_v01.DataPersistance.DatabaseHelper;
 import com.example.android.personalfinance_v01.Fragments.AddExpenseFragment;
 import com.example.android.personalfinance_v01.Fragments.AddIncomeFragment;
@@ -84,7 +84,7 @@ public class AddExpIncomeTabbedActivity extends AppCompatActivity {
         expenseFragment = new AddExpenseFragment();
         incomeFragment =  new AddIncomeFragment();
 
-        AddExpIncomePagerAdapter adapter =  new AddExpIncomePagerAdapter(getSupportFragmentManager());
+        ExpenseIncomePagerAdapter adapter =  new ExpenseIncomePagerAdapter(getSupportFragmentManager());
         adapter.addFragment(expenseFragment, "Add expense");
         adapter.addFragment(incomeFragment, "Add income");
         viewPager.setAdapter(adapter);

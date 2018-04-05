@@ -114,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
                     case (R.id.navMenuHistory):
-                        MyUtils.startActivity(MainActivity.this, HistoryActivity.class);
+                        MyUtils.startActivity(MainActivity.this, HistoryTabbedActivity.class);
                         break;
                     case (R.id.navMenuAccounts):
                         MyUtils.startActivity(MainActivity.this, AccountListActivity.class);

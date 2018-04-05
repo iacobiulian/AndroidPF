@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
@@ -18,7 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="4dp"
-            android:text="Name" />
+            tools:text="Name" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -29,20 +30,21 @@
                 android:id="@+id/itemBalAccCurrency"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="4dp"
-                android:text="EUR" />
+                android:layout_marginEnd="4dp"
+                tools:text="EUR" />
 
             <TextView
                 android:id="@+id/itemBalAccBalance"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="1500" />
+                tools:text="1500" />
 
         </LinearLayout>
 
     </LinearLayout>
 
     <ImageView
+        android:contentDescription="@string/img"
         android:layout_width="0px"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"

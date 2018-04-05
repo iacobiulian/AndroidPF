@@ -9,9 +9,9 @@
     tools:showIn="@layout/activity_main">
 
     <Button
+        android:id="@+id/mainAddAccountBtn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/mainAddAccountBtn"
         android:layout_alignParentTop="true"
         android:layout_margin="32dp"
         android:text="@string/createAccount"
@@ -30,8 +30,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:gravity="center_horizontal"
-        android:text="1234"
         android:textSize="@android:dimen/notification_large_icon_height"
-        android:visibility="gone" />
+        android:visibility="gone"
+        tools:text="1234" />
 
 </RelativeLayout>
