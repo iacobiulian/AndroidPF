@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.provider.CalendarContract;
 import android.support.annotation.Nullable;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -15,10 +14,8 @@ import com.example.android.personalfinance_v01.R;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -36,6 +33,8 @@ public class MyUtils {
     public static ArrayList<BalanceAccount> accountList = new ArrayList<>();
     //Global expense/income list
     public static ArrayList<ExpenseIncome> expenseIncomeList = new ArrayList<>();
+    //Global Transfer list
+    public static ArrayList<Transfer> transferList = new ArrayList<>();
     //Global debt list
     public static ArrayList<Debt> debtList = new ArrayList<>();
     //Global Goal list
@@ -59,10 +58,10 @@ public class MyUtils {
     private static List<ExpenseIncome> parseExpenseIncomeCursor(Cursor cursor, Context context) {
         ArrayList<ExpenseIncome> list = new ArrayList<>();
         DatabaseHelper databaseHelper = new DatabaseHelper(context);
-        if(!cursor.moveToLast())
+        if (!cursor.moveToLast())
             return list;
 
-        while (cursor.moveToPrevious()) {
+        do {
             double balance = cursor.getDouble(1);
             int type = cursor.getInt(2);
             String categoryName = cursor.getString(3);
@@ -82,6 +81,31 @@ public class MyUtils {
 
             list.add(expenseIncome);
         }
+        while (cursor.moveToPrevious());
+
+        return list;
+    }
+
+    private static List<Transfer> parseTransferCursor(Cursor cursor, Context context) {
+        ArrayList<Transfer> list = new ArrayList<>();
+        DatabaseHelper databaseHelper = new DatabaseHelper(context);
+        if (!cursor.moveToLast())
+            return list;
+
+        do {
+            double balance = cursor.getDouble(1);
+            long date = cursor.getLong(2);
+            int fromAccountId = cursor.getInt(3);
+            int toAccountId = cursor.getInt(4);
+
+            BalanceAccount fromAcc = databaseHelper.getBalanceAccount(fromAccountId);
+            BalanceAccount toAcc = databaseHelper.getBalanceAccount(toAccountId);
+
+            Transfer transfer = new Transfer(balance, date, fromAcc, toAcc);
+
+            list.add(transfer);
+        }
+        while (cursor.moveToPrevious());
 
         return list;
     }
@@ -186,6 +210,23 @@ public class MyUtils {
     }
 
     /**
+     * Fetches the transfers from the database into the global transferList
+     *
+     * @param context Activity context
+     */
+    public static void getTransfersFromDatabase(Context context) {
+        DatabaseHelper databaseHelper = new DatabaseHelper(context);
+        Cursor transferData = databaseHelper.getTransferData();
+
+        transferList.clear();
+        transferList.addAll(parseTransferCursor(transferData, context));
+
+        if (!transferData.isClosed()) {
+            transferData.close();
+        }
+    }
+
+    /**
      * Fetches the debts from the database into the global debtList
      *
      * @param context Activity context
@@ -236,7 +277,7 @@ public class MyUtils {
     }
 
     public static HashMap<String, Boolean> getExpCategoriesMap() {
-        HashMap<String, Boolean> hashMap =  new HashMap<>();
+        HashMap<String, Boolean> hashMap = new HashMap<>();
         for (Category item : getExpenseCategories()) {
             hashMap.put(item.getName(), true);
         }
@@ -263,7 +304,7 @@ public class MyUtils {
     }
 
     public static HashMap<String, Boolean> getIncCategoriesMap() {
-        HashMap<String, Boolean> hashMap =  new HashMap<>();
+        HashMap<String, Boolean> hashMap = new HashMap<>();
         for (Category item : getIncomeCategories()) {
             hashMap.put(item.getName(), true);
         }

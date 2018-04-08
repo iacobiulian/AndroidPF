@@ -81,6 +81,14 @@
             fab:menu_showShadow="true">
 
             <com.github.clans.fab.FloatingActionButton
+                android:id="@+id/fabTransfer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_right_arrow"
+                fab:fab_label="@string/transfer"
+                fab:fab_size="normal" />
+
+            <com.github.clans.fab.FloatingActionButton
                 android:id="@+id/fabAdd"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

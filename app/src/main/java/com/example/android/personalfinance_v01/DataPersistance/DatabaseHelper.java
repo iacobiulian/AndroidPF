@@ -11,11 +11,13 @@ import com.example.android.personalfinance_v01.DataPersistance.DatabaseContract.
 import com.example.android.personalfinance_v01.DataPersistance.DatabaseContract.DebtEntry;
 import com.example.android.personalfinance_v01.DataPersistance.DatabaseContract.ExpenseIncomeEntry;
 import com.example.android.personalfinance_v01.DataPersistance.DatabaseContract.GoalEntry;
+import com.example.android.personalfinance_v01.DataPersistance.DatabaseContract.TransferEntry;
 import com.example.android.personalfinance_v01.MyClasses.BalanceAccount;
 import com.example.android.personalfinance_v01.MyClasses.Debt;
 import com.example.android.personalfinance_v01.MyClasses.ExpenseIncome;
 import com.example.android.personalfinance_v01.MyClasses.Goal;
 import com.example.android.personalfinance_v01.MyClasses.MyUtils;
+import com.example.android.personalfinance_v01.MyClasses.Transfer;
 
 import java.util.ArrayList;
 
@@ -46,6 +48,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + ExpenseIncomeEntry.COLUMN_DATE_CREATED + " INTEGER, "
                 + ExpenseIncomeEntry.COLUMN_ACCOUNT_ID + " INTEGER);";
 
+        String createTableTransfers = "CREATE TABLE " + TransferEntry.TABLE_NAME + "("
+                + TransferEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + TransferEntry.COLUMN_AMOUNT + " REAL, "
+                + TransferEntry.COLUMN_DATE_CREATED + " INTEGER, "
+                + TransferEntry.COLUMN_FROM_ACCOUNT_ID + " INTEGER, "
+                + TransferEntry.COLUMN_TO_ACCOUNT_ID + " INTEGER);";
+
         String createTableDebts = "CREATE TABLE " + DebtEntry.TABLE_NAME + "("
                 + DebtEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + DebtEntry.COLUMN_TYPE + " INTEGER, "
@@ -66,6 +75,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         sqLiteDatabase.execSQL(createTableBalanceAccount);
         sqLiteDatabase.execSQL(createTableExpenseIncome);
+        sqLiteDatabase.execSQL(createTableTransfers);
         sqLiteDatabase.execSQL(createTableDebts);
         sqLiteDatabase.execSQL(createTableGoals);
     }
@@ -74,10 +84,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
         String dropBalanceAccount = "DROP TABLE IF EXISTS " + BalanceAccountEntry.TABLE_NAME + ";";
         String dropExpenseIncome = "DROP TABLE IF EXISTS " + ExpenseIncomeEntry.TABLE_NAME + ";";
+        String dropTransfer = "DROP TABLE IF EXISTS " + TransferEntry.TABLE_NAME + ";";
         String dropDebt = "DROP TABLE IF EXISTS " + DebtEntry.TABLE_NAME + ";";
         String dropGoal = "DROP TABLE IF EXISTS " + GoalEntry.TABLE_NAME + ";";
         sqLiteDatabase.execSQL(dropBalanceAccount);
         sqLiteDatabase.execSQL(dropExpenseIncome);
+        sqLiteDatabase.execSQL(dropTransfer);
         sqLiteDatabase.execSQL(dropDebt);
         sqLiteDatabase.execSQL(dropGoal);
         onCreate(sqLiteDatabase);
@@ -252,6 +264,67 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         String deleteQuery = "DELETE FROM " + ExpenseIncomeEntry.TABLE_NAME + " WHERE "
                 + ExpenseIncomeEntry._ID + " = '" + id + "';";
+        db.execSQL(deleteQuery);
+    }
+    //endregion
+
+    //region Transfer Database Methods
+
+    /**
+     * @param transfer added to the database
+     * @return true if insertion was successful and false otherwise
+     */
+    public boolean addTransferData(Transfer transfer) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues transferContentValues = new ContentValues();
+        transferContentValues.put(TransferEntry.COLUMN_AMOUNT, transfer.getAmount());
+        transferContentValues.put(TransferEntry.COLUMN_DATE_CREATED, transfer.getCreationDate());
+        int fromId = getAccountID(transfer.getFromAccount());
+        transferContentValues.put(TransferEntry.COLUMN_FROM_ACCOUNT_ID, fromId);
+        int toId = getAccountID(transfer.getToAccount());
+        transferContentValues.put(TransferEntry.COLUMN_TO_ACCOUNT_ID, toId);
+
+        long result = db.insert(TransferEntry.TABLE_NAME, null, transferContentValues);
+
+        return (result != -1);
+    }
+
+    /**
+     * @return Cursor containing all the Transfer data from the database
+     */
+    public Cursor getTransferData() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String selectQuery = "SELECT * FROM " + TransferEntry.TABLE_NAME + ";";
+        return db.rawQuery(selectQuery, null);
+    }
+
+    /**
+     * @param searchedTransfer Transfer searched
+     * @return id of the searched Transfer
+     */
+    public int getTransferID(Transfer searchedTransfer) {
+        String selectQuery = "SELECT " + TransferEntry._ID + " FROM " + TransferEntry.TABLE_NAME +
+                " WHERE " + TransferEntry.COLUMN_DATE_CREATED + " = '" + searchedTransfer.getCreationDate() + "';";
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        int searchedId = -1;
+        if (cursor.moveToFirst()) {
+            searchedId = cursor.getInt(0);
+        }
+        cursor.close();
+
+        return searchedId;
+    }
+
+    /**
+     * @param id Database id of the expense/income being deleted
+     */
+    public void deleteTransfer(int id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String deleteQuery = "DELETE FROM " + TransferEntry.TABLE_NAME + " WHERE "
+                + TransferEntry._ID + " = '" + id + "';";
         db.execSQL(deleteQuery);
     }
     //endregion

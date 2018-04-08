@@ -1,0 +1,229 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:ignore="HardcodedText">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0px"
+        android:layout_weight="1">
+
+        <TextView
+            android:id="@+id/fragmentTransferFromTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:padding="4dp"
+            android:text="From" />
+
+        <TextView
+            android:id="@+id/fragmentTransferAccFromTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@id/fragmentTransferFromTv"
+            android:padding="4dp"
+            tools:text="Bank" />
+
+        <TextView
+            android:id="@+id/fragmentTransferToTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:padding="4dp"
+            android:text="To" />
+
+        <TextView
+            android:id="@+id/fragmentTransferAccToTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@id/fragmentTransferToTv"
+            android:padding="4dp"
+            tools:text="Bank" />
+
+        <TextView
+            android:id="@+id/fragmentTransferMoneyAmountTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:text="0"
+            android:textSize="48sp" />
+
+        <TextView
+            android:id="@+id/fragmentTransferSignTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="12dp"
+            android:layout_toStartOf="@id/fragmentTransferMoneyAmountTV"
+            android:text="-"
+            android:textSize="48sp" />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0px"
+        android:layout_weight="2"
+        android:background="@color/textDark"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0px"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/fragmentTransferBtn1"
+                android:layout_width="0px"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@color/colorExpIncomeBtn"
+                android:text="1"
+                android:textColor="#ffffff"
+                android:textSize="36sp" />
+
+            <Button
+                android:id="@+id/fragmentTransferBtn2"
+                android:layout_width="0px"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@color/colorExpIncomeBtn"
+                android:text="2"
+                android:textColor="#ffffff"
+                android:textSize="36sp" />
+
+            <Button
+                android:id="@+id/fragmentTransferBtn3"
+                android:layout_width="0px"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@color/colorExpIncomeBtn"
+                android:text="3"
+                android:textColor="#ffffff"
+                android:textSize="36sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0px"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/fragmentTransferBtn4"
+                android:layout_width="0px"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@color/colorExpIncomeBtn"
+                android:text="4"
+                android:textColor="#ffffff"
+                android:textSize="36sp" />
+
+            <Button
+                android:id="@+id/fragmentTransferBtn5"
+                android:layout_width="0px"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@color/colorExpIncomeBtn"
+                android:text="5"
+                android:textColor="#ffffff"
+                android:textSize="36sp" />
+
+            <Button
+                android:id="@+id/fragmentTransferBtn6"
+                android:layout_width="0px"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@color/colorExpIncomeBtn"
+                android:text="6"
+                android:textColor="#ffffff"
+                android:textSize="36sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0px"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/fragmentTransferBtn7"
+                android:layout_width="0px"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@color/colorExpIncomeBtn"
+                android:text="7"
+                android:textColor="#ffffff"
+                android:textSize="36sp" />
+
+            <Button
+                android:id="@+id/fragmentTransferBtn8"
+                android:layout_width="0px"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@color/colorExpIncomeBtn"
+                android:text="8"
+                android:textColor="#ffffff"
+                android:textSize="36sp" />
+
+            <Button
+                android:id="@+id/fragmentTransferBtn9"
+                android:layout_width="0px"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@color/colorExpIncomeBtn"
+                android:text="9"
+                android:textColor="#ffffff"
+                android:textSize="36sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0px"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/fragmentTransferDelBtn"
+                android:layout_width="0px"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@color/colorExpIncomeBtn"
+                android:text="DEL"
+                android:textColor="#ffffff"
+                android:textSize="36sp" />
+
+            <Button
+                android:id="@+id/fragmentTransferBtn0"
+                android:layout_width="0px"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@color/colorExpIncomeBtn"
+                android:text="0"
+                android:textColor="#ffffff"
+                android:textSize="36sp" />
+
+            <Button
+                android:id="@+id/fragmentTransferCommaBtn"
+                android:layout_width="0px"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@color/colorExpIncomeBtn"
+                android:text="."
+                android:textColor="#ffffff"
+                android:textSize="36sp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

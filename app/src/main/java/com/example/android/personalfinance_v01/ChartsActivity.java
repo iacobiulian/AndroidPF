@@ -64,7 +64,7 @@ public class ChartsActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_calendar, menu);
+        getMenuInflater().inflate(R.menu.menu_calendar_filter, menu);
 
         return true;
     }

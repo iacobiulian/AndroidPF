@@ -22,6 +22,8 @@ import com.github.clans.fab.FloatingActionButton;
 
 public class MainActivity extends AppCompatActivity {
 
+    public static final int TYPE_TRANSFER = 3;
+
     //Navigation drawer
     DrawerLayout drawerLayout;
     NavigationView navigationView;
@@ -33,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
     //Fab
     FloatingActionButton fab_add;
     FloatingActionButton fab_substract;
+    FloatingActionButton fab_transfer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,6 +119,13 @@ public class MainActivity extends AppCompatActivity {
                     case (R.id.navMenuHistory):
                         MyUtils.startActivity(MainActivity.this, HistoryTabbedActivity.class);
                         break;
+                    case (R.id.navMenuTransferHistory):
+                        if(MyUtils.accountList.size() < 2) {
+                            MyUtils.makeToast(MainActivity.this, "You need at least 2 existing balance accounts to do a transfer");
+                        } else {
+                            MyUtils.startActivity(MainActivity.this, TransferHistoryActivity.class);
+                        }
+                        break;
                     case (R.id.navMenuAccounts):
                         MyUtils.startActivity(MainActivity.this, AccountListActivity.class);
                         break;
@@ -148,6 +158,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 MyUtils.startActivityWithCode(MainActivity.this, AddExpIncomeTabbedActivity.class, ExpenseIncome.TYPE_INCOME);
+            }
+        });
+
+        fab_transfer = findViewById(R.id.fabTransfer);
+        fab_transfer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                MyUtils.startActivityWithCode(MainActivity.this, AddExpIncomeTabbedActivity.class, TYPE_TRANSFER);
             }
         });
     }

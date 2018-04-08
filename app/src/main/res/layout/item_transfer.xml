@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    android:background="@color/textGrey"
+    android:orientation="vertical"
+    android:padding="8dp">
+
+    <LinearLayout
+        android:id="@+id/historyMoneyAmountLinLay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="4dp">
+
+        <TextView
+            android:id="@+id/itemTransferAmountTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:textColor="@color/textDark"
+            android:textSize="@dimen/category_text"
+            tools:text="140" />
+
+        <TextView
+            android:id="@+id/itemTransferCurrencyTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:gravity="center_vertical"
+            android:textColor="@color/textDark"
+            android:textSize="@dimen/category_text"
+            tools:text="Currency" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="4dp">
+
+        <TextView
+            android:id="@+id/itemTransferFromTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="4dp"
+            android:gravity="center_vertical"
+            android:textColor="@color/textDark"
+            android:textSize="16sp"
+            tools:text="Bank" />
+
+        <TextView
+            android:id="@+id/historyCategoryTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:textColor="@color/textDark"
+            android:textSize="16sp"
+            android:text="@string/line" />
+
+        <TextView
+            android:id="@+id/itemTransferToTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:gravity="center_vertical"
+            android:textColor="@color/textDark"
+            android:textSize="16sp"
+            tools:text="Cash" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/itemTransfertartDateTv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:padding="4dp"
+        android:textColor="@color/textDark"
+        tools:text="Wed, 18 June, 2002, 15:44" />
+</LinearLayout>

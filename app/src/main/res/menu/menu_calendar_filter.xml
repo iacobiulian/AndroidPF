@@ -3,6 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/actionFilter"
+        android:icon="@drawable/ic_filter"
+        android:title=""
+        app:showAsAction="ifRoom" />
+
+    <item
         android:id="@+id/actionCalendar"
         android:icon="@drawable/ic_calendar"
         android:title=""

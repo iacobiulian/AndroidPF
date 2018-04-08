@@ -13,6 +13,7 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.example.android.personalfinance_v01.CustomAdapters.ExpenseIncomeAdapter;
+import com.example.android.personalfinance_v01.HistoryTabbedActivity;
 import com.example.android.personalfinance_v01.MyClasses.ExpenseIncome;
 import com.example.android.personalfinance_v01.R;
 
@@ -30,10 +31,14 @@ public class HistoryIncomeFragment extends Fragment {
     TextView emptyListView;
     ExpenseIncomeAdapter expenseIncomeAdapter;
 
+    HistoryTabbedActivity parentActivity;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mainView = inflater.inflate(R.layout.fragment_history_income, container, false);
+
+        parentActivity = (HistoryTabbedActivity) getActivity();
 
         initListView();
 
@@ -58,7 +63,7 @@ public class HistoryIncomeFragment extends Fragment {
                     public boolean onMenuItemClick(MenuItem menuItem) {
                         switch (menuItem.getItemId()) {
                             case R.id.menuDelete:
-                                //parentActivity.deleteExpenseIncome(adapterView.getItemAtPosition(i));
+                                parentActivity.deleteExpenseIncome(adapterView, i);
                                 break;
                         }
                         return false;
@@ -71,7 +76,7 @@ public class HistoryIncomeFragment extends Fragment {
     }
 
     public void updateListView(ArrayList<ExpenseIncome> expenseIncomeList) {
-        if(!expenseIncomeAdapter.isEmpty()) {
+        if (!expenseIncomeAdapter.isEmpty()) {
             expenseIncomeAdapter.clear();
         }
         expenseIncomeAdapter.addAll(expenseIncomeList);

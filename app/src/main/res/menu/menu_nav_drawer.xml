@@ -14,7 +14,12 @@
     <item
         android:id="@+id/navMenuHistory"
         android:icon="@drawable/nav_history"
-        android:title="@string/history" />
+        android:title="@string/expIncHistory" />
+
+    <item
+        android:id="@+id/navMenuTransferHistory"
+        android:icon="@drawable/nav_history"
+        android:title="@string/transferHistory" />
 
     <item
         android:id="@+id/navMenuDebts"

@@ -63,7 +63,7 @@ public class HistoryExpenseFragment extends Fragment {
                     public boolean onMenuItemClick(MenuItem menuItem) {
                         switch (menuItem.getItemId()) {
                             case R.id.menuDelete:
-                                //parentActivity.deleteExpenseIncome(adapterView.getItemAtPosition(i));
+                                parentActivity.deleteExpenseIncome(adapterView, i);
                                 break;
                         }
                         return false;

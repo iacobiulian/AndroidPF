@@ -7,6 +7,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,6 +22,7 @@ import android.widget.Spinner;
 
 import com.example.android.personalfinance_v01.CustomAdapters.BalanceAccountSpinnerAdapter;
 import com.example.android.personalfinance_v01.CustomAdapters.ExpenseIncomePagerAdapter;
+import com.example.android.personalfinance_v01.DataPersistance.DatabaseHelper;
 import com.example.android.personalfinance_v01.Fragments.HistoryExpenseFragment;
 import com.example.android.personalfinance_v01.Fragments.HistoryIncomeFragment;
 import com.example.android.personalfinance_v01.MyClasses.BalanceAccount;
@@ -35,12 +37,15 @@ import java.util.Map;
 
 public class HistoryTabbedActivity extends AppCompatActivity {
 
+    private static final String TAG = "HistoryTabbedActivity";
+    private static final int FRAGMENT_EXPENSE = 0;
+    private static final int FRAGMENT_INCOME = 1;
     private static BalanceAccount ALL_ACCOUNTS_OPTION = new BalanceAccount("All accounts", 0.0, "");
     private LinearLayout linearLayout;
     private ViewPager viewPager;
     private HistoryExpenseFragment expenseHistoryFragment;
     private HistoryIncomeFragment incomeHistoryFragment;
-    private ExpenseIncomeFilter chartsFilter = new ExpenseIncomeFilter(ALL_ACCOUNTS_OPTION, 0);
+    private ExpenseIncomeFilter expenseIncomeFilter = new ExpenseIncomeFilter(ALL_ACCOUNTS_OPTION, 0);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +71,7 @@ public class HistoryTabbedActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_calendar, menu);
+        getMenuInflater().inflate(R.menu.menu_calendar_filter, menu);
 
         return true;
     }
@@ -86,12 +91,12 @@ public class HistoryTabbedActivity extends AppCompatActivity {
                 if (viewPager.getCurrentItem() == 0) {
                     View filterCategDialogView = getLayoutInflater().inflate(R.layout.dialog_filter_exp_categories, linearLayout, false);
                     AlertDialog filterCategAlertDialog = initFilterCategAlertDialog(filterCategDialogView);
-                    initFilterExpCategAlertDialogButtons(filterCategDialogView, filterCategAlertDialog, chartsFilter);
+                    initFilterExpCategAlertDialogButtons(filterCategDialogView, filterCategAlertDialog, expenseIncomeFilter);
                     filterCategAlertDialog.show();
-                } else {
+                } else if (viewPager.getCurrentItem() == 1) {
                     View filterCategDialogView = getLayoutInflater().inflate(R.layout.dialog_filter_inc_categories, linearLayout, false);
                     AlertDialog filterCategAlertDialog = initFilterCategAlertDialog(filterCategDialogView);
-                    initFilterIncCategAlertDialogButtons(filterCategDialogView, filterCategAlertDialog, chartsFilter);
+                    initFilterIncCategAlertDialogButtons(filterCategDialogView, filterCategAlertDialog, expenseIncomeFilter);
                     filterCategAlertDialog.show();
                 }
                 break;
@@ -109,7 +114,7 @@ public class HistoryTabbedActivity extends AppCompatActivity {
 
     private void initDateAlertDialogButtons(View dialogView, final AlertDialog alertDialog) {
         RadioGroup radioGroup = dialogView.findViewById(R.id.dialogDateRadioGroup);
-        radioGroup.check(radioGroup.getChildAt(chartsFilter.getRadioButtonIndex()).getId());
+        radioGroup.check(radioGroup.getChildAt(expenseIncomeFilter.getRadioButtonIndex()).getId());
 
         initStartDatePickerDialog((RadioButton) radioGroup.getChildAt(radioGroup.getChildCount() - 1));
 
@@ -122,37 +127,36 @@ public class HistoryTabbedActivity extends AppCompatActivity {
                 long currentTime = MyUtils.getCurrentDateTime();
                 switch (selectedIndex) {
                     case 0:
-                        chartsFilter.setRadioButtonIndex(0);
-                        chartsFilter.setStartDate(0L);
-                        chartsFilter.setEndDate(currentTime);
+                        expenseIncomeFilter.setRadioButtonIndex(0);
+                        expenseIncomeFilter.setStartDate(0L);
+                        expenseIncomeFilter.setEndDate(currentTime);
                         break;
                     case 1:
-                        chartsFilter.setRadioButtonIndex(1);
-                        chartsFilter.setStartDate(MyUtils.subtractDaysFromCurrentDateTime(1));
-                        chartsFilter.setEndDate(currentTime);
+                        expenseIncomeFilter.setRadioButtonIndex(1);
+                        expenseIncomeFilter.setStartDate(MyUtils.subtractDaysFromCurrentDateTime(1));
+                        expenseIncomeFilter.setEndDate(currentTime);
                         break;
                     case 2:
-                        chartsFilter.setRadioButtonIndex(2);
-                        chartsFilter.setStartDate(MyUtils.subtractDaysFromCurrentDateTime(7));
-                        chartsFilter.setEndDate(currentTime);
+                        expenseIncomeFilter.setRadioButtonIndex(2);
+                        expenseIncomeFilter.setStartDate(MyUtils.subtractDaysFromCurrentDateTime(7));
+                        expenseIncomeFilter.setEndDate(currentTime);
                         break;
                     case 3:
-                        chartsFilter.setRadioButtonIndex(3);
-                        chartsFilter.setStartDate(MyUtils.subtractDaysFromCurrentDateTime(30));
-                        chartsFilter.setEndDate(currentTime);
+                        expenseIncomeFilter.setRadioButtonIndex(3);
+                        expenseIncomeFilter.setStartDate(MyUtils.subtractDaysFromCurrentDateTime(30));
+                        expenseIncomeFilter.setEndDate(currentTime);
                         break;
                     case 4:
-                        chartsFilter.setRadioButtonIndex(4);
-                        chartsFilter.setStartDate(MyUtils.subtractDaysFromCurrentDateTime(365));
-                        chartsFilter.setEndDate(currentTime);
+                        expenseIncomeFilter.setRadioButtonIndex(4);
+                        expenseIncomeFilter.setStartDate(MyUtils.subtractDaysFromCurrentDateTime(365));
+                        expenseIncomeFilter.setEndDate(currentTime);
                         break;
                     case 5:
-                        chartsFilter.setRadioButtonIndex(5);
+                        expenseIncomeFilter.setRadioButtonIndex(5);
                         break;
                 }
 
                 updateLists();
-
                 alertDialog.dismiss();
             }
         });
@@ -172,7 +176,7 @@ public class HistoryTabbedActivity extends AppCompatActivity {
                     public void onDateSet(DatePicker datePicker, int y, int m, int d) {
                         Calendar calendar = new GregorianCalendar(y, m, d);
 
-                        chartsFilter.setStartDate(calendar.getTimeInMillis());
+                        expenseIncomeFilter.setStartDate(calendar.getTimeInMillis());
 
                         initEndDatePickerDialog(year, month, day);
                     }
@@ -196,9 +200,11 @@ public class HistoryTabbedActivity extends AppCompatActivity {
                 Calendar calendar = new GregorianCalendar(year, month, day);
 
                 long oneDay = 24 * 3600 * 1000L;
-                chartsFilter.setEndDate(calendar.getTimeInMillis() + oneDay);
+                expenseIncomeFilter.setEndDate(calendar.getTimeInMillis() + oneDay);
 
-                if (chartsFilter.isBadCustomDate()) {
+                if (!expenseIncomeFilter.isBadCustomDate()) {
+                    expenseIncomeFilter.setEndDate(calendar.getTimeInMillis() + oneDay);
+                } else {
                     MyUtils.makeToast(HistoryTabbedActivity.this, "Start date can not be after end date");
                 }
 
@@ -349,7 +355,8 @@ public class HistoryTabbedActivity extends AppCompatActivity {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                chartsFilter.setBalanceAccount((BalanceAccount) adapterView.getItemAtPosition(i));
+                BalanceAccount balanceAccount = (BalanceAccount) adapterView.getItemAtPosition(i);
+                expenseIncomeFilter.setBalanceAccount(balanceAccount);
                 updateLists();
             }
 
@@ -377,13 +384,13 @@ public class HistoryTabbedActivity extends AppCompatActivity {
                     return;
                 }
 
-                if (position == 0) {
-                    chartsFilter.setExpenseIncomeType(ExpenseIncome.TYPE_EXPENSE);
-                    updateExpenseList();
-                } else {
-                    chartsFilter.setExpenseIncomeType(ExpenseIncome.TYPE_INCOME);
-                    updateIncomeList();
+                if (position == FRAGMENT_EXPENSE) {
+                    expenseIncomeFilter.setExpenseIncomeType(ExpenseIncome.TYPE_EXPENSE);
+                } else if (position == FRAGMENT_INCOME) {
+                    expenseIncomeFilter.setExpenseIncomeType(ExpenseIncome.TYPE_INCOME);
                 }
+
+                updateLists();
             }
 
             @Override
@@ -401,21 +408,37 @@ public class HistoryTabbedActivity extends AppCompatActivity {
             }
         }
 
-        MyUtils.makeToast(this, "Showing " + filteredList.size() + " items");
+        //MyUtils.makeToast(this, "Showing " + filteredList.size() + " items");
+
+        Log.e(TAG, "EXPINCOMELIST SIZE: " + filteredList.size());
 
         return filteredList;
     }
 
     public void updateLists() {
-        updateExpenseList();
-        updateIncomeList();
+        if (viewPager.getCurrentItem() == FRAGMENT_EXPENSE) {
+            updateExpenseList();
+        } else if (viewPager.getCurrentItem() == FRAGMENT_INCOME) {
+            updateIncomeList();
+        }
     }
 
     public void updateExpenseList() {
-        expenseHistoryFragment.updateListView(filterExpenseIncomeList(MyUtils.expenseIncomeList, chartsFilter));
+        expenseHistoryFragment.updateListView(filterExpenseIncomeList(MyUtils.expenseIncomeList, expenseIncomeFilter));
     }
 
     public void updateIncomeList() {
-        incomeHistoryFragment.updateListView(filterExpenseIncomeList(MyUtils.expenseIncomeList, chartsFilter));
+        incomeHistoryFragment.updateListView(filterExpenseIncomeList(MyUtils.expenseIncomeList, expenseIncomeFilter));
+    }
+
+    public void deleteExpenseIncome(AdapterView<?> adapterView, int index) {
+        ExpenseIncome expenseIncome = (ExpenseIncome) adapterView.getItemAtPosition(index);
+        DatabaseHelper databaseHelper = new DatabaseHelper(HistoryTabbedActivity.this);
+
+        databaseHelper.deleteExpenseIncome(databaseHelper.getExpenseIncomeID(expenseIncome));
+
+        MyUtils.getExpenseIncomeFromDatabase(HistoryTabbedActivity.this);
+
+        updateLists();
     }
 }
