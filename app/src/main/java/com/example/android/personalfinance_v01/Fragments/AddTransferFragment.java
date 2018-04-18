@@ -21,27 +21,22 @@ import com.example.android.personalfinance_v01.R;
 
 public class AddTransferFragment extends Fragment {
 
-    static final String BASE_VALUE = "0";
+    private static final String BASE_VALUE = "0";
     private static final String TAG = "AddTransferFragment";
-    String currentValue = BASE_VALUE;
+    private String currentValue = BASE_VALUE;
 
-    View mainView;
+    private View mainView;
 
-    TextView fromAccTv;
-    TextView toAccTv;
+    private TextView fromAccTv;
+    private TextView toAccTv;
 
-    BalanceAccount fromAcc = MyUtils.accountList.get(0);
-    BalanceAccount toAcc = MyUtils.accountList.get(1);
+    private BalanceAccount fromAcc = MyUtils.accountList.get(0);
+    private BalanceAccount toAcc = MyUtils.accountList.get(1);
 
-    //OnClick event for every number button (0-9)
-    View.OnClickListener onClickNumber;
+    private TextView moneyAmountTV;
 
-    TextView moneyAmountTV;
-    Button delBtn;
-    Button commaBtn;
-
-    int fromRadioButtonIndex = 0;
-    int toRadioButtonIndex = 1;
+    private int fromRadioButtonIndex = 0;
+    private int toRadioButtonIndex = 1;
 
     @Nullable
     @Override
@@ -149,7 +144,7 @@ public class AddTransferFragment extends Fragment {
 
     private void initNumberButtons() {
         //OnClick event for every number button (0-9)
-        onClickNumber = new View.OnClickListener() {
+        View.OnClickListener onClickNumber = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Button button = (Button) v;
@@ -192,7 +187,7 @@ public class AddTransferFragment extends Fragment {
     }
 
     private void initSpecialButtons() {
-        delBtn = mainView.findViewById(R.id.fragmentTransferDelBtn);
+        Button delBtn = mainView.findViewById(R.id.fragmentTransferDelBtn);
         delBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -214,7 +209,7 @@ public class AddTransferFragment extends Fragment {
             }
         });
 
-        commaBtn = mainView.findViewById(R.id.fragmentTransferCommaBtn);
+        Button commaBtn = mainView.findViewById(R.id.fragmentTransferCommaBtn);
         commaBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -120,17 +120,16 @@ public class MainActivity extends AppCompatActivity {
                         MyUtils.startActivity(MainActivity.this, HistoryTabbedActivity.class);
                         break;
                     case (R.id.navMenuTransferHistory):
-                        if(MyUtils.accountList.size() < 2) {
-                            MyUtils.makeToast(MainActivity.this, "You need at least 2 existing balance accounts to do a transfer");
-                        } else {
-                            MyUtils.startActivity(MainActivity.this, TransferHistoryActivity.class);
-                        }
+                        MyUtils.startActivity(MainActivity.this, TransferHistoryActivity.class);
                         break;
                     case (R.id.navMenuAccounts):
                         MyUtils.startActivity(MainActivity.this, AccountListActivity.class);
                         break;
                     case (R.id.navMenuStats):
                         MyUtils.startActivity(MainActivity.this, ChartsActivity.class);
+                        break;
+                    case (R.id.navMenuBudgets):
+                        MyUtils.startActivity(MainActivity.this, BudgetListActivity.class);
                         break;
                     case (R.id.navMenuDebts):
                         MyUtils.startActivity(MainActivity.this, DebtListActivity.class);

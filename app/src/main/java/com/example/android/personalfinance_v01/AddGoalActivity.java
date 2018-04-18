@@ -27,10 +27,7 @@ public class AddGoalActivity extends AppCompatActivity {
     private EditText savedAlreadyEt;
     private EditText targetDateEt;
 
-    private String name;
-    private double targetAmount;
-    private double savedAlready;
-    private long targetDate;
+    private long targetDate = MyUtils.getCurrentDateTime();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,9 +112,9 @@ public class AddGoalActivity extends AppCompatActivity {
     }
 
     private Goal createGoal() {
-        name = nameEt.getText().toString();
-        targetAmount = MyUtils.getDoubleFromEditText(targetAmountEt);
-        savedAlready = MyUtils.getDoubleFromEditText(savedAlreadyEt);
+        String name = nameEt.getText().toString();
+        double targetAmount = MyUtils.getDoubleFromEditText(targetAmountEt);
+        double savedAlready = MyUtils.getDoubleFromEditText(savedAlreadyEt);
         if(savedAlready < 0.0)
             savedAlready = 0.0;
 

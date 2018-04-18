@@ -22,14 +22,19 @@
         android:title="@string/transferHistory" />
 
     <item
-        android:id="@+id/navMenuDebts"
-        android:icon="@drawable/nav_debts"
-        android:title="@string/debts" />
+        android:id="@+id/navMenuBudgets"
+        android:icon="@drawable/nav_budgets"
+        android:title="@string/budgets" />
 
     <item
         android:id="@+id/navMenuGoals"
         android:icon="@drawable/nav_goals"
         android:title="@string/goals" />
+
+    <item
+        android:id="@+id/navMenuDebts"
+        android:icon="@drawable/nav_debts"
+        android:title="@string/debts" />
 
     <item
         android:id="@+id/navMenuHelp"

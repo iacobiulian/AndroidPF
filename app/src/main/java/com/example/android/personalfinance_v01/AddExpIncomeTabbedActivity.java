@@ -1,10 +1,9 @@
 package com.example.android.personalfinance_v01;
 
-import android.support.design.widget.TabLayout;
-import android.support.v7.app.AppCompatActivity;
-
-import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,19 +19,19 @@ import com.example.android.personalfinance_v01.MyClasses.ExpenseIncome;
 import com.example.android.personalfinance_v01.MyClasses.MyUtils;
 import com.example.android.personalfinance_v01.MyClasses.Transfer;
 
+import java.util.Objects;
+
 public class AddExpIncomeTabbedActivity extends AppCompatActivity {
 
     private static final int FRAGMENT_EXPENSE = 0;
     private static final int FRAGMENT_INCOME = 1;
     private static final int FRAGMENT_TRANSFER = 2;
 
-    AddExpenseFragment expenseFragment;
-    AddIncomeFragment incomeFragment;
-    AddTransferFragment transferFragment;
+    private AddExpenseFragment expenseFragment;
+    private AddIncomeFragment incomeFragment;
+    private AddTransferFragment transferFragment;
 
-    ViewPager viewPager;
-
-    Toolbar toolbar;
+    private ViewPager viewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,13 +39,13 @@ public class AddExpIncomeTabbedActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_exp_income_tabbed);
 
         //Toolbar
-        toolbar = findViewById(R.id.toolbarAddExpIncTabbed);
+        Toolbar toolbar = findViewById(R.id.toolbarAddExpIncTabbed);
         setSupportActionBar(toolbar);
 
         viewPager = findViewById(R.id.addExpIncViewPager);
         initViewPager(viewPager);
 
-        TabLayout tabLayout =  findViewById(R.id.addExpIncTabLayout);
+        TabLayout tabLayout = findViewById(R.id.addExpIncTabLayout);
         tabLayout.setupWithViewPager(viewPager);
 
         //Back button on the toolbar
@@ -68,19 +67,23 @@ public class AddExpIncomeTabbedActivity extends AppCompatActivity {
 
         switch (id) {
             case R.id.actionDone:
-                if(viewPager.getCurrentItem() == FRAGMENT_EXPENSE) {
-                    ExpenseIncome expense =  expenseFragment.getExpense();
-                    insertExpenseIncomeIntoDb(expense);
-                    substractMoneyFromAccount(MyUtils.getSelectedAccount(), expense.getAmount());
-                } else if (viewPager.getCurrentItem() == FRAGMENT_INCOME){
-                    ExpenseIncome income = incomeFragment.getIncome();
-                    insertExpenseIncomeIntoDb(incomeFragment.getIncome());
-                    addMoneyToAccount(MyUtils.getSelectedAccount(), income.getAmount());
-                } else if (viewPager.getCurrentItem() == FRAGMENT_TRANSFER) {
-                    Transfer transfer = transferFragment.getTransfer();
-                    insertTransferIntoDb(transfer);
-                    substractMoneyFromAccount(transfer.getFromAccount(), transfer.getAmount());
-                    addMoneyToAccount(transfer.getToAccount(), transfer.getAmount());
+                switch (viewPager.getCurrentItem()) {
+                    case FRAGMENT_EXPENSE:
+                        ExpenseIncome expense = expenseFragment.getExpense();
+                        insertExpenseIncomeIntoDb(expense);
+                        substractMoneyFromAccount(MyUtils.getSelectedAccount(), expense.getAmount());
+                        break;
+                    case FRAGMENT_INCOME:
+                        ExpenseIncome income = incomeFragment.getIncome();
+                        insertExpenseIncomeIntoDb(incomeFragment.getIncome());
+                        addMoneyToAccount(MyUtils.getSelectedAccount(), income.getAmount());
+                        break;
+                    case FRAGMENT_TRANSFER:
+                        Transfer transfer = transferFragment.getTransfer();
+                        insertTransferIntoDb(transfer);
+                        substractMoneyFromAccount(transfer.getFromAccount(), transfer.getAmount());
+                        addMoneyToAccount(transfer.getToAccount(), transfer.getAmount());
+                        break;
                 }
                 MyUtils.startActivity(AddExpIncomeTabbedActivity.this, MainActivity.class);
                 break;
@@ -91,21 +94,21 @@ public class AddExpIncomeTabbedActivity extends AppCompatActivity {
 
     private void initViewPager(ViewPager viewPager) {
         expenseFragment = new AddExpenseFragment();
-        incomeFragment =  new AddIncomeFragment();
+        incomeFragment = new AddIncomeFragment();
         transferFragment = new AddTransferFragment();
 
-        ExpenseIncomePagerAdapter adapter =  new ExpenseIncomePagerAdapter(getSupportFragmentManager());
+        ExpenseIncomePagerAdapter adapter = new ExpenseIncomePagerAdapter(getSupportFragmentManager());
         adapter.addFragment(expenseFragment, "Add expense");
         adapter.addFragment(incomeFragment, "Add income");
         adapter.addFragment(transferFragment, "Add transfer");
         viewPager.setAdapter(adapter);
 
-        if(isTransferActivity()) {
+        if (isTransferActivity()) {
             viewPager.setCurrentItem(FRAGMENT_TRANSFER);
             return;
         }
 
-        if(isIncomeActivity()) {
+        if (isIncomeActivity()) {
             viewPager.setCurrentItem(FRAGMENT_INCOME, false);
         } else {
             viewPager.setCurrentItem(FRAGMENT_EXPENSE, false);
@@ -116,11 +119,11 @@ public class AddExpIncomeTabbedActivity extends AppCompatActivity {
      * @return TRUE for INCOME Activity and FALSE for EXPENSE Activity
      */
     private boolean isIncomeActivity() {
-        return getIntent().getExtras().getInt(MyUtils.INTENT_KEY) == ExpenseIncome.TYPE_INCOME;
+        return Objects.requireNonNull(getIntent().getExtras()).getInt(MyUtils.INTENT_KEY) == ExpenseIncome.TYPE_INCOME;
     }
 
     private boolean isTransferActivity() {
-        return getIntent().getExtras().getInt(MyUtils.INTENT_KEY) == MainActivity.TYPE_TRANSFER;
+        return Objects.requireNonNull(getIntent().getExtras()).getInt(MyUtils.INTENT_KEY) == MainActivity.TYPE_TRANSFER;
     }
 
     /**

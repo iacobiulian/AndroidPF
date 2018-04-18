@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string-array name="budget_type_array">
+        <item>None</item>
+        <item>Weekly</item>
+        <item>Bi-weekly</item>
+        <item>Monthly</item>
+        <item>Yearly</item>
+    </string-array>
+
     <string-array name="debt_type_array">
         <item>I lend</item>
         <item>I borrow</item>

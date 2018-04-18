@@ -53,6 +53,11 @@ public class Goal {
     }
 
     public boolean isValid() {
-        return (!(this.goalAmount <= 0.0) || !TextUtils.isEmpty(this.name));
+        if (this.goalAmount < 0)
+            return false;
+        if (TextUtils.isEmpty(this.name))
+            return false;
+
+        return true;
     }
 }

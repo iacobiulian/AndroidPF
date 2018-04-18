@@ -35,6 +35,8 @@ public class MyUtils {
     public static ArrayList<ExpenseIncome> expenseIncomeList = new ArrayList<>();
     //Global Transfer list
     public static ArrayList<Transfer> transferList = new ArrayList<>();
+    //Global Budget list
+    public static ArrayList<Budget> budgetList = new ArrayList<>();
     //Global debt list
     public static ArrayList<Debt> debtList = new ArrayList<>();
     //Global Goal list

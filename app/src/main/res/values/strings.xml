@@ -76,5 +76,8 @@
     <string name="img">Image</string>
     <string name="transfer">Transfer</string>
     <string name="transferHistory">Transfer History</string>
+    <string name="category">Category</string>
+    <string name="addBudget">Add budget</string>
+    <string name="budgets">Budgets</string>
 
 </resources>
