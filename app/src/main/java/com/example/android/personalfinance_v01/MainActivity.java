@@ -148,7 +148,11 @@ public class MainActivity extends AppCompatActivity {
         fab_substract.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                MyUtils.startActivityWithCode(MainActivity.this, AddExpIncomeTabbedActivity.class, ExpenseIncome.TYPE_EXPENSE);
+                if (MyUtils.accountList.size() < 1) {
+                    MyUtils.makeToast(MainActivity.this, getResources().getString(R.string.error));
+                } else {
+                    MyUtils.startActivityWithCode(MainActivity.this, AddExpIncomeTabbedActivity.class, ExpenseIncome.TYPE_EXPENSE);
+                }
             }
         });
 
@@ -156,7 +160,11 @@ public class MainActivity extends AppCompatActivity {
         fab_add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                MyUtils.startActivityWithCode(MainActivity.this, AddExpIncomeTabbedActivity.class, ExpenseIncome.TYPE_INCOME);
+                if (MyUtils.accountList.size() < 1) {
+                    MyUtils.makeToast(MainActivity.this, getResources().getString(R.string.error));
+                } else {
+                    MyUtils.startActivityWithCode(MainActivity.this, AddExpIncomeTabbedActivity.class, ExpenseIncome.TYPE_INCOME);
+                }
             }
         });
 
@@ -164,7 +172,11 @@ public class MainActivity extends AppCompatActivity {
         fab_transfer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                MyUtils.startActivityWithCode(MainActivity.this, AddExpIncomeTabbedActivity.class, TYPE_TRANSFER);
+                if (MyUtils.accountList.size() < 2) {
+                    MyUtils.makeToast(MainActivity.this, getResources().getString(R.string.error));
+                } else {
+                    MyUtils.startActivityWithCode(MainActivity.this, AddExpIncomeTabbedActivity.class, TYPE_TRANSFER);
+                }
             }
         });
     }

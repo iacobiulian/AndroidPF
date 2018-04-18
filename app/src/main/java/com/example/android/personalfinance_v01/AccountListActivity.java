@@ -51,10 +51,10 @@ public class AccountListActivity extends AppCompatActivity {
                     @Override
                     public boolean onMenuItemClick(MenuItem menuItem) {
                         switch (menuItem.getItemId()) {
-                            case R.id.accountListMenuEdit:
+                            case R.id.optiontMenuEdit:
                                 editBalanceAccount(adapterView, i);
                                 break;
-                            case R.id.accountListMenuDelete:
+                            case R.id.optionMenuDelete:
                                 deleteBalanceAccount(adapterView, i);
                                 balanceAccountAdapter.notifyDataSetChanged();
                                 break;

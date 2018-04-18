@@ -1,0 +1,14 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.android.personalfinance_v01.MainActivity">
+    <item
+        android:id="@+id/menuBudgetEdit"
+        android:orderInCategory="1"
+        android:title="@string/editBudgetAmount" />
+
+    <item
+        android:id="@+id/menuBudgetDelete"
+        android:orderInCategory="2"
+        android:title="@string/delete" />
+</menu>

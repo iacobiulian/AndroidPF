@@ -1,0 +1,75 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="12dp">
+
+    <ImageView
+        android:id="@+id/itemBudgetCategoryImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_gravity="center"
+        android:layout_marginEnd="8dp"
+        android:contentDescription="@string/img"
+        android:src="@drawable/nav_goals" />
+
+    <TextView
+        android:id="@+id/itemBudgetCategoryTv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@+id/itemBudgetCategoryImageView"
+        android:gravity="center_vertical"
+        android:textColor="@color/textDark"
+        android:textSize="@dimen/category_text"
+        tools:text="Food" />
+
+    <ProgressBar
+        android:id="@+id/itemBudgetProgressBar"
+        style="@style/Base.Widget.AppCompat.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/itemBudgetCategoryImageView"
+        android:padding="8dp" />
+
+    <TextView
+        android:id="@+id/itemBudgetAmountTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@id/itemBudgetProgressBar"
+        android:padding="4dp"
+        android:textSize="@dimen/debt_text_small"
+        tools:text="Goal: 3000" />
+
+    <TextView
+        android:id="@+id/itemBudgetSavedAmountTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@id/itemBudgetAmountTv"
+        android:layout_centerInParent="true"
+        android:padding="4dp"
+        android:textSize="@dimen/debt_text_small"
+        tools:text="Saved: 2000" />
+
+    <TextView
+        android:id="@+id/itemBudgetRemainingAmountTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@id/itemBudgetAmountTv"
+        android:layout_alignParentEnd="true"
+        android:padding="4dp"
+        android:textSize="@dimen/debt_text_small"
+        tools:text="Remaining: 1000" />
+
+
+    <TextView
+        android:id="@+id/itemBudgetStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@id/itemBudgetCategoryTv"
+        android:layout_alignParentEnd="true"
+        android:textSize="@dimen/debt_text_big"
+        tools:text="Weekly" />
+
+</RelativeLayout>

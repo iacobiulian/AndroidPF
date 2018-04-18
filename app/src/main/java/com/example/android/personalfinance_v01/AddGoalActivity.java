@@ -115,7 +115,7 @@ public class AddGoalActivity extends AppCompatActivity {
         String name = nameEt.getText().toString();
         double targetAmount = MyUtils.getDoubleFromEditText(targetAmountEt);
         double savedAlready = MyUtils.getDoubleFromEditText(savedAlreadyEt);
-        if(savedAlready < 0.0)
+        if (savedAlready < 0.0)
             savedAlready = 0.0;
 
         return new Goal(name, targetAmount, savedAlready, targetDate);
@@ -124,8 +124,8 @@ public class AddGoalActivity extends AppCompatActivity {
     private void insertGoalIntoDb() {
         Goal newGoal = createGoal();
 
-        if(newGoal.isValid()) {
-            DatabaseHelper databaseHelper =  new DatabaseHelper(AddGoalActivity.this);
+        if (newGoal.isValid()) {
+            DatabaseHelper databaseHelper = new DatabaseHelper(AddGoalActivity.this);
             boolean inserted = databaseHelper.addGoalData(newGoal);
 
             if (inserted)

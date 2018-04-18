@@ -95,12 +95,16 @@ public class AddExpIncomeTabbedActivity extends AppCompatActivity {
     private void initViewPager(ViewPager viewPager) {
         expenseFragment = new AddExpenseFragment();
         incomeFragment = new AddIncomeFragment();
-        transferFragment = new AddTransferFragment();
 
         ExpenseIncomePagerAdapter adapter = new ExpenseIncomePagerAdapter(getSupportFragmentManager());
         adapter.addFragment(expenseFragment, "Add expense");
         adapter.addFragment(incomeFragment, "Add income");
-        adapter.addFragment(transferFragment, "Add transfer");
+
+        if (MyUtils.accountList.size() > 1) {
+            transferFragment = new AddTransferFragment();
+            adapter.addFragment(transferFragment, "Add transfer");
+        }
+
         viewPager.setAdapter(adapter);
 
         if (isTransferActivity()) {

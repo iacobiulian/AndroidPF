@@ -79,5 +79,6 @@
     <string name="category">Category</string>
     <string name="addBudget">Add budget</string>
     <string name="budgets">Budgets</string>
+    <string name="editBudgetAmount">Edit budget amount</string>
 
 </resources>

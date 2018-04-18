@@ -19,6 +19,7 @@ import com.example.android.personalfinance_v01.MyClasses.MyUtils;
 public class AddBudgetActivity extends AppCompatActivity {
 
     Spinner typeSpinner;
+    Spinner categorySpinner;
     Category currentCategory;
     private EditText amountEt;
 
@@ -48,7 +49,7 @@ public class AddBudgetActivity extends AppCompatActivity {
             case R.id.actionDone:
                 //insertBudgetIntoDb();
                 createBudget();
-                MyUtils.startActivity(AddBudgetActivity.this, MainActivity.class);
+                MyUtils.startActivity(AddBudgetActivity.this, BudgetListActivity.class);
                 break;
         }
 
@@ -74,7 +75,7 @@ public class AddBudgetActivity extends AppCompatActivity {
     }
 
     private void initCategorySpinner() {
-        Spinner categorySpinner = findViewById(R.id.addBudgetCategorySpinner);
+        categorySpinner = findViewById(R.id.addBudgetCategorySpinner);
 
         CategoryAdapter categoryAdapter;
 

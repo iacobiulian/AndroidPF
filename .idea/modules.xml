@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/PersonalFinance_v01.iml" filepath="$PROJECT_DIR$/PersonalFinance_v01.iml" />
+      <module fileurl="file://$PROJECT_DIR$/AndroidPF.iml" filepath="$PROJECT_DIR$/AndroidPF.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
