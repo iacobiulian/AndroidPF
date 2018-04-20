@@ -14,6 +14,7 @@ import com.example.android.personalfinance_v01.DataPersistance.DatabaseContract.
 import com.example.android.personalfinance_v01.DataPersistance.DatabaseContract.TransferEntry;
 import com.example.android.personalfinance_v01.DataPersistance.DatabaseContract.BudgetEntry;
 import com.example.android.personalfinance_v01.MyClasses.BalanceAccount;
+import com.example.android.personalfinance_v01.MyClasses.Budget;
 import com.example.android.personalfinance_v01.MyClasses.Debt;
 import com.example.android.personalfinance_v01.MyClasses.ExpenseIncome;
 import com.example.android.personalfinance_v01.MyClasses.Goal;
@@ -523,8 +524,94 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     //endregion
-}
 
+    //region Budget Database Methods
+
+    /**
+     * @param budget added to the database
+     * @return true if insertion was successful and false otherwise
+     */
+    public boolean addBudgetData(Budget budget) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues budgetContentValues = new ContentValues();
+        budgetContentValues.put(BudgetEntry.COLUMN_TYPE, budget.getType());
+        budgetContentValues.put(BudgetEntry.COLUMN_CATEGORY_NAME, budget.getCategory().getName());
+        budgetContentValues.put(BudgetEntry.COLUMN_TOTAL_AMOUNT, budget.getTotalAmount());
+        budgetContentValues.put(BudgetEntry.COLUMN_CURRENT_AMOUNT, budget.getCurrentAmount());
+        budgetContentValues.put(BudgetEntry.COLUMN_DATE, budget.getDate());
+
+        long result = db.insert(BudgetEntry.TABLE_NAME, null, budgetContentValues);
+
+        return (result != -1);
+    }
+
+    /**
+     * @return Cursor containing all the budget data from the database
+     */
+    public Cursor getBudgetData() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String selectQuery = "SELECT * FROM " + BudgetEntry.TABLE_NAME + ";";
+        return db.rawQuery(selectQuery, null);
+    }
+
+    /**
+     * @param searchedBudget Debt searched
+     * @return id of the searchedBudget
+     */
+    public int getBudgetId(Budget searchedBudget) {
+        String selectQuery = "SELECT " + BudgetEntry._ID + " FROM " + BudgetEntry.TABLE_NAME +
+                " WHERE " + BudgetEntry.COLUMN_DATE + " = '" + searchedBudget.getDate() + "' AND "
+                + BudgetEntry.COLUMN_TOTAL_AMOUNT + " = '" + searchedBudget.getTotalAmount() + "';";
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        int searchedId = -1;
+        if (cursor.moveToFirst()) {
+            searchedId = cursor.getInt(0);
+        }
+        cursor.close();
+
+        return searchedId;
+    }
+
+    /**
+     * @param budgetId        Database id of the budget being updated
+     * @param newTotalAmount  New total budget amount
+     */
+    public void updateBudgetTotalAmount(int budgetId, double newTotalAmount) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String updateQuery = "UPDATE " + BudgetEntry.TABLE_NAME + " SET "
+                + BudgetEntry.COLUMN_TOTAL_AMOUNT + " = '" + newTotalAmount + "' "
+                + "WHERE " + BudgetEntry._ID + " = '" + budgetId + "';";
+        db.execSQL(updateQuery);
+    }
+
+    /**
+     * @param budgetId        Database id of the debt being updated
+     * @param newCurrentAmount New currently spent budget amount
+     */
+    public void updateBudgetCurrentAmount(int budgetId, double newCurrentAmount) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String updateQuery = "UPDATE " + BudgetEntry.TABLE_NAME + " SET "
+                + BudgetEntry.COLUMN_CURRENT_AMOUNT + " = '" + newCurrentAmount + "' "
+                + "WHERE " + BudgetEntry._ID + " = '" + budgetId + "';";
+        db.execSQL(updateQuery);
+    }
+
+    /**
+     * @param budgetId Database id of the account being deleted
+     */
+    public void deleteBudget(int budgetId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String deleteQuery = "DELETE FROM " + BudgetEntry.TABLE_NAME + " WHERE "
+                + DebtEntry._ID + " = '" + budgetId + "';";
+        db.execSQL(deleteQuery);
+    }
+
+    //endregion
+}
 
 
 

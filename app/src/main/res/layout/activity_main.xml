@@ -50,7 +50,6 @@
             fab:menu_colorPressed="#E75043"
             fab:menu_colorRipple="#99FFFFFF"
             fab:menu_fab_hide_animation="@anim/hide_to_bottom"
-            fab:menu_fab_label="@string/new_transaction"
             fab:menu_fab_show_animation="@anim/show_from_bottom"
             fab:menu_fab_size="normal"
             fab:menu_icon="@drawable/fab_add"

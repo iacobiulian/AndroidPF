@@ -3,7 +3,6 @@
     <string-array name="budget_type_array">
         <item>None</item>
         <item>Weekly</item>
-        <item>Bi-weekly</item>
         <item>Monthly</item>
         <item>Yearly</item>
     </string-array>

@@ -149,6 +149,23 @@ public class MyUtils {
         return list;
     }
 
+    private static List<Budget> parseBudgetCursor(Cursor cursor) {
+
+        ArrayList<Budget> list = new ArrayList<>();
+
+        while (cursor.moveToNext()) {
+            int type = cursor.getInt(1);
+            String categoryName = cursor.getString(2);
+            double totalAmount = cursor.getDouble(3);
+            double currentAmount = cursor.getDouble(4);
+            long dateCreated = cursor.getLong(5);
+
+            list.add(new Budget(type, searchExpenseCategoryList(categoryName), totalAmount, currentAmount, dateCreated));
+        }
+
+        return list;
+    }
+
     /**
      * Fetches the accounts from the database into the global accountList
      *
@@ -262,6 +279,22 @@ public class MyUtils {
         }
     }
 
+    /**
+     * Fetches the debts from the database into the global debtList
+     *
+     * @param context Activity context
+     */
+    public static void getBudgetsFromDatabase(Context context) {
+        DatabaseHelper databaseHelper = new DatabaseHelper(context);
+        Cursor budgetData = databaseHelper.getBudgetData();
+
+        budgetList.clear();
+        budgetList.addAll(parseBudgetCursor(budgetData));
+
+        if (!budgetData.isClosed()) {
+            budgetData.close();
+        }
+    }
 
     //region Categories
 

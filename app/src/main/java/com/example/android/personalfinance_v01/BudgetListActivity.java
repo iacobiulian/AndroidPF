@@ -1,8 +1,8 @@
 package com.example.android.personalfinance_v01;
 
+import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -14,7 +14,6 @@ import android.widget.PopupMenu;
 import com.example.android.personalfinance_v01.CustomAdapters.BudgetAdapter;
 import com.example.android.personalfinance_v01.DataPersistance.DatabaseHelper;
 import com.example.android.personalfinance_v01.MyClasses.Budget;
-import com.example.android.personalfinance_v01.MyClasses.Debt;
 import com.example.android.personalfinance_v01.MyClasses.MyUtils;
 import com.github.clans.fab.FloatingActionButton;
 
@@ -25,6 +24,8 @@ public class BudgetListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_budget_list);
+
+        MyUtils.getBudgetsFromDatabase(BudgetListActivity.this);
 
         budgetAdapter = new BudgetAdapter(BudgetListActivity.this, MyUtils.budgetList);
 
@@ -65,7 +66,7 @@ public class BudgetListActivity extends AppCompatActivity {
                                 alertDialog.show();
                                 break;
                             case R.id.menuBudgetDelete:
-                                MyUtils.budgetList.remove(currentBudget);
+                                deleteBudget(currentBudget);
                                 break;
                         }
                         budgetAdapter.notifyDataSetChanged();
@@ -93,14 +94,33 @@ public class BudgetListActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 double amountInput = MyUtils.getDoubleFromEditText(amountEt);
-                modifyBudgetAmount(budgetForUpdate, amountInput);
+                modifyBudgetTotalAmount(budgetForUpdate, amountInput);
                 alertDialog.hide();
             }
         });
     }
 
-    private void modifyBudgetAmount(Budget budgetModified, double newAmount) {
-        int i = MyUtils.budgetList.indexOf(budgetModified);
-        MyUtils.budgetList.get(i).setTotalAmount(newAmount);
+    private void modifyBudgetTotalAmount(Budget budgetModified, double newTotalAmount) {
+        DatabaseHelper databaseHelper = new DatabaseHelper(BudgetListActivity.this);
+
+        databaseHelper.updateBudgetTotalAmount(databaseHelper.getBudgetId(budgetModified), newTotalAmount);
+
+        MyUtils.getBudgetsFromDatabase(BudgetListActivity.this);
+    }
+
+    private void modifyBudgetCurrentAmount(Budget budgetModified, double newCurrentAmount) {
+        DatabaseHelper databaseHelper = new DatabaseHelper(BudgetListActivity.this);
+
+        databaseHelper.updateBudgetCurrentAmount(databaseHelper.getBudgetId(budgetModified), newCurrentAmount);
+
+        MyUtils.getBudgetsFromDatabase(BudgetListActivity.this);
+    }
+
+    private void deleteBudget(Budget budgetForDeletion) {
+        DatabaseHelper databaseHelper = new DatabaseHelper(BudgetListActivity.this);
+
+        databaseHelper.deleteBudget(databaseHelper.getBudgetId(budgetForDeletion));
+
+        MyUtils.getBudgetsFromDatabase(BudgetListActivity.this);
     }
 }

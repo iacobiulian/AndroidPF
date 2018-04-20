@@ -12,12 +12,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.android.personalfinance_v01.MyClasses.Budget;
-import com.example.android.personalfinance_v01.MyClasses.Goal;
 import com.example.android.personalfinance_v01.R;
 
 import java.util.List;
 
-import static com.example.android.personalfinance_v01.MyClasses.MyUtils.formatDateWithoutTime;
 import static com.example.android.personalfinance_v01.MyClasses.MyUtils.formatDecimalTwoPlaces;
 
 public class BudgetAdapter extends ArrayAdapter<Budget> {
@@ -51,9 +49,6 @@ public class BudgetAdapter extends ArrayAdapter<Budget> {
                 case Budget.WEEKLY:
                     statusTv.setText("Weekly");
                     break;
-                case Budget.BI_WEEKLY:
-                    statusTv.setText("Bi-weekly");
-                    break;
                 case Budget.MONTHLY:
                     statusTv.setText("Monthly");
                     break;
@@ -70,7 +65,7 @@ public class BudgetAdapter extends ArrayAdapter<Budget> {
             goalAmountTv.setText("Budget: " + formatDecimalTwoPlaces(currentBudget.getTotalAmount()));
 
             TextView savedAmountTv = convertView.findViewById(R.id.itemBudgetSavedAmountTv);
-            savedAmountTv.setText("Saved: " + formatDecimalTwoPlaces(currentBudget.getCurrentAmount()));
+            savedAmountTv.setText("Spent: " + formatDecimalTwoPlaces(currentBudget.getCurrentAmount()));
 
             TextView remainingAmountTv = convertView.findViewById(R.id.itemBudgetRemainingAmountTv);
             remainingAmountTv.setText("Remaining: " + formatDecimalTwoPlaces(currentBudget.getTotalAmount() -

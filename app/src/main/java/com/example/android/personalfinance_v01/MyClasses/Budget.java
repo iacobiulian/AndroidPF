@@ -1,11 +1,11 @@
 package com.example.android.personalfinance_v01.MyClasses;
 
 import java.io.Serializable;
+import java.util.Calendar;
 
-public class Budget implements Serializable{
+public class Budget implements Serializable {
     public static final int NONE = 0;
     public static final int WEEKLY = 7;
-    public static final int BI_WEEKLY = 14;
     public static final int MONTHLY = 30;
     public static final int YEARLY = 365;
 
@@ -56,6 +56,30 @@ public class Budget implements Serializable{
 
     public double getCurrentAmount() {
         return currentAmount;
+    }
+
+    public boolean isResetBudget() {
+        Calendar calendar = Calendar.getInstance();
+
+        int day = 0;
+
+        switch (this.getType()) {
+            case NONE:
+                break;
+            case WEEKLY:
+                day = calendar.get(Calendar.DAY_OF_WEEK);
+                break;
+            case MONTHLY:
+                day = calendar.get(Calendar.DAY_OF_MONTH);
+                break;
+            case YEARLY:
+                day = calendar.get(Calendar.DAY_OF_YEAR);
+                break;
+            default:
+                break;
+        }
+
+        return (day == 1);
     }
 
     public boolean isValid() {

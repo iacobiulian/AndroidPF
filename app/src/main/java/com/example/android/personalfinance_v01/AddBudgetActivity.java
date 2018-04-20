@@ -10,10 +10,13 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.example.android.personalfinance_v01.CustomAdapters.CategoryAdapter;
+import com.example.android.personalfinance_v01.DataPersistance.DatabaseHelper;
 import com.example.android.personalfinance_v01.MyClasses.Budget;
 import com.example.android.personalfinance_v01.MyClasses.Category;
+import com.example.android.personalfinance_v01.MyClasses.Debt;
 import com.example.android.personalfinance_v01.MyClasses.MyUtils;
 
 public class AddBudgetActivity extends AppCompatActivity {
@@ -47,8 +50,7 @@ public class AddBudgetActivity extends AppCompatActivity {
 
         switch (id) {
             case R.id.actionDone:
-                //insertBudgetIntoDb();
-                createBudget();
+                insertBudgetIntoDb();
                 MyUtils.startActivity(AddBudgetActivity.this, BudgetListActivity.class);
                 break;
         }
@@ -104,20 +106,31 @@ public class AddBudgetActivity extends AppCompatActivity {
                 type = Budget.WEEKLY;
                 break;
             case 2:
-                type = Budget.BI_WEEKLY;
-                break;
-            case 3:
                 type = Budget.MONTHLY;
                 break;
-            case 4:
+            case 3:
                 type = Budget.YEARLY;
                 break;
         }
 
         double amount = MyUtils.getDoubleFromEditText(amountEt);
 
-        MyUtils.budgetList.add(new Budget(type, currentCategory, amount));
+        return new Budget(type, currentCategory, amount);
+    }
 
-        return null;
+    private void insertBudgetIntoDb() {
+        Budget newBudget = createBudget();
+
+        if(newBudget.isValid()) {
+            DatabaseHelper databaseHelper =  new DatabaseHelper(AddBudgetActivity.this);
+            boolean inserted = databaseHelper.addBudgetData(newBudget);
+
+            if (inserted)
+                Toast.makeText(this, R.string.addBudget, Toast.LENGTH_SHORT).show();
+            else
+                Toast.makeText(this, "INSERTION FAILED", Toast.LENGTH_SHORT).show();
+        } else {
+            MyUtils.makeToast(this, getResources().getString(R.string.error_debt));
+        }
     }
 }
