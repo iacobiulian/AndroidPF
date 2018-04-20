@@ -296,6 +296,12 @@ public class MyUtils {
         }
     }
 
+    public static void modifyBudgetCurrentAmount(Context context, Budget budgetModified, double newCurrentAmount) {
+        DatabaseHelper databaseHelper = new DatabaseHelper(context);
+
+        databaseHelper.updateBudgetCurrentAmount(databaseHelper.getBudgetId(budgetModified), newCurrentAmount);
+    }
+
     //region Categories
 
     public static List<Category> getExpenseCategories() {

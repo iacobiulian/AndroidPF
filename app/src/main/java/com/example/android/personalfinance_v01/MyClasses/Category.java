@@ -23,4 +23,8 @@ public class Category implements Serializable {
         return iconID;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof Category && this.name.equals(((Category) obj).getName());
+    }
 }

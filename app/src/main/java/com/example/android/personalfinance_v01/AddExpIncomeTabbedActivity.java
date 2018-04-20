@@ -1,5 +1,6 @@
 package com.example.android.personalfinance_v01;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -15,6 +16,8 @@ import com.example.android.personalfinance_v01.Fragments.AddExpenseFragment;
 import com.example.android.personalfinance_v01.Fragments.AddIncomeFragment;
 import com.example.android.personalfinance_v01.Fragments.AddTransferFragment;
 import com.example.android.personalfinance_v01.MyClasses.BalanceAccount;
+import com.example.android.personalfinance_v01.MyClasses.Budget;
+import com.example.android.personalfinance_v01.MyClasses.Category;
 import com.example.android.personalfinance_v01.MyClasses.ExpenseIncome;
 import com.example.android.personalfinance_v01.MyClasses.MyUtils;
 import com.example.android.personalfinance_v01.MyClasses.Transfer;
@@ -37,6 +40,8 @@ public class AddExpIncomeTabbedActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_exp_income_tabbed);
+
+        MyUtils.getBudgetsFromDatabase(AddExpIncomeTabbedActivity.this);
 
         //Toolbar
         Toolbar toolbar = findViewById(R.id.toolbarAddExpIncTabbed);
@@ -71,7 +76,8 @@ public class AddExpIncomeTabbedActivity extends AppCompatActivity {
                     case FRAGMENT_EXPENSE:
                         ExpenseIncome expense = expenseFragment.getExpense();
                         insertExpenseIncomeIntoDb(expense);
-                        substractMoneyFromAccount(MyUtils.getSelectedAccount(), expense.getAmount());
+                        subtractMoneyFromAccount(MyUtils.getSelectedAccount(), expense.getAmount());
+                        subtractMoneyFromBudgets(expense);
                         break;
                     case FRAGMENT_INCOME:
                         ExpenseIncome income = incomeFragment.getIncome();
@@ -81,7 +87,7 @@ public class AddExpIncomeTabbedActivity extends AppCompatActivity {
                     case FRAGMENT_TRANSFER:
                         Transfer transfer = transferFragment.getTransfer();
                         insertTransferIntoDb(transfer);
-                        substractMoneyFromAccount(transfer.getFromAccount(), transfer.getAmount());
+                        subtractMoneyFromAccount(transfer.getFromAccount(), transfer.getAmount());
                         addMoneyToAccount(transfer.getToAccount(), transfer.getAmount());
                         break;
                 }
@@ -170,7 +176,7 @@ public class AddExpIncomeTabbedActivity extends AppCompatActivity {
     /**
      * @param amount of money substracted
      */
-    private void substractMoneyFromAccount(BalanceAccount balanceAccount, double amount) {
+    private void subtractMoneyFromAccount(BalanceAccount balanceAccount, double amount) {
         DatabaseHelper databaseHelper = new DatabaseHelper(AddExpIncomeTabbedActivity.this);
         int id = databaseHelper.getAccountID(balanceAccount);
 
@@ -181,4 +187,27 @@ public class AddExpIncomeTabbedActivity extends AppCompatActivity {
 
         databaseHelper.updateAccountBalanceAmount(id, newBalanceAmount);
     }
+
+    private void subtractMoneyFromBudgets(ExpenseIncome expense) {
+        Category category = expense.getCategory();
+
+        for (Budget item : MyUtils.budgetList) {
+            if (item.getCategory().equals(category)) {
+                MyUtils.modifyBudgetCurrentAmount(AddExpIncomeTabbedActivity.this, item, item.getCurrentAmount() + expense.getAmount());
+            }
+        }
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+

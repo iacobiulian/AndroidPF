@@ -108,14 +108,6 @@ public class BudgetListActivity extends AppCompatActivity {
         MyUtils.getBudgetsFromDatabase(BudgetListActivity.this);
     }
 
-    private void modifyBudgetCurrentAmount(Budget budgetModified, double newCurrentAmount) {
-        DatabaseHelper databaseHelper = new DatabaseHelper(BudgetListActivity.this);
-
-        databaseHelper.updateBudgetCurrentAmount(databaseHelper.getBudgetId(budgetModified), newCurrentAmount);
-
-        MyUtils.getBudgetsFromDatabase(BudgetListActivity.this);
-    }
-
     private void deleteBudget(Budget budgetForDeletion) {
         DatabaseHelper databaseHelper = new DatabaseHelper(BudgetListActivity.this);
 

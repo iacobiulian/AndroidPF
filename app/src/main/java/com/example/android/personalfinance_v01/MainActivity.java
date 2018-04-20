@@ -16,11 +16,14 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.android.personalfinance_v01.CustomAdapters.BalanceAccountAdapterMain;
+import com.example.android.personalfinance_v01.MyClasses.Budget;
 import com.example.android.personalfinance_v01.MyClasses.ExpenseIncome;
 import com.example.android.personalfinance_v01.MyClasses.MyUtils;
 import com.github.clans.fab.FloatingActionButton;
 
 public class MainActivity extends AppCompatActivity {
+
+    //TODO https://github.com/evernote/android-job
 
     public static final int TYPE_TRANSFER = 3;
 
@@ -197,4 +200,23 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void checkBudgetsReset() {
+        MyUtils.getBudgetsFromDatabase(MainActivity.this);
+
+        for(Budget item : MyUtils.budgetList) {
+            if(item.isResetBudget()) {
+                MyUtils.modifyBudgetCurrentAmount(MainActivity.this, item, 0.0);
+            }
+        }
+    }
 }
+
+
+
+
+
+
+
+
+
