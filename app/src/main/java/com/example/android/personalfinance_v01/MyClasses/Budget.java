@@ -59,6 +59,7 @@ public class Budget implements Serializable {
     }
 
     public boolean isResetBudget() {
+
         Calendar calendar = Calendar.getInstance();
 
         int day = 0;
@@ -79,7 +80,8 @@ public class Budget implements Serializable {
                 break;
         }
 
-        return (day == 1);
+        return true;
+        //return (day == 1);
     }
 
     public boolean isValid() {

@@ -75,6 +75,8 @@
             android:name=".BudgetListActivity"
             android:label="@string/budgets"
             android:parentActivityName=".MainActivity" />
+        <activity android:name=".DetailedBudgetActivity"
+            android:parentActivityName=".BudgetListActivity" />
     </application>
 
 </manifest>

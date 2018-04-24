@@ -80,5 +80,6 @@
     <string name="addBudget">Add budget</string>
     <string name="budgets">Budgets</string>
     <string name="editBudgetAmount">Edit budget amount</string>
+    <string name="seeBudgetDetails">See Budget Details</string>
 
 </resources>

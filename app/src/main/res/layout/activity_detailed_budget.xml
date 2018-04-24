@@ -1,0 +1,113 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="12dp">
+
+    <ImageView
+        android:id="@+id/detailedBudgetImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_gravity="center"
+        android:layout_marginEnd="8dp"
+        android:contentDescription="@string/img"
+        android:src="@drawable/nav_goals" />
+
+    <TextView
+        android:id="@+id/detailedBudgetCategoryTv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@+id/detailedBudgetImageView"
+        android:gravity="center_vertical"
+        android:textColor="@color/textDark"
+        android:textSize="@dimen/category_text"
+        tools:text="Food" />
+
+    <ProgressBar
+        android:id="@+id/detailedBudgetProgressBar"
+        style="@style/Base.Widget.AppCompat.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/detailedBudgetImageView"
+        android:padding="8dp" />
+
+    <TextView
+        android:id="@+id/detailedBudgetAmountTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@id/detailedBudgetProgressBar"
+        android:layout_marginBottom="8dp"
+        android:padding="4dp"
+        android:textSize="@dimen/debt_text_small"
+        tools:text="Goal: 3000" />
+
+    <TextView
+        android:id="@+id/detailedBudgetSavedAmountTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@id/detailedBudgetAmountTv"
+        android:layout_centerInParent="true"
+        android:padding="4dp"
+        android:textSize="@dimen/debt_text_small"
+        tools:text="Saved: 2000" />
+
+    <TextView
+        android:id="@+id/detailedBudgetRemainingAmountTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@id/detailedBudgetAmountTv"
+        android:layout_alignParentEnd="true"
+        android:padding="4dp"
+        android:textSize="@dimen/debt_text_small"
+        tools:text="Remaining: 1000" />
+
+
+    <TextView
+        android:id="@+id/detailedBudgetStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@id/detailedBudgetCategoryTv"
+        android:layout_alignParentEnd="true"
+        android:textSize="@dimen/debt_text_big"
+        tools:text="Weekly" />
+
+    <TextView
+        android:id="@+id/detailedBudgetAverage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/detailedBudgetAmountTv"
+        android:padding="4dp"
+        android:textSize="@dimen/debt_text_big"
+        tools:text="Average: 250" />
+
+    <TextView
+        android:id="@+id/detailedBudgetRecommended"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/detailedBudgetAverage"
+        android:padding="4dp"
+        android:textSize="@dimen/debt_text_big"
+        tools:text="Recommended: 250" />
+
+    <com.github.mikephil.charting.charts.PieChart
+        android:id="@+id/fragmentStatsExpPieChart"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/detailedBudgetRecommended">
+
+
+    </com.github.mikephil.charting.charts.PieChart>
+
+    <TextView
+        android:id="@+id/fragmentStatsExpEmptyTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:text="@string/no_data"
+        android:textColor="@color/textDark"
+        android:textSize="24sp" />
+
+</RelativeLayout>

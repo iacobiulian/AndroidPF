@@ -65,6 +65,12 @@ public class BudgetListActivity extends AppCompatActivity {
                                 initAlertDialogButtons(dialogView, alertDialog, currentBudget);
                                 alertDialog.show();
                                 break;
+                            case R.id.menuBudgetDetails:
+                                Bundle bundle = new Bundle();
+                                bundle.putSerializable("budget", currentBudget);
+                                MyUtils.startActivityWithBundle(BudgetListActivity.this, DetailedBudgetActivity.class,
+                                        bundle);
+                                break;
                             case R.id.menuBudgetDelete:
                                 deleteBudget(currentBudget);
                                 break;

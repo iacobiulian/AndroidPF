@@ -16,6 +16,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.android.personalfinance_v01.CustomAdapters.BalanceAccountAdapterMain;
+import com.example.android.personalfinance_v01.Jobs.BudgetResetJob;
 import com.example.android.personalfinance_v01.MyClasses.Budget;
 import com.example.android.personalfinance_v01.MyClasses.ExpenseIncome;
 import com.example.android.personalfinance_v01.MyClasses.MyUtils;
@@ -60,6 +61,9 @@ public class MainActivity extends AppCompatActivity {
         //ListView
         initListView();
 
+        //Jobs
+        //scheduleJobs();
+
         //'Add account' button
         Button button = findViewById(R.id.mainAddAccountBtn);
         button.setOnClickListener(new View.OnClickListener() {
@@ -101,6 +105,10 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void scheduleJobs() {
+        BudgetResetJob.schedule();
     }
 
     private void initDrawer() {
