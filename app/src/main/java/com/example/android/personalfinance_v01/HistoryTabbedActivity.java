@@ -436,6 +436,15 @@ public class HistoryTabbedActivity extends AppCompatActivity {
         DatabaseHelper databaseHelper = new DatabaseHelper(HistoryTabbedActivity.this);
 
         databaseHelper.deleteExpenseIncome(databaseHelper.getExpenseIncomeID(expenseIncome));
+        double newBalance = expenseIncome.getAccount().getBalance();
+
+        if(expenseIncome.getType() == ExpenseIncome.TYPE_INCOME) {
+            newBalance += expenseIncome.getAmount();
+        } else {
+            newBalance -= expenseIncome.getAmount();
+        }
+
+        databaseHelper.updateAccountBalanceAmount(databaseHelper.getAccountID(expenseIncome.getAccount()), newBalance);
 
         MyUtils.getExpenseIncomeFromDatabase(HistoryTabbedActivity.this);
 

@@ -11,6 +11,7 @@ import android.widget.PopupMenu;
 import com.example.android.personalfinance_v01.CustomAdapters.BalanceAccountAdapter;
 import com.example.android.personalfinance_v01.DataPersistance.DatabaseHelper;
 import com.example.android.personalfinance_v01.MyClasses.BalanceAccount;
+import com.example.android.personalfinance_v01.MyClasses.ExpenseIncome;
 import com.example.android.personalfinance_v01.MyClasses.MyUtils;
 import com.github.clans.fab.FloatingActionButton;
 
@@ -84,6 +85,12 @@ public class AccountListActivity extends AppCompatActivity {
         DatabaseHelper databaseHelper = new DatabaseHelper(AccountListActivity.this);
 
         databaseHelper.deleteAccount(databaseHelper.getAccountID(accountForDeletion));
+
+        for(ExpenseIncome expenseIncome : MyUtils.expenseIncomeList) {
+            if(expenseIncome.getAccount().equals(accountForDeletion)) {
+                databaseHelper.deleteExpenseIncome(databaseHelper.getExpenseIncomeID(expenseIncome));
+            }
+        }
 
         MyUtils.getBalanceAccountsFromDatabase(AccountListActivity.this);
     }

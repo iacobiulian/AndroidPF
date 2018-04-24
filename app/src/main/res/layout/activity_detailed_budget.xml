@@ -91,23 +91,13 @@
         android:textSize="@dimen/debt_text_big"
         tools:text="Recommended: 250" />
 
-    <com.github.mikephil.charting.charts.PieChart
-        android:id="@+id/fragmentStatsExpPieChart"
+    <com.github.mikephil.charting.charts.BarChart
+        android:id="@+id/detailedBudgetExpBarChart"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/detailedBudgetRecommended">
 
 
-    </com.github.mikephil.charting.charts.PieChart>
-
-    <TextView
-        android:id="@+id/fragmentStatsExpEmptyTv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:text="@string/no_data"
-        android:textColor="@color/textDark"
-        android:textSize="24sp" />
-
+    </com.github.mikephil.charting.charts.BarChart>
+    
 </RelativeLayout>

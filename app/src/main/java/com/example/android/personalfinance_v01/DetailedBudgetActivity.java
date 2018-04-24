@@ -9,6 +9,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.android.personalfinance_v01.MyClasses.Budget;
+import com.github.mikephil.charting.charts.BarChart;
 
 import java.util.ArrayList;
 
@@ -86,7 +87,7 @@ public class DetailedBudgetActivity extends AppCompatActivity {
     }
 
     private void initChart() {
-        
+        BarChart barChart = findViewById(R.id.detailedBudgetExpBarChart);
     }
 
     public double getAverageSpent() {
