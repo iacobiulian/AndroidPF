@@ -388,6 +388,10 @@ public class MyUtils {
         return cal.getTime().getTime();
     }
 
+    public static long addDaysToDate(long date, int days) {
+        return date + days * 24 * 3600;
+    }
+
     public static String formatDateWithTime(long unixTime) {
         DateFormat df = new SimpleDateFormat("EEE, d MMM yyyy, HH:mm", Locale.ENGLISH);
         return df.format(unixTime);

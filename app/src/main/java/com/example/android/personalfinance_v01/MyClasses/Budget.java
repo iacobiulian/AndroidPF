@@ -80,8 +80,7 @@ public class Budget implements Serializable {
                 break;
         }
 
-        return true;
-        //return (day == 1);
+        return (day == 1);
     }
 
     public boolean isValid() {

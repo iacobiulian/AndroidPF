@@ -92,7 +92,7 @@
         tools:text="Recommended: 250" />
 
     <com.github.mikephil.charting.charts.BarChart
-        android:id="@+id/detailedBudgetExpBarChart"
+        android:id="@+id/detailedBudgetExpLineChart"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/detailedBudgetRecommended">

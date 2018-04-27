@@ -132,7 +132,7 @@ public class ExpenseStatsFragment extends Fragment {
         ArrayList<PieEntry> yValues = new ArrayList<>();
         total = 0.0f;
 
-        if(expenseMap.isEmpty()) {
+        if (expenseMap.isEmpty()) {
             pieChart.setVisibility(View.GONE);
             emptyDataSetTv.setVisibility(View.VISIBLE);
             return;
