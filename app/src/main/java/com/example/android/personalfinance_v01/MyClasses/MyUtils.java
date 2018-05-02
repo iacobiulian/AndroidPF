@@ -389,7 +389,7 @@ public class MyUtils {
     }
 
     public static long addDaysToDate(long date, int days) {
-        return date + days * 24 * 3600;
+        return date + days * 24 * 3600 * 1000;
     }
 
     public static String formatDateWithTime(long unixTime) {
