@@ -3,6 +3,7 @@ package com.example.android.personalfinance_v01;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -11,10 +12,17 @@ import android.widget.TextView;
 import com.example.android.personalfinance_v01.MyClasses.Budget;
 import com.example.android.personalfinance_v01.MyClasses.Category;
 import com.example.android.personalfinance_v01.MyClasses.ExpenseIncome;
+import com.example.android.personalfinance_v01.MyClasses.MyUtils;
 import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.AxisBase;
+import com.github.mikephil.charting.components.Description;
+import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.formatter.IAxisValueFormatter;
+import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -36,11 +44,11 @@ public class DetailedBudgetActivity extends AppCompatActivity {
 
         currentBudget = (Budget) Objects.requireNonNull(getIntent().getExtras()).getSerializable("budget");
 
+        initPeriod();
+
         initFields();
 
         initChart();
-
-        initPeriod();
     }
 
     @SuppressLint("SetTextI18n")
@@ -105,7 +113,7 @@ public class DetailedBudgetActivity extends AppCompatActivity {
         switch (currentBudget.getType()) {
             case Budget.NONE:
             case Budget.WEEKLY:
-                periodNames = new String[]{"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
+                periodNames = new String[]{"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"};
                 calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
                 long mondayOfThisWeek = calendar.getTime().getTime();
                 initSpecificPeriod(mondayOfThisWeek, 7, 1);
@@ -168,11 +176,58 @@ public class DetailedBudgetActivity extends AppCompatActivity {
     }
 
     private void initChart() {
-        BarChart barChart = findViewById(R.id.detailedBudgetExpLineChart);
+        TextView emptyTextView = findViewById(R.id.detailedBudgetEmptyTv);
+        emptyTextView.setVisibility(View.GONE);
 
-        ArrayList<BarEntry> entries = new ArrayList<BarEntry>();
+        BarChart barChart = findViewById(R.id.detailedBudgetExpLineChart);
+        barChart.setDrawBarShadow(true);
+        barChart.setMaxVisibleValueCount(12);
+        barChart.setPinchZoom(false);
+        barChart.setDrawBorders(false);
+        barChart.setDrawBarShadow(false);
+        barChart.setDrawGridBackground(true);
+
+        Description description = new Description();
+        description.setText("");
+        barChart.setDescription(description);
+
+        Legend legend = barChart.getLegend();
+        legend.setEnabled(false);
+
+        if (isPeriodPopulated()) {
+            ArrayList<BarEntry> entries = new ArrayList<BarEntry>();
+            for (int i = 0; i < period.length; i++) {
+                entries.add(new BarEntry(i, MyUtils.returnFloat(period[i])));
+            }
+
+            BarDataSet barDataSet = new BarDataSet(entries, "");
+            barDataSet.setColors(ColorTemplate.JOYFUL_COLORS);
+            barDataSet.setValueTextSize(12f);
+
+            BarData barData = new BarData(barDataSet);
+            barData.setBarWidth(0.9f);
+
+            barChart.setData(barData);
+
+            XAxis xAxis = barChart.getXAxis();
+            xAxis.setValueFormatter(new MyXAxisValueFormatter(periodNames));
+            xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        } else {
+            barChart.setVisibility(View.GONE);
+            emptyTextView.setVisibility(View.VISIBLE);
+        }
 
         //TODO https://www.youtube.com/watch?v=naPRHNfzDk8
+    }
+
+    private boolean isPeriodPopulated() {
+        for (double item : period) {
+            if (item > 0) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private double getAverageSpent() {
@@ -185,5 +240,19 @@ public class DetailedBudgetActivity extends AppCompatActivity {
 
     private double getRecommendedSpent() {
         return currentBudget.getTotalAmount() / currentBudget.getType();
+    }
+
+    public class MyXAxisValueFormatter implements IAxisValueFormatter {
+
+        private String[] values;
+
+        MyXAxisValueFormatter(String[] values) {
+            this.values = values;
+        }
+
+        @Override
+        public String getFormattedValue(float value, AxisBase axis) {
+            return values[(int) value];
+        }
     }
 }

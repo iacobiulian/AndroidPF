@@ -99,5 +99,15 @@
 
 
     </com.github.mikephil.charting.charts.BarChart>
-    
+
+    <TextView
+        android:id="@+id/detailedBudgetEmptyTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:text="@string/no_data"
+        android:textColor="@color/textDark"
+        android:textSize="24sp" />
+
 </RelativeLayout>
