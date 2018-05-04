@@ -439,9 +439,9 @@ public class HistoryTabbedActivity extends AppCompatActivity {
         double newBalance = expenseIncome.getAccount().getBalance();
 
         if(expenseIncome.getType() == ExpenseIncome.TYPE_INCOME) {
-            newBalance += expenseIncome.getAmount();
-        } else {
             newBalance -= expenseIncome.getAmount();
+        } else {
+            newBalance += expenseIncome.getAmount();
         }
 
         databaseHelper.updateAccountBalanceAmount(databaseHelper.getAccountID(expenseIncome.getAccount()), newBalance);

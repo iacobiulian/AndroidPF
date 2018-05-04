@@ -24,7 +24,6 @@ import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -34,7 +33,6 @@ import static com.example.android.personalfinance_v01.MyClasses.MyUtils.expenseI
 import static com.example.android.personalfinance_v01.MyClasses.MyUtils.formatDecimalTwoPlaces;
 
 public class DetailedBudgetActivity extends AppCompatActivity {
-    private static final String TAG = "DetailedBudgetActivity";
     private Budget currentBudget = null;
     private double[] period;
     private String[] periodNames;
@@ -113,6 +111,7 @@ public class DetailedBudgetActivity extends AppCompatActivity {
     private void initPeriod() {
         Calendar calendar = Calendar.getInstance();
         calendar.setFirstDayOfWeek(Calendar.MONDAY);
+        calendar.set(Calendar.HOUR_OF_DAY,0);
 
         switch (currentBudget.getType()) {
             case Budget.NONE:
@@ -153,6 +152,8 @@ public class DetailedBudgetActivity extends AppCompatActivity {
 
         ArrayList<ExpenseIncome> filteredCategList = filterCategoryExpenseIncomeList(expenseIncomeList, currentBudget.getCategory());
         for (int i = 0; i < periodSize; i++) {
+            calendarLower.setTime(startDate);
+            calendarUpper.setTime(startDate);
             calendarLower.add(calendarType, i);
             calendarUpper.add(calendarType, i + 1);
             lowerBound = calendarLower.getTime();
@@ -160,13 +161,10 @@ public class DetailedBudgetActivity extends AppCompatActivity {
             ArrayList<ExpenseIncome> filteredTimeList =
                     new ArrayList<>(filterTimeExpenseIncomeList(filteredCategList, lowerBound, upperBound));
 
-            if(filteredTimeList.isEmpty())
-                Log.e(TAG, "initSpecificPeriod: empty [i] " + i);
-            else
-                Log.e(TAG, "initSpecificPeriod: full [i] " + i);
-
-            for (ExpenseIncome expinc : filteredTimeList) {
-                period[i] += expinc.getAmount();
+            if(!filteredTimeList.isEmpty()) {
+                for (ExpenseIncome expinc : filteredTimeList) {
+                    period[i] += expinc.getAmount();
+                }
             }
         }
     }
@@ -186,7 +184,8 @@ public class DetailedBudgetActivity extends AppCompatActivity {
         for (ExpenseIncome item : list) {
             Date date = new Date(item.getDate());
             boolean cond = date.after(lowerBound) && date.before(upperBound);
-            if (cond) {
+            boolean otherCond = date.after(new Date(currentBudget.getDate()));
+            if (cond && otherCond) {
                 filteredList.add(item);
             }
         }
