@@ -2,6 +2,7 @@ package com.example.android.personalfinance_v01.MyClasses;
 
 import java.io.Serializable;
 import java.util.Calendar;
+import java.util.Date;
 
 public class Budget implements Serializable {
     public static final int NONE = 0;
@@ -42,6 +43,21 @@ public class Budget implements Serializable {
         return type;
     }
 
+    public String getTypeString() {
+        switch (this.getType()) {
+            case NONE:
+                return "";
+            case WEEKLY:
+                return "weekly ";
+            case MONTHLY:
+                return "monthly ";
+            case YEARLY:
+                return "yearly ";
+            default:
+                return "";
+        }
+    }
+
     public Category getCategory() {
         return category;
     }
@@ -58,9 +74,14 @@ public class Budget implements Serializable {
         return currentAmount;
     }
 
+    public void setCurrentAmount(double currentAmount) {
+        this.currentAmount = currentAmount;
+    }
+
     public boolean isResetBudget() {
 
         Calendar calendar = Calendar.getInstance();
+        calendar.setFirstDayOfWeek(Calendar.MONDAY);
 
         int day = 0;
 
@@ -85,5 +106,36 @@ public class Budget implements Serializable {
 
     public boolean isValid() {
         return !(this.totalAmount < 0);
+    }
+
+    public boolean isExceeded() {
+        return this.currentAmount > this.totalAmount;
+    }
+
+    public boolean isExceededHalf() {
+        return this.currentAmount > this.totalAmount / 2;
+    }
+
+    public boolean isDateInArea(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setFirstDayOfWeek(Calendar.MONDAY);
+
+        switch (this.getType()) {
+            case NONE:
+                return true;
+            case WEEKLY:
+                calendar.add(Calendar.WEEK_OF_MONTH, -1);
+                break;
+            case MONTHLY:
+                calendar.add(Calendar.MONTH, -1);
+                break;
+            case YEARLY:
+                calendar.add(Calendar.YEAR, -1);
+                break;
+            default:
+                return true;
+        }
+
+        return date.after(calendar.getTime());
     }
 }

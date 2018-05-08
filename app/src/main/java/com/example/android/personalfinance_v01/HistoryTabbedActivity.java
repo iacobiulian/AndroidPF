@@ -26,12 +26,14 @@ import com.example.android.personalfinance_v01.DataPersistance.DatabaseHelper;
 import com.example.android.personalfinance_v01.Fragments.HistoryExpenseFragment;
 import com.example.android.personalfinance_v01.Fragments.HistoryIncomeFragment;
 import com.example.android.personalfinance_v01.MyClasses.BalanceAccount;
+import com.example.android.personalfinance_v01.MyClasses.Budget;
 import com.example.android.personalfinance_v01.MyClasses.ExpenseIncome;
 import com.example.android.personalfinance_v01.MyClasses.ExpenseIncomeFilter;
 import com.example.android.personalfinance_v01.MyClasses.MyUtils;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Map;
 
@@ -436,18 +438,42 @@ public class HistoryTabbedActivity extends AppCompatActivity {
         DatabaseHelper databaseHelper = new DatabaseHelper(HistoryTabbedActivity.this);
 
         databaseHelper.deleteExpenseIncome(databaseHelper.getExpenseIncomeID(expenseIncome));
-        double newBalance = expenseIncome.getAccount().getBalance();
+        updateAccount(expenseIncome, databaseHelper);
+        updateBudgets(expenseIncome, databaseHelper);
 
-        if(expenseIncome.getType() == ExpenseIncome.TYPE_INCOME) {
+        MyUtils.getExpenseIncomeFromDatabase(HistoryTabbedActivity.this);
+
+        updateLists();
+    }
+
+    private void updateAccount(ExpenseIncome expenseIncome, DatabaseHelper databaseHelper) {
+        double newBalance = expenseIncome.getAccount().getBalance();
+        if (expenseIncome.getType() == ExpenseIncome.TYPE_INCOME) {
             newBalance -= expenseIncome.getAmount();
         } else {
             newBalance += expenseIncome.getAmount();
         }
 
         databaseHelper.updateAccountBalanceAmount(databaseHelper.getAccountID(expenseIncome.getAccount()), newBalance);
+    }
 
-        MyUtils.getExpenseIncomeFromDatabase(HistoryTabbedActivity.this);
+    private void updateBudgets(ExpenseIncome expenseIncome, DatabaseHelper databaseHelper) {
 
-        updateLists();
+        Date date = new Date(expenseIncome.getDate());
+        ArrayList<Budget> budgets = new ArrayList<>();
+
+        for (Budget budget : MyUtils.budgetList) {
+            if (expenseIncome.getCategory().equals(budget.getCategory())) {
+                if (budget.isDateInArea(date)) {
+                    budgets.add(budget);
+                }
+            }
+        }
+
+        for (Budget budget : budgets) {
+            double newBalance = budget.getCurrentAmount();
+            newBalance -= expenseIncome.getAmount();
+            databaseHelper.updateBudgetCurrentAmount(databaseHelper.getBudgetId(budget), newBalance);
+        }
     }
 }

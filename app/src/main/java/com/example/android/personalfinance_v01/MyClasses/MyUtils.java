@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.android.personalfinance_v01.DataPersistance.DatabaseHelper;
+import com.example.android.personalfinance_v01.HistoryTabbedActivity;
 import com.example.android.personalfinance_v01.MainActivity;
 import com.example.android.personalfinance_v01.R;
 
@@ -370,9 +371,10 @@ public class MyUtils {
     //region Utility functions
 
     public static void createNotification(Context context, Intent intent, String title, String content, int iconId) {
-        //TODO MAKE 2 FUNCTIONS OUT OF THIS
         //TODO NOTIFICATIONS WHERE NEEDED
-        Intent backIntent = new Intent(context, MainActivity.class);
+
+        //When budget resets without exceeding it: *smiley face* Congratulations
+        Intent backIntent = new Intent(context, HistoryTabbedActivity.class);
         backIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.setFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
         PendingIntent pendingIntent = PendingIntent.getActivities(context, 0,

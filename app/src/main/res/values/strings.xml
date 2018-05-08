@@ -82,4 +82,10 @@
     <string name="editBudgetAmount">Edit budget amount</string>
     <string name="seeBudgetDetails">See Budget Details</string>
 
+    <string name="notificationExceededHalfBudgetTitle">Half gone</string>
+    <string name="notificationExceededHalfBudgetBody">You exceeded half your %1$s budget for %2$s</string>
+    <string name="notificationExceededBudgetTitle">Budget exceeded</string>
+    <string name="notificationExceededBudgetBody">You exceeded %1$s budget for %2$s</string>
+    <string name="notificationAlreadyExceededBudgetTitle">Slow down!</string>
+    <string name="notificationAlreadyExceededBudgetBody">You already exceeded the %1$s budget for %2$s</string>
 </resources>

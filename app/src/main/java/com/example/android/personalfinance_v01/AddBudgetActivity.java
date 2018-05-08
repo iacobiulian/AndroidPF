@@ -17,7 +17,11 @@ import com.example.android.personalfinance_v01.DataPersistance.DatabaseHelper;
 import com.example.android.personalfinance_v01.MyClasses.Budget;
 import com.example.android.personalfinance_v01.MyClasses.Category;
 import com.example.android.personalfinance_v01.MyClasses.Debt;
+import com.example.android.personalfinance_v01.MyClasses.ExpenseIncome;
 import com.example.android.personalfinance_v01.MyClasses.MyUtils;
+
+import java.util.ArrayList;
+import java.util.Date;
 
 public class AddBudgetActivity extends AppCompatActivity {
 
@@ -120,6 +124,7 @@ public class AddBudgetActivity extends AppCompatActivity {
 
     private void insertBudgetIntoDb() {
         Budget newBudget = createBudget();
+        initNewBudgetCurrentAmount(newBudget);
 
         if(newBudget.isValid()) {
             DatabaseHelper databaseHelper =  new DatabaseHelper(AddBudgetActivity.this);
@@ -132,5 +137,21 @@ public class AddBudgetActivity extends AppCompatActivity {
         } else {
             MyUtils.makeToast(this, getResources().getString(R.string.error_debt));
         }
+    }
+
+    private void initNewBudgetCurrentAmount(Budget budget) {
+        //TODO FIX THIS
+        double currentAmount = 0.0;
+
+        for (ExpenseIncome expenseIncome : MyUtils.expenseIncomeList) {
+            if (expenseIncome.getCategory().equals(budget.getCategory())) {
+                Date date = new Date(expenseIncome.getDate());
+                if (budget.isDateInArea(date)) {
+                    currentAmount+=expenseIncome.getAmount();
+                }
+            }
+        }
+
+        budget.setCurrentAmount(currentAmount);
     }
 }

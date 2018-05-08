@@ -1,5 +1,6 @@
 package com.example.android.personalfinance_v01;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -24,6 +25,8 @@ import com.example.android.personalfinance_v01.MyClasses.Transfer;
 import java.util.Objects;
 
 public class AddExpIncomeTabbedActivity extends AppCompatActivity {
+
+    private static final String TAG = "AddExpIncomeTabbedActiv";
 
     private static final int FRAGMENT_EXPENSE = 0;
     private static final int FRAGMENT_INCOME = 1;
@@ -192,9 +195,26 @@ public class AddExpIncomeTabbedActivity extends AppCompatActivity {
 
         for (Budget item : MyUtils.budgetList) {
             if (item.getCategory().equals(category)) {
-                MyUtils.modifyBudgetCurrentAmount(AddExpIncomeTabbedActivity.this, item, item.getCurrentAmount() + expense.getAmount());
+                double newAmount = item.getCurrentAmount() + expense.getAmount();
+                MyUtils.modifyBudgetCurrentAmount(AddExpIncomeTabbedActivity.this, item, newAmount);
+                if (item.isExceeded()) {
+                    makeBudgetNotification(item, R.string.notificationAlreadyExceededBudgetTitle, R.string.notificationAlreadyExceededBudgetBody);
+                } else if (item.getTotalAmount() < newAmount) {
+                    makeBudgetNotification(item, R.string.notificationExceededBudgetTitle, R.string.notificationExceededBudgetBody);
+                } else if (!item.isExceededHalf() && newAmount > item.getTotalAmount() / 2) {
+                    makeBudgetNotification(item, R.string.notificationExceededHalfBudgetTitle, R.string.notificationExceededHalfBudgetBody);
+                }
             }
         }
+    }
+
+    private void makeBudgetNotification(Budget budget, int titleStringId, int bodyStringId) {
+        Intent intent = new Intent(AddExpIncomeTabbedActivity.this, DetailedBudgetActivity.class);
+        intent.putExtra("budget", budget);
+        String title = getResources().getString(titleStringId);
+        String body = String.format(getResources().getString(bodyStringId),
+                budget.getTypeString(), budget.getCategory().getName());
+        MyUtils.createNotification(AddExpIncomeTabbedActivity.this, intent, title, body, budget.getCategory().getIconID());
     }
 }
 

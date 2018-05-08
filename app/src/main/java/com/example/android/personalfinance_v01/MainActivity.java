@@ -95,8 +95,8 @@ public class MainActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, ChartsActivity.class);
-                MyUtils.createNotification(MainActivity.this, intent,"Testing","Content",R.drawable.categ_health);
+                Intent intent = new Intent(getApplicationContext(), ChartsActivity.class);
+                MyUtils.createNotification(getApplicationContext(), intent,"Exceeded budget","You exceeded your allocated budget ",R.drawable.notif_warning);
             }
         });
     }
