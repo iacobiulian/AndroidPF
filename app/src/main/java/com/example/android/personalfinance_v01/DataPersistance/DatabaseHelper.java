@@ -8,11 +8,11 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import com.example.android.personalfinance_v01.DataPersistance.DatabaseContract.BalanceAccountEntry;
+import com.example.android.personalfinance_v01.DataPersistance.DatabaseContract.BudgetEntry;
 import com.example.android.personalfinance_v01.DataPersistance.DatabaseContract.DebtEntry;
 import com.example.android.personalfinance_v01.DataPersistance.DatabaseContract.ExpenseIncomeEntry;
 import com.example.android.personalfinance_v01.DataPersistance.DatabaseContract.GoalEntry;
 import com.example.android.personalfinance_v01.DataPersistance.DatabaseContract.TransferEntry;
-import com.example.android.personalfinance_v01.DataPersistance.DatabaseContract.BudgetEntry;
 import com.example.android.personalfinance_v01.MyClasses.BalanceAccount;
 import com.example.android.personalfinance_v01.MyClasses.Budget;
 import com.example.android.personalfinance_v01.MyClasses.Debt;
@@ -105,6 +105,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 //        sqLiteDatabase.execSQL(dropGoal);
 //        onCreate(sqLiteDatabase);
 
+        String dropBudget = "DROP TABLE IF EXISTS " + BudgetEntry.TABLE_NAME + ";";
 
         String createTableBudgets = "CREATE TABLE " + BudgetEntry.TABLE_NAME + "("
                 + BudgetEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
@@ -112,7 +113,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + BudgetEntry.COLUMN_CATEGORY_NAME + " TEXT, "
                 + BudgetEntry.COLUMN_TOTAL_AMOUNT + " REAL, "
                 + BudgetEntry.COLUMN_CURRENT_AMOUNT + " REAL, "
-                + BudgetEntry.COLUMN_DATE + " INTEGER);";
+                + BudgetEntry.COLUMN_DATE + " INTEGER, "
+                + BudgetEntry.COLUMN_RESET_DATE + " INTEGER);";
+        sqLiteDatabase.execSQL(dropBudget);
         sqLiteDatabase.execSQL(createTableBudgets);
     }
 
@@ -502,7 +505,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     /**
-     * @param goalId        Database id of the goal being updated
+     * @param goalId         Database id of the goal being updated
      * @param newSavedAmount Updated saved amount
      */
     public void updateGoalSavedAmount(int goalId, double newSavedAmount) {
@@ -539,7 +542,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         budgetContentValues.put(BudgetEntry.COLUMN_CATEGORY_NAME, budget.getCategory().getName());
         budgetContentValues.put(BudgetEntry.COLUMN_TOTAL_AMOUNT, budget.getTotalAmount());
         budgetContentValues.put(BudgetEntry.COLUMN_CURRENT_AMOUNT, budget.getCurrentAmount());
-        budgetContentValues.put(BudgetEntry.COLUMN_DATE, budget.getDate());
+        budgetContentValues.put(BudgetEntry.COLUMN_DATE, budget.getCreationDate());
+        budgetContentValues.put(BudgetEntry.COLUMN_RESET_DATE, budget.getResetDate());
 
         long result = db.insert(BudgetEntry.TABLE_NAME, null, budgetContentValues);
 
@@ -561,7 +565,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      */
     public int getBudgetId(Budget searchedBudget) {
         String selectQuery = "SELECT " + BudgetEntry._ID + " FROM " + BudgetEntry.TABLE_NAME +
-                " WHERE " + BudgetEntry.COLUMN_DATE + " = '" + searchedBudget.getDate() + "' AND "
+                " WHERE " + BudgetEntry.COLUMN_DATE + " = '" + searchedBudget.getCreationDate() + "' AND "
                 + BudgetEntry.COLUMN_TOTAL_AMOUNT + " = '" + searchedBudget.getTotalAmount() + "';";
 
         SQLiteDatabase db = this.getWritableDatabase();
@@ -577,8 +581,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     /**
-     * @param budgetId        Database id of the budget being updated
-     * @param newTotalAmount  New total budget amount
+     * @param budgetId       Database id of the budget being updated
+     * @param newTotalAmount New total budget amount
      */
     public void updateBudgetTotalAmount(int budgetId, double newTotalAmount) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -589,7 +593,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     /**
-     * @param budgetId        Database id of the debt being updated
+     * @param budgetId         Database id of the debt being updated
      * @param newCurrentAmount New currently spent budget amount
      */
     public void updateBudgetCurrentAmount(int budgetId, double newCurrentAmount) {

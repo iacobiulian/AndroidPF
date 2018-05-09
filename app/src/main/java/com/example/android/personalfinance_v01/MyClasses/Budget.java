@@ -14,7 +14,8 @@ public class Budget implements Serializable {
     private Category category;
     private double totalAmount;
     private double currentAmount;
-    private long date;
+    private long creationDate;
+    private long resetDate;
 
     public Budget() {
     }
@@ -24,19 +25,21 @@ public class Budget implements Serializable {
         this.category = category;
         this.totalAmount = totalAmount;
         currentAmount = 0;
-        date = MyUtils.getCurrentDateTime();
+        creationDate = MyUtils.getCurrentDateTime();
+        resetDate = getNextResetDate(this.creationDate);
     }
 
-    public Budget(int type, Category category, double totalAmount, double currentAmount, long date) {
+    public Budget(int type, Category category, double totalAmount, double currentAmount, long creationDate, long resetDate) {
         this.type = type;
         this.category = category;
         this.totalAmount = totalAmount;
         this.currentAmount = currentAmount;
-        this.date = date;
+        this.creationDate = creationDate;
+        this.resetDate = resetDate;
     }
 
-    public long getDate() {
-        return date;
+    public long getCreationDate() {
+        return creationDate;
     }
 
     public int getType() {
@@ -58,16 +61,16 @@ public class Budget implements Serializable {
         }
     }
 
+    public long getResetDate() {
+        return resetDate;
+    }
+
     public Category getCategory() {
         return category;
     }
 
     public double getTotalAmount() {
         return totalAmount;
-    }
-
-    public void setTotalAmount(double totalAmount) {
-        this.totalAmount = totalAmount;
     }
 
     public double getCurrentAmount() {
@@ -83,25 +86,46 @@ public class Budget implements Serializable {
         Calendar calendar = Calendar.getInstance();
         calendar.setFirstDayOfWeek(Calendar.MONDAY);
 
-        int day = 0;
+        Date rightNow = calendar.getTime();
+
+        if(rightNow.after(new Date(this.resetDate))) {
+            this.resetDate = getNextResetDate(this.resetDate);
+            return true;
+        }
+
+        return false;
+    }
+
+    private long getNextResetDate(long date) {
+        Date creationDate = new Date(date);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setFirstDayOfWeek(Calendar.MONDAY);
+        calendar.setTime(creationDate);
+        calendar.add(Calendar.DATE, 1);
 
         switch (this.getType()) {
             case NONE:
-                break;
+                return Long.MAX_VALUE - 1;
             case WEEKLY:
-                day = calendar.get(Calendar.DAY_OF_WEEK);
+                while (calendar.get(Calendar.DAY_OF_WEEK) != Calendar.MONDAY) {
+                    calendar.add(Calendar.DATE, 1);
+                }
                 break;
             case MONTHLY:
-                day = calendar.get(Calendar.DAY_OF_MONTH);
+                while (calendar.get(Calendar.DAY_OF_MONTH) != 1) {
+                    calendar.add(Calendar.DATE, 1);
+                }
                 break;
             case YEARLY:
-                day = calendar.get(Calendar.DAY_OF_YEAR);
+                while (calendar.get(Calendar.DAY_OF_YEAR) != 1) {
+                    calendar.add(Calendar.DATE, 1);
+                }
                 break;
             default:
-                break;
+                return Long.MAX_VALUE - 1;
         }
 
-        return (day == 1);
+        return calendar.getTimeInMillis();
     }
 
     public boolean isValid() {

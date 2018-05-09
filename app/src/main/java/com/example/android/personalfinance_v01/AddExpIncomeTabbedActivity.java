@@ -209,7 +209,7 @@ public class AddExpIncomeTabbedActivity extends AppCompatActivity {
     }
 
     private void makeBudgetNotification(Budget budget, int titleStringId, int bodyStringId) {
-        Intent intent = new Intent(AddExpIncomeTabbedActivity.this, DetailedBudgetActivity.class);
+        Intent intent = new Intent(getApplicationContext(), DetailedBudgetActivity.class);
         intent.putExtra("budget", budget);
         String title = getResources().getString(titleStringId);
         String body = String.format(getResources().getString(bodyStringId),

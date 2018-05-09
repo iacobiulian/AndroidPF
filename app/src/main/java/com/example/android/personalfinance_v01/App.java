@@ -2,13 +2,19 @@ package com.example.android.personalfinance_v01;
 
 import android.app.Application;
 
-import com.evernote.android.job.JobManager;
-import com.example.android.personalfinance_v01.Jobs.MyJobCreator;
+import java.util.concurrent.TimeUnit;
 
 public class App extends Application {
+    private static App instance;
+
+    public static App getInstance() {
+        return instance;
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
-        JobManager.create(this).addJobCreator(new MyJobCreator());
+
+        instance = this;
     }
 }

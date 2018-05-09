@@ -3,6 +3,7 @@ package com.example.android.personalfinance_v01;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class AddBudgetActivity extends AppCompatActivity {
+    private static final String TAG = "AddBudgetActivity";
 
     Spinner typeSpinner;
     Spinner categorySpinner;
@@ -34,6 +36,8 @@ public class AddBudgetActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_budget);
+
+        MyUtils.getExpenseIncomeFromDatabase(AddBudgetActivity.this);
 
         amountEt = findViewById(R.id.addBudgetAmountEt);
 
@@ -140,7 +144,6 @@ public class AddBudgetActivity extends AppCompatActivity {
     }
 
     private void initNewBudgetCurrentAmount(Budget budget) {
-        //TODO FIX THIS
         double currentAmount = 0.0;
 
         for (ExpenseIncome expenseIncome : MyUtils.expenseIncomeList) {

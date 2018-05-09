@@ -1,4 +1,5 @@
 package com.example.android.personalfinance_v01.DataPersistance;
+
 import android.provider.BaseColumns;
 
 /**
@@ -6,10 +7,10 @@ import android.provider.BaseColumns;
  */
 
 public final class DatabaseContract {
-    private DatabaseContract() {}
-
     public static final String DATABASE_NAME = "personal_finance.db";
-    public static final int DATABASE_VERSION = 6;
+    public static final int DATABASE_VERSION = 7;
+    private DatabaseContract() {
+    }
 
     public final static class BalanceAccountEntry implements BaseColumns {
         public static final String TABLE_NAME = "balance_accounts";
@@ -74,5 +75,6 @@ public final class DatabaseContract {
         public static final String COLUMN_TOTAL_AMOUNT = "total_amount";
         public static final String COLUMN_CURRENT_AMOUNT = "current_amount";
         public static final String COLUMN_DATE = "creation_date";
+        public static final String COLUMN_RESET_DATE = "reset_date";
     }
 }

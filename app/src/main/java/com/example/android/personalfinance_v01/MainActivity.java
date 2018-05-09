@@ -2,15 +2,11 @@ package com.example.android.personalfinance_v01;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -24,7 +20,6 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.android.personalfinance_v01.CustomAdapters.BalanceAccountAdapterMain;
-import com.example.android.personalfinance_v01.Jobs.BudgetResetJob;
 import com.example.android.personalfinance_v01.MyClasses.Budget;
 import com.example.android.personalfinance_v01.MyClasses.ExpenseIncome;
 import com.example.android.personalfinance_v01.MyClasses.MyUtils;
@@ -73,11 +68,11 @@ public class MainActivity extends AppCompatActivity {
         //ListView
         initListView();
 
+        //Budgets
+        checkBudgetsReset();
+
         //Jobs
         //scheduleJobs();
-
-        //NOTIFICATIONS
-        initNotificationButton();
 
         //'Add account' button
         Button button = findViewById(R.id.mainAddAccountBtn);
@@ -85,18 +80,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 MyUtils.startActivity(MainActivity.this, CreateAccountActivity.class);
-            }
-        });
-    }
-
-    private void initNotificationButton() {
-        Button button = findViewById(R.id.btnNotification);
-
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), ChartsActivity.class);
-                MyUtils.createNotification(getApplicationContext(), intent,"Exceeded budget","You exceeded your allocated budget ",R.drawable.notif_warning);
             }
         });
     }
@@ -145,10 +128,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    private void scheduleJobs() {
-        BudgetResetJob.schedule();
     }
 
     private void initDrawer() {

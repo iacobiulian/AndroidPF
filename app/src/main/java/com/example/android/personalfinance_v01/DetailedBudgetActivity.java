@@ -3,7 +3,6 @@ package com.example.android.personalfinance_v01;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -152,6 +151,7 @@ public class DetailedBudgetActivity extends AppCompatActivity {
 
         ArrayList<ExpenseIncome> filteredCategList = filterCategoryExpenseIncomeList(expenseIncomeList, currentBudget.getCategory());
         for (int i = 0; i < periodSize; i++) {
+            //TODO USE BUDGET.ISINDATEAREA() HERE
             calendarLower.setTime(startDate);
             calendarUpper.setTime(startDate);
             calendarLower.add(calendarType, i);
@@ -184,7 +184,7 @@ public class DetailedBudgetActivity extends AppCompatActivity {
         for (ExpenseIncome item : list) {
             Date date = new Date(item.getDate());
             boolean cond = date.after(lowerBound) && date.before(upperBound);
-            boolean otherCond = date.after(new Date(currentBudget.getDate()));
+            boolean otherCond = date.after(new Date(currentBudget.getCreationDate()));
             if (cond && otherCond) {
                 filteredList.add(item);
             }
@@ -240,7 +240,7 @@ public class DetailedBudgetActivity extends AppCompatActivity {
 
     private boolean isPeriodPopulated() {
         for (double item : period) {
-            if (item > 0) {
+            if (item > 0.0) {
                 return true;
             }
         }

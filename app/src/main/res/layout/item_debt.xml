@@ -91,7 +91,7 @@
         android:layout_marginStart="4dp"
         android:layout_marginTop="4dp"
         android:textSize="@dimen/debt_text_small"
-        tools:text="Start date" />
+        tools:text="Start creationDate" />
 
     <TextView
         android:id="@+id/itemDebtEndDateTv"
@@ -101,7 +101,7 @@
         android:layout_alignBottom="@+id/itemDebtStartDateTv"
         android:layout_alignParentEnd="true"
         android:textSize="@dimen/debt_text_small"
-        tools:text="Due date" />
+        tools:text="Due creationDate" />
 
     <TextView
         android:id="@+id/itemDebtClosed"

@@ -13,7 +13,6 @@ import android.widget.Toast;
 
 import com.example.android.personalfinance_v01.DataPersistance.DatabaseHelper;
 import com.example.android.personalfinance_v01.HistoryTabbedActivity;
-import com.example.android.personalfinance_v01.MainActivity;
 import com.example.android.personalfinance_v01.R;
 
 import java.text.DateFormat;
@@ -164,8 +163,9 @@ public class MyUtils {
             double totalAmount = cursor.getDouble(3);
             double currentAmount = cursor.getDouble(4);
             long dateCreated = cursor.getLong(5);
+            long resetDate = cursor.getLong(6);
 
-            list.add(new Budget(type, searchExpenseCategoryList(categoryName), totalAmount, currentAmount, dateCreated));
+            list.add(new Budget(type, searchExpenseCategoryList(categoryName), totalAmount, currentAmount, dateCreated, resetDate));
         }
 
         return list;
