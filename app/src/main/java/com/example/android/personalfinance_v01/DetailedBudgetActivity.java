@@ -3,7 +3,7 @@ package com.example.android.personalfinance_v01;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -26,9 +26,9 @@ import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Objects;
 
-import static com.example.android.personalfinance_v01.MyClasses.MyUtils.addDaysToDate;
 import static com.example.android.personalfinance_v01.MyClasses.MyUtils.expenseIncomeList;
 import static com.example.android.personalfinance_v01.MyClasses.MyUtils.formatDecimalTwoPlaces;
 
@@ -41,6 +41,8 @@ public class DetailedBudgetActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detailed_budget);
+
+        MyUtils.getExpenseIncomeFromDatabase(DetailedBudgetActivity.this);
 
         currentBudget = (Budget) Objects.requireNonNull(getIntent().getExtras()).getSerializable("budget");
 
@@ -109,46 +111,60 @@ public class DetailedBudgetActivity extends AppCompatActivity {
     private void initPeriod() {
         Calendar calendar = Calendar.getInstance();
         calendar.setFirstDayOfWeek(Calendar.MONDAY);
+        calendar.set(Calendar.HOUR_OF_DAY,0);
 
         switch (currentBudget.getType()) {
             case Budget.NONE:
             case Budget.WEEKLY:
                 periodNames = new String[]{"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"};
                 calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-                long mondayOfThisWeek = calendar.getTime().getTime();
-                initSpecificPeriod(mondayOfThisWeek, 7, 1);
+                initSpecificPeriod(calendar.getTime(), 7, Calendar.DATE);
                 break;
             case Budget.MONTHLY:
                 //get the value spent for each week of the month
                 periodNames = new String[]{"Week 1", "Week 2", "Week 3", "Week 4"};
                 calendar.set(Calendar.DAY_OF_MONTH, 1);
-                long firstDayOfMonth = calendar.getTime().getTime();
-                initSpecificPeriod(firstDayOfMonth, 4, 7);
+                initSpecificPeriod(calendar.getTime(), 4, Calendar.WEEK_OF_MONTH);
                 break;
             case Budget.YEARLY:
                 //get the value spent for each month of the year
                 periodNames = new String[]{"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Dec"};
                 calendar.set(Calendar.DAY_OF_YEAR, 1);
-                long firstDayOfYear = calendar.getTime().getTime();
-                initSpecificPeriod(firstDayOfYear, 12, 30);
+                initSpecificPeriod(calendar.getTime(), 12, Calendar.MONTH);
                 break;
             default:
+                MyUtils.makeToast(DetailedBudgetActivity.this, "You should never see this");
                 break;
         }
 
     }
 
-    private void initSpecificPeriod(long startTime, int periodSize, int offset) {
+    private void initSpecificPeriod(Date startDate, int periodSize, int calendarType) {
         period = new double[periodSize];
 
         //filter the list based on budget category
+        Calendar calendarLower = Calendar.getInstance();
+        Calendar calendarUpper = Calendar.getInstance();
+        calendarLower.setTime(startDate);
+        calendarUpper.setTime(startDate);
+        Date lowerBound;
+        Date upperBound;
+
         ArrayList<ExpenseIncome> filteredCategList = filterCategoryExpenseIncomeList(expenseIncomeList, currentBudget.getCategory());
         for (int i = 0; i < periodSize; i++) {
+            calendarLower.setTime(startDate);
+            calendarUpper.setTime(startDate);
+            calendarLower.add(calendarType, i);
+            calendarUpper.add(calendarType, i + 1);
+            lowerBound = calendarLower.getTime();
+            upperBound = calendarUpper.getTime();
             ArrayList<ExpenseIncome> filteredTimeList =
-                    filterTimeExpenseIncomeList(filteredCategList,
-                            addDaysToDate(startTime, i * offset), addDaysToDate(startTime, (i + 1) * offset));
-            for (ExpenseIncome expinc : filteredTimeList) {
-                period[i] += expinc.getAmount();
+                    new ArrayList<>(filterTimeExpenseIncomeList(filteredCategList, lowerBound, upperBound));
+
+            if(!filteredTimeList.isEmpty()) {
+                for (ExpenseIncome expinc : filteredTimeList) {
+                    period[i] += expinc.getAmount();
+                }
             }
         }
     }
@@ -163,12 +179,13 @@ public class DetailedBudgetActivity extends AppCompatActivity {
         return filteredList;
     }
 
-    private ArrayList<ExpenseIncome> filterTimeExpenseIncomeList(ArrayList<ExpenseIncome> list, long lowerBound, long upperBound) {
+    private ArrayList<ExpenseIncome> filterTimeExpenseIncomeList(ArrayList<ExpenseIncome> list, Date lowerBound, Date upperBound) {
         ArrayList<ExpenseIncome> filteredList = new ArrayList<>();
         for (ExpenseIncome item : list) {
-            boolean lower = item.getDate() > lowerBound;
-            boolean upper = item.getDate() < upperBound;
-            if (lower && upper) {
+            Date date = new Date(item.getDate());
+            boolean cond = date.after(lowerBound) && date.before(upperBound);
+            boolean otherCond = date.after(new Date(currentBudget.getDate()));
+            if (cond && otherCond) {
                 filteredList.add(item);
             }
         }
@@ -197,7 +214,9 @@ public class DetailedBudgetActivity extends AppCompatActivity {
         if (isPeriodPopulated()) {
             ArrayList<BarEntry> entries = new ArrayList<BarEntry>();
             for (int i = 0; i < period.length; i++) {
-                entries.add(new BarEntry(i, MyUtils.returnFloat(period[i])));
+                float xValue = (float) i;
+                float yValue = (float) period[i];
+                entries.add(new BarEntry(xValue, yValue));
             }
 
             BarDataSet barDataSet = new BarDataSet(entries, "");
@@ -217,7 +236,6 @@ public class DetailedBudgetActivity extends AppCompatActivity {
             emptyTextView.setVisibility(View.VISIBLE);
         }
 
-        //TODO https://www.youtube.com/watch?v=naPRHNfzDk8
     }
 
     private boolean isPeriodPopulated() {

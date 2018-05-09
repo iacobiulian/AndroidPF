@@ -1,14 +1,19 @@
 package com.example.android.personalfinance_v01.MyClasses;
 
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.android.personalfinance_v01.DataPersistance.DatabaseHelper;
+import com.example.android.personalfinance_v01.HistoryTabbedActivity;
+import com.example.android.personalfinance_v01.MainActivity;
 import com.example.android.personalfinance_v01.R;
 
 import java.text.DateFormat;
@@ -365,6 +370,30 @@ public class MyUtils {
 
     //region Utility functions
 
+    public static void createNotification(Context context, Intent intent, String title, String content, int iconId) {
+        //TODO NOTIFICATIONS WHERE NEEDED
+
+        //When budget resets without exceeding it: *smiley face* Congratulations
+        Intent backIntent = new Intent(context, HistoryTabbedActivity.class);
+        backIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.setFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+        PendingIntent pendingIntent = PendingIntent.getActivities(context, 0,
+                new Intent[]{backIntent, intent}, PendingIntent.FLAG_ONE_SHOT);
+
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context, "default")
+                .setSmallIcon(iconId)
+                .setContentTitle(title)
+                .setContentText(content)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true);
+
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
+
+        // notificationId is a unique int for each notification that you must define
+        notificationManager.notify(1, mBuilder.build());
+    }
+
     public static String formatDecimalOnePlace(double numberToFormat) {
         DecimalFormat df = new DecimalFormat("0.0");
         return df.format(numberToFormat);
@@ -386,10 +415,6 @@ public class MyUtils {
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DAY_OF_YEAR, -days);
         return cal.getTime().getTime();
-    }
-
-    public static long addDaysToDate(long date, int days) {
-        return date + days * 24 * 3600;
     }
 
     public static String formatDateWithTime(long unixTime) {
