@@ -33,7 +33,7 @@ public class CreateAccountActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_create_account);
+        setContentView(R.layout.activity_add_account);
 
         nameEt = findViewById(R.id.createAccNameEt);
         balanceEt = findViewById(R.id.createAccBalanceEt);

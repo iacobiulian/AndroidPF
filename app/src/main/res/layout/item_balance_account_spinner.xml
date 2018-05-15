@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:gravity="center_vertical"
-        android:textColor="@color/textWhite"
+        android:textColor="@color/icons"
         android:textSize="@dimen/category_text"
         tools:text="Cash" />
 
@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_toEndOf="@id/itemBalAccSpinnerName"
         android:gravity="center_vertical"
-        android:textColor="@color/textWhite"
+        android:textColor="@color/icons"
         android:textSize="@dimen/category_text"
         tools:text="RON" />
 

@@ -3,6 +3,7 @@ package com.example.android.personalfinance_v01;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -32,6 +33,8 @@ import static com.example.android.personalfinance_v01.MyClasses.MyUtils.expenseI
 import static com.example.android.personalfinance_v01.MyClasses.MyUtils.formatDecimalTwoPlaces;
 
 public class DetailedBudgetActivity extends AppCompatActivity {
+    private static final String TAG = "DetailedBudgetActivity";
+
     private Budget currentBudget = null;
     private double[] period;
     private String[] periodNames;
@@ -117,6 +120,7 @@ public class DetailedBudgetActivity extends AppCompatActivity {
             case Budget.WEEKLY:
                 periodNames = new String[]{"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"};
                 calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+                Log.e(TAG, "initPeriod: " + calendar.getTime() );
                 initSpecificPeriod(calendar.getTime(), 7, Calendar.DATE);
                 break;
             case Budget.MONTHLY:
@@ -184,8 +188,7 @@ public class DetailedBudgetActivity extends AppCompatActivity {
         for (ExpenseIncome item : list) {
             Date date = new Date(item.getDate());
             boolean cond = date.after(lowerBound) && date.before(upperBound);
-            boolean otherCond = date.after(new Date(currentBudget.getCreationDate()));
-            if (cond && otherCond) {
+            if (cond) {
                 filteredList.add(item);
             }
         }

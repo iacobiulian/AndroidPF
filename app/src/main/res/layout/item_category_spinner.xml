@@ -20,7 +20,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
-        android:textColor="@color/textDark"
+        android:textColor="@color/textPrimary"
         android:textSize="@dimen/category_text"
         tools:text="Free time" />
 

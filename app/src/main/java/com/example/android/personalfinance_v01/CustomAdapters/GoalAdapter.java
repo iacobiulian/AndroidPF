@@ -51,6 +51,7 @@ public class GoalAdapter extends ArrayAdapter<Goal> {
             ProgressBar progressBar = convertView.findViewById(R.id.itemGoalProgressBar);
             int percentage = (int) (currentGoal.getSavedAmount() * 100 / currentGoal.getGoalAmount());
             progressBar.setProgress(percentage);
+            progressBar.
 
             TextView goalAmountTv = convertView.findViewById(R.id.itemGoalAmountTv);
             goalAmountTv.setText("Goal: " + formatDecimalTwoPlaces(currentGoal.getGoalAmount()));

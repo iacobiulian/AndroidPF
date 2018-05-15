@@ -2,11 +2,11 @@
 
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:padding="16dp"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="16dp">
 
     <CheckBox
         android:id="@+id/dialogFilterExpCheckBox1"
@@ -58,20 +58,26 @@
 
     <Button
         android:id="@+id/dialogFilterExpUnselectBtn"
-        android:text="@string/unselect"
+        style="@style/buttonStyle"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:text="@string/unselect" />
 
     <Button
         android:id="@+id/dialogFilterExpSelectBtn"
-        android:text="@string/selectAll"
+        style="@style/buttonStyle"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:text="@string/selectAll" />
 
     <Button
         android:id="@+id/dialogFilterExpSaveBtn"
-        android:text="@string/save"
+        style="@style/buttonStyle"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:text="@string/save" />
 
 </LinearLayout>

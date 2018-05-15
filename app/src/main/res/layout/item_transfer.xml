@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
-    android:background="@color/textGrey"
+    android:background="@color/textSecondary"
     android:orientation="vertical"
     android:padding="8dp">
 
@@ -20,7 +20,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:textColor="@color/textDark"
+            android:textColor="@color/textPrimary"
             android:textSize="@dimen/category_text"
             tools:text="140" />
 
@@ -30,7 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:gravity="center_vertical"
-            android:textColor="@color/textDark"
+            android:textColor="@color/textPrimary"
             android:textSize="@dimen/category_text"
             tools:text="Currency" />
 
@@ -48,7 +48,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="4dp"
             android:gravity="center_vertical"
-            android:textColor="@color/textDark"
+            android:textColor="@color/textPrimary"
             android:textSize="16sp"
             tools:text="Bank" />
 
@@ -57,7 +57,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:textColor="@color/textDark"
+            android:textColor="@color/textPrimary"
             android:textSize="16sp"
             android:text="@string/line" />
 
@@ -67,7 +67,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
             android:gravity="center_vertical"
-            android:textColor="@color/textDark"
+            android:textColor="@color/textPrimary"
             android:textSize="16sp"
             tools:text="Cash" />
 
@@ -79,6 +79,6 @@
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:padding="4dp"
-        android:textColor="@color/textDark"
+        android:textColor="@color/textPrimary"
         tools:text="Wed, 18 June, 2002, 15:44" />
 </LinearLayout>

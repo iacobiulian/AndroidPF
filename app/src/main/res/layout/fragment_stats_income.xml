@@ -15,6 +15,6 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:text="@string/no_data"
-        android:textColor="@color/textDark"
+        android:textColor="@color/textPrimary"
         android:textSize="24sp" />
 </RelativeLayout>

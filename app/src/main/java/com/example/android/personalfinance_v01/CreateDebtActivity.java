@@ -40,7 +40,7 @@ public class CreateDebtActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_create_debt);
+        setContentView(R.layout.activity_add_debt);
 
         //Toolbar
         toolbar = findViewById(R.id.addDebtToolbar);
