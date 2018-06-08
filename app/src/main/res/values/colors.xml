@@ -22,4 +22,6 @@
     <color name="darkYellow">#d5ae9f02</color>
     <color name="darkCyan">#d500beae</color>
     <color name="darkGreen">#d5085c04</color>
+
+    <color name="selectedItem">#e0c9e4</color>
 </resources>

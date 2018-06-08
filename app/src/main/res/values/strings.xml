@@ -88,4 +88,6 @@
     <string name="notificationExceededBudgetBody">You exceeded %1$s budget for %2$s</string>
     <string name="notificationAlreadyExceededBudgetTitle">Slow down!</string>
     <string name="notificationAlreadyExceededBudgetBody">You already exceeded the %1$s budget for %2$s</string>
+    <string name="nothingHere">There\'s nothing here!</string>
+    <string name="clickThePlus">Click the + to add a new item</string>
 </resources>

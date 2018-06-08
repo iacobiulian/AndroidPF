@@ -87,9 +87,10 @@ public class Budget implements Serializable {
         calendar.setFirstDayOfWeek(Calendar.MONDAY);
 
         Date rightNow = calendar.getTime();
+        long currentResetDate = this.resetDate;
 
         if(rightNow.after(new Date(this.resetDate))) {
-            this.resetDate = getNextResetDate(this.resetDate);
+            setResetDate(getNextResetDate(currentResetDate));
             return true;
         }
 
@@ -161,5 +162,9 @@ public class Budget implements Serializable {
         }
 
         return date.after(calendar.getTime());
+    }
+
+    private void setResetDate(long resetDate) {
+        this.resetDate = resetDate;
     }
 }

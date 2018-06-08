@@ -39,6 +39,7 @@ public class DebtListActivity extends AppCompatActivity {
         MyUtils.getDebtsFromDatabase(DebtListActivity.this);
         listView = findViewById(R.id.debtListView);
         final DebtAdapter debtAdapter = new DebtAdapter(this, MyUtils.debtList);
+        listView.setEmptyView(findViewById(R.id.debtListEmptyView));
         listView.setAdapter(debtAdapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

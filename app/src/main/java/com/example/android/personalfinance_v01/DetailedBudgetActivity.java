@@ -155,7 +155,6 @@ public class DetailedBudgetActivity extends AppCompatActivity {
 
         ArrayList<ExpenseIncome> filteredCategList = filterCategoryExpenseIncomeList(expenseIncomeList, currentBudget.getCategory());
         for (int i = 0; i < periodSize; i++) {
-            //TODO USE BUDGET.ISINDATEAREA() HERE
             calendarLower.setTime(startDate);
             calendarUpper.setTime(startDate);
             calendarLower.add(calendarType, i);

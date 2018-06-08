@@ -2,6 +2,7 @@ package com.example.android.personalfinance_v01;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -13,12 +14,15 @@ import com.example.android.personalfinance_v01.DataPersistance.DatabaseHelper;
 import com.example.android.personalfinance_v01.MyClasses.BalanceAccount;
 import com.example.android.personalfinance_v01.MyClasses.ExpenseIncome;
 import com.example.android.personalfinance_v01.MyClasses.MyUtils;
+import com.example.android.personalfinance_v01.MyClasses.Transfer;
 import com.github.clans.fab.FloatingActionButton;
 
 public class AccountListActivity extends AppCompatActivity {
 
     ListView listView;
     FloatingActionButton fab;
+
+    private static final String TAG = "AccountListActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +93,13 @@ public class AccountListActivity extends AppCompatActivity {
         for(ExpenseIncome expenseIncome : MyUtils.expenseIncomeList) {
             if(expenseIncome.getAccount().equals(accountForDeletion)) {
                 databaseHelper.deleteExpenseIncome(databaseHelper.getExpenseIncomeID(expenseIncome));
+            }
+        }
+
+        for(Transfer transfer : MyUtils.transferList) {
+            if(transfer.getToAccount().equals(accountForDeletion) || transfer.getFromAccount().equals(accountForDeletion)) {
+                Log.e(TAG, "FROMACC: " + transfer.getFromAccount().getName() + " TOACC: " + transfer.getToAccount().getName() );
+                databaseHelper.deleteTransfer(databaseHelper.getTransferID(transfer));
             }
         }
 

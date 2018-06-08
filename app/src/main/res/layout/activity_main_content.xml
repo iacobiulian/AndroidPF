@@ -1,38 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.example.android.personalfinance_v01.MainActivity"
     tools:showIn="@layout/activity_main">
 
-    <Button
-        android:id="@+id/mainAddAccountBtn"
-        style="@style/buttonStyle"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_margin="32dp"
-        android:text="@string/createAccount"
-        android:visibility="gone" />
+        android:layout_height="0dp"
+        android:layout_weight="6">
 
-    <ListView
-        android:id="@+id/mainAccountListView"
+        <Button
+            android:id="@+id/mainAddAccountBtn"
+            style="@style/buttonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_margin="32dp"
+            android:text="@string/createAccount"
+            android:visibility="gone" />
+
+        <ListView
+            android:id="@+id/mainAccountListView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp" />
+
+        <TextView
+            android:id="@+id/cashAmountTv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:gravity="center_horizontal"
+            android:textSize="@android:dimen/notification_large_icon_height"
+            android:visibility="gone"
+            tools:text="1234" />
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp" />
+        android:id="@+id/mainAccDetailsRelLay"
+        android:layout_height="0px"
+        android:layout_weight="3">
 
-    <TextView
-        android:id="@+id/cashAmountTv"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:gravity="center_horizontal"
-        android:textSize="@android:dimen/notification_large_icon_height"
-        android:visibility="gone"
-        tools:text="1234" />
+        <TextView
+            android:id="@+id/mainAccNameTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:padding="8dp"
+            tools:text="AccountName" />
 
-</RelativeLayout>
+        <TextView
+            android:id="@+id/mainAccBalanceTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/mainAccNameTv"
+            android:layout_centerHorizontal="true"
+            android:drawableStart="@drawable/ic_money"
+            android:textSize="42sp"
+            tools:text="1234.5" />
+
+        <TextView
+            android:id="@+id/mainAccLastUsedTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/mainAccBalanceTv"
+            android:layout_marginTop="3dp"
+            android:layout_centerHorizontal="true"
+            tools:text="Last used 22/10" />
+
+    </RelativeLayout>
+
+</LinearLayout>

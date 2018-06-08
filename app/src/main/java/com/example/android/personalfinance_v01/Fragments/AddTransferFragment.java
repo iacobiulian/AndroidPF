@@ -22,7 +22,6 @@ import com.example.android.personalfinance_v01.R;
 public class AddTransferFragment extends Fragment {
 
     private static final String BASE_VALUE = "0";
-    private static final String TAG = "AddTransferFragment";
     private String currentValue = BASE_VALUE;
 
     private View mainView;
@@ -124,8 +123,6 @@ public class AddTransferFragment extends Fragment {
                     toRadioButtonIndex = selectedIndex;
                 }
 
-                Log.e(TAG, "From: " + fromAcc.getName() + " From Index: " + fromRadioButtonIndex);
-                Log.e(TAG, "\nTo: " + toAcc.getName() + " To Index: " + toRadioButtonIndex);
                 updateTextViews();
                 alertDialog.dismiss();
             }

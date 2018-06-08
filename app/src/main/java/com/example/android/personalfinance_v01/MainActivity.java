@@ -17,13 +17,18 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.android.personalfinance_v01.CustomAdapters.BalanceAccountAdapterMain;
+import com.example.android.personalfinance_v01.MyClasses.BalanceAccount;
 import com.example.android.personalfinance_v01.MyClasses.Budget;
 import com.example.android.personalfinance_v01.MyClasses.ExpenseIncome;
 import com.example.android.personalfinance_v01.MyClasses.MyUtils;
+import com.example.android.personalfinance_v01.MyClasses.Transfer;
 import com.github.clans.fab.FloatingActionButton;
+import com.github.clans.fab.FloatingActionMenu;
 
 import java.util.Objects;
 
@@ -53,6 +58,9 @@ public class MainActivity extends AppCompatActivity {
 
         initNotificationChannels(MainActivity.this);
 
+        MyUtils.getExpenseIncomeFromDatabase(this);
+        MyUtils.getTransfersFromDatabase(this);
+
         //Toolbar
         Toolbar toolbar = findViewById(R.id.mainToolbar);
         setSupportActionBar(toolbar);
@@ -62,11 +70,11 @@ public class MainActivity extends AppCompatActivity {
         //Navigation drawer menu items onClicks
         initDrawerItems();
 
-        //Fab
-        initFab();
-
         //ListView
         initListView();
+
+        //Fab
+        initFab();
 
         //Budgets
         checkBudgetsReset();
@@ -174,6 +182,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initFab() {
+        FloatingActionMenu mainFab = findViewById(R.id.fabMain);
+        if(MyUtils.accountList.isEmpty()) {
+            mainFab.setVisibility(View.GONE);
+            return;
+        }
+
         fab_subtract = findViewById(R.id.fabSubstract);
         fab_subtract.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -213,6 +227,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void initListView() {
         MyUtils.getBalanceAccountsFromDatabase(MainActivity.this);
+        changeSelectedAccountDetails();
 
         listView = findViewById(R.id.mainAccountListView);
         listView.setEmptyView(findViewById(R.id.mainAddAccountBtn));
@@ -224,8 +239,55 @@ public class MainActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 view.setSelected(true);
                 MyUtils.setSelected(i);
+                changeSelectedAccountDetails();
             }
         });
+    }
+
+    private void changeSelectedAccountDetails() {
+        BalanceAccount balanceAccount = MyUtils.getSelectedAccount();
+        if(balanceAccount == null) {
+            RelativeLayout relativeLayout = findViewById(R.id.mainAccDetailsRelLay);
+            relativeLayout.setVisibility(View.GONE);
+            return;
+        }
+
+        TextView accName = findViewById(R.id.mainAccNameTv);
+        TextView accBalance = findViewById(R.id.mainAccBalanceTv);
+        TextView accLastUsed = findViewById(R.id.mainAccLastUsedTv);
+
+        accName.setText(balanceAccount.getName());
+
+        accBalance.setText(MyUtils.formatDecimalOnePlace(balanceAccount.getBalance()));
+
+        long lastUsed = getLastUsedDate(balanceAccount);
+        if(lastUsed == 0) {
+            accLastUsed.setText("Never used");
+        } else {
+            accLastUsed.setText("Last used " + MyUtils.formatDateWithoutTime(lastUsed));
+        }
+    }
+
+    private long getLastUsedDate(BalanceAccount balanceAccount) {
+
+        long dateExp = 0;
+        long dateTrans = 0;
+
+        for(int i = MyUtils.expenseIncomeList.size() - 1; i >= 0; i--) {
+            ExpenseIncome expenseIncome = MyUtils.expenseIncomeList.get(i);
+            if(expenseIncome.getAccount().equals(balanceAccount)) {
+                dateExp = expenseIncome.getDate();
+            }
+        }
+
+        for(int i = MyUtils.transferList.size() - 1; i >= 0; i--) {
+            Transfer transfer = MyUtils.transferList.get(i);
+            if(transfer.getToAccount().equals(balanceAccount) || transfer.getFromAccount().equals(balanceAccount)) {
+                dateTrans = transfer.getCreationDate();
+            }
+        }
+
+        return dateExp > dateTrans ? dateExp : dateTrans;
     }
 
     private void checkBudgetsReset() {
@@ -236,6 +298,8 @@ public class MainActivity extends AppCompatActivity {
                 MyUtils.modifyBudgetCurrentAmount(MainActivity.this, item, 0.0);
             }
         }
+
+        MyUtils.getBudgetsFromDatabase(MainActivity.this);
     }
 }
 

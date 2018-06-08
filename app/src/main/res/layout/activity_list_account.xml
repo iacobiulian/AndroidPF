@@ -11,12 +11,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <ImageView
+    <include
         android:id="@+id/accountListEmptyView"
+        layout="@layout/empty_view_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:contentDescription="@string/list_empty_add_items"
-        android:src="@drawable/ic_plus"
         android:visibility="gone" />
 
     <com.github.clans.fab.FloatingActionButton

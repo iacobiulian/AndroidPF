@@ -1,5 +1,6 @@
 package com.example.android.personalfinance_v01.CustomAdapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -24,6 +25,7 @@ public class BudgetAdapter extends ArrayAdapter<Budget> {
         super(context, 0, budgetList);
     }
 
+    @SuppressLint("SetTextI18n")
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {

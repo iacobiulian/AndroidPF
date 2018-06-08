@@ -39,6 +39,7 @@ public class GoalListActivity extends AppCompatActivity {
         MyUtils.getGoalsFromDatabase(GoalListActivity.this);
         listView = findViewById(R.id.goalListView);
         final GoalAdapter goalAdapter = new GoalAdapter(this, MyUtils.goalList);
+        listView.setEmptyView(findViewById(R.id.goalListEmptyView));
         listView.setAdapter(goalAdapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
