@@ -4,9 +4,9 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/icon_finance"
+        android:icon="@drawable/ic_main"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/icon_finance"
+        android:roundIcon="@drawable/ic_main"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity

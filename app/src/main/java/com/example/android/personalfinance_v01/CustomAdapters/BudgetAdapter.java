@@ -1,9 +1,13 @@
 package com.example.android.personalfinance_v01.CustomAdapters;
 
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.res.ColorStateList;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +29,7 @@ public class BudgetAdapter extends ArrayAdapter<Budget> {
         super(context, 0, budgetList);
     }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @SuppressLint("SetTextI18n")
     @NonNull
     @Override
@@ -62,16 +67,55 @@ public class BudgetAdapter extends ArrayAdapter<Budget> {
             ProgressBar progressBar = convertView.findViewById(R.id.itemBudgetProgressBar);
             int percentage = (int) (currentBudget.getCurrentAmount() * 100 / currentBudget.getTotalAmount());
             progressBar.setProgress(percentage);
+            int[][] states = new int[][]{
+                    new int[]{},
+            };
+            int[] colors;
+            ColorStateList colorStateList;
 
             TextView goalAmountTv = convertView.findViewById(R.id.itemBudgetAmountTv);
-            goalAmountTv.setText("Budget: " + formatDecimalTwoPlaces(currentBudget.getTotalAmount()));
+            goalAmountTv.setText(formatDecimalTwoPlaces(currentBudget.getTotalAmount()));
 
             TextView savedAmountTv = convertView.findViewById(R.id.itemBudgetSavedAmountTv);
-            savedAmountTv.setText("Spent: " + formatDecimalTwoPlaces(currentBudget.getCurrentAmount()));
+            savedAmountTv.setText(formatDecimalTwoPlaces(currentBudget.getCurrentAmount()));
 
             TextView remainingAmountTv = convertView.findViewById(R.id.itemBudgetRemainingAmountTv);
-            remainingAmountTv.setText("Remaining: " + formatDecimalTwoPlaces(currentBudget.getTotalAmount() -
+            remainingAmountTv.setText(formatDecimalTwoPlaces(currentBudget.getTotalAmount() -
                     currentBudget.getCurrentAmount()));
+
+            if (percentage <= 20) {
+                int color = ContextCompat.getColor(getContext(), R.color.debtGoalVeryHigh);
+                savedAmountTv.setTextColor(color);
+                remainingAmountTv.setTextColor(color);
+                colors = new int[]{ color };
+                colorStateList = new ColorStateList(states, colors);
+            } else if (percentage <= 40) {
+                int color = ContextCompat.getColor(getContext(), R.color.debtGoalHigh);
+                savedAmountTv.setTextColor(color);
+                remainingAmountTv.setTextColor(color);
+                colors = new int[]{ color };
+                colorStateList = new ColorStateList(states, colors);
+            } else if (percentage <= 60) {
+                int color = ContextCompat.getColor(getContext(), R.color.debtGoalMedium);
+                savedAmountTv.setTextColor(color);
+                remainingAmountTv.setTextColor(color);
+                colors = new int[]{ color };
+                colorStateList = new ColorStateList(states, colors);
+            } else if (percentage <= 80) {
+                int color = ContextCompat.getColor(getContext(), R.color.debtGoalLow);
+                savedAmountTv.setTextColor(color);
+                remainingAmountTv.setTextColor(color);
+                colors = new int[]{ color };
+                colorStateList = new ColorStateList(states, colors);
+            } else {
+                int color = ContextCompat.getColor(getContext(), R.color.debtGoalVeryLow);
+                savedAmountTv.setTextColor(color);
+                remainingAmountTv.setTextColor(color);
+                colors = new int[]{ color };
+                colorStateList = new ColorStateList(states, colors);
+            }
+
+            progressBar.setProgressTintList(colorStateList);
         }
 
         return convertView;

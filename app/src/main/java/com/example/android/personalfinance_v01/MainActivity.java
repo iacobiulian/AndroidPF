@@ -19,7 +19,6 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.android.personalfinance_v01.CustomAdapters.BalanceAccountAdapterMain;
 import com.example.android.personalfinance_v01.MyClasses.BalanceAccount;
@@ -108,7 +107,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
 
         //Set the first listview view as 'selected'
         //If you do this in onCreate() you get a nullptr exception
@@ -121,21 +119,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         //Navigation drawer button
-        if (actionBarDrawerToggle.onOptionsItemSelected(item))
-            return true;
+        return actionBarDrawerToggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
 
-        int id = item.getItemId();
-
-        switch (id) {
-            case R.id.actionSettings:
-                Toast.makeText(MainActivity.this, "Settings clicked", Toast.LENGTH_SHORT).show();
-                break;
-            case R.id.actionExit:
-                Toast.makeText(MainActivity.this, "Exit clicked", Toast.LENGTH_SHORT).show();
-                break;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     private void initDrawer() {
@@ -183,7 +168,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void initFab() {
         FloatingActionMenu mainFab = findViewById(R.id.fabMain);
-        if(MyUtils.accountList.isEmpty()) {
+        if (MyUtils.accountList.isEmpty()) {
             mainFab.setVisibility(View.GONE);
             return;
         }
@@ -213,14 +198,13 @@ public class MainActivity extends AppCompatActivity {
         });
 
         fab_transfer = findViewById(R.id.fabTransfer);
+        if (MyUtils.accountList.size() < 2) {
+            fab_transfer.setVisibility(View.GONE);
+        }
         fab_transfer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (MyUtils.accountList.size() < 2) {
-                    MyUtils.makeToast(MainActivity.this, getResources().getString(R.string.error));
-                } else {
-                    MyUtils.startActivityWithCode(MainActivity.this, AddExpIncomeTabbedActivity.class, TYPE_TRANSFER);
-                }
+                MyUtils.startActivityWithCode(MainActivity.this, AddExpIncomeTabbedActivity.class, TYPE_TRANSFER);
             }
         });
     }
@@ -246,7 +230,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void changeSelectedAccountDetails() {
         BalanceAccount balanceAccount = MyUtils.getSelectedAccount();
-        if(balanceAccount == null) {
+        if (balanceAccount == null) {
             RelativeLayout relativeLayout = findViewById(R.id.mainAccDetailsRelLay);
             relativeLayout.setVisibility(View.GONE);
             return;
@@ -261,7 +245,7 @@ public class MainActivity extends AppCompatActivity {
         accBalance.setText(MyUtils.formatDecimalOnePlace(balanceAccount.getBalance()));
 
         long lastUsed = getLastUsedDate(balanceAccount);
-        if(lastUsed == 0) {
+        if (lastUsed == 0) {
             accLastUsed.setText("Never used");
         } else {
             accLastUsed.setText("Last used " + MyUtils.formatDateWithoutTime(lastUsed));
@@ -273,16 +257,16 @@ public class MainActivity extends AppCompatActivity {
         long dateExp = 0;
         long dateTrans = 0;
 
-        for(int i = MyUtils.expenseIncomeList.size() - 1; i >= 0; i--) {
+        for (int i = MyUtils.expenseIncomeList.size() - 1; i >= 0; i--) {
             ExpenseIncome expenseIncome = MyUtils.expenseIncomeList.get(i);
-            if(expenseIncome.getAccount().equals(balanceAccount)) {
+            if (expenseIncome.getAccount().equals(balanceAccount)) {
                 dateExp = expenseIncome.getDate();
             }
         }
 
-        for(int i = MyUtils.transferList.size() - 1; i >= 0; i--) {
+        for (int i = MyUtils.transferList.size() - 1; i >= 0; i--) {
             Transfer transfer = MyUtils.transferList.get(i);
-            if(transfer.getToAccount().equals(balanceAccount) || transfer.getFromAccount().equals(balanceAccount)) {
+            if (transfer.getToAccount().equals(balanceAccount) || transfer.getFromAccount().equals(balanceAccount)) {
                 dateTrans = transfer.getCreationDate();
             }
         }

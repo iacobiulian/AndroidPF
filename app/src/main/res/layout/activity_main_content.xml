@@ -64,7 +64,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/mainAccNameTv"
             android:layout_centerHorizontal="true"
-            android:drawableStart="@drawable/ic_money"
+            android:drawableStart="@drawable/ic_money_big"
             android:textSize="42sp"
             tools:text="1234.5" />
 

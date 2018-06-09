@@ -24,4 +24,10 @@
     <color name="darkGreen">#d5085c04</color>
 
     <color name="selectedItem">#e0c9e4</color>
+
+    <color name="debtGoalVeryLow">#FF0000</color>
+    <color name="debtGoalLow">#FF7700</color>
+    <color name="debtGoalMedium">#FFED00</color>
+    <color name="debtGoalHigh">#66CB00</color>
+    <color name="debtGoalVeryHigh">#00B500</color>
 </resources>

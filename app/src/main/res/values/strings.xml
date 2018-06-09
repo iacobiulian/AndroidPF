@@ -90,4 +90,12 @@
     <string name="notificationAlreadyExceededBudgetBody">You already exceeded the %1$s budget for %2$s</string>
     <string name="nothingHere">There\'s nothing here!</string>
     <string name="clickThePlus">Click the + to add a new item</string>
+    <string name="journal">Journal</string>
+    <string name="to">to</string>
+    <string name="from">From</string>
+    <string name="paid">Paid</string>
+    <string name="initial">Initial</string>
+    <string name="remaining">Remaining</string>
+    <string name="budget">Budget</string>
+    <string name="spent">Spent</string>
 </resources>

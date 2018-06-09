@@ -1,8 +1,13 @@
 package com.example.android.personalfinance_v01.CustomAdapters;
 
+import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.res.ColorStateList;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +33,8 @@ public class DebtAdapter extends ArrayAdapter<Debt> {
         super(context, 0, debtList);
     }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    @SuppressLint("SetTextI18n")
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
@@ -50,13 +57,57 @@ public class DebtAdapter extends ArrayAdapter<Debt> {
             }
 
             TextView initialAmountTv = convertView.findViewById(R.id.itemDebtInitialAmountTv);
-            initialAmountTv.setText("Initial: " + formatDecimalTwoPlaces(currentDebt.getAmount()));
+            initialAmountTv.setText(formatDecimalTwoPlaces(currentDebt.getAmount()));
 
             TextView paidBackAmountTv = convertView.findViewById(R.id.itemDebtPaidBackAmountTv);
-            paidBackAmountTv.setText("Paid: " + formatDecimalTwoPlaces(currentDebt.getAmountPaidBack()));
+            paidBackAmountTv.setText(formatDecimalTwoPlaces(currentDebt.getAmountPaidBack()));
 
             TextView remainingAmountTv = convertView.findViewById(R.id.itemDebtRemainingAmountTv);
-            remainingAmountTv.setText("Remaining: " + formatDecimalTwoPlaces(currentDebt.getAmount() - currentDebt.getAmountPaidBack()));
+            remainingAmountTv.setText(formatDecimalTwoPlaces(currentDebt.getAmount() - currentDebt.getAmountPaidBack()));
+
+            ProgressBar progressBar = convertView.findViewById(R.id.itemDebtProgressBar);
+            int percentage = (int) (currentDebt.getAmountPaidBack() * 100/currentDebt.getAmount());
+            progressBar.setMax(100);
+            progressBar.setProgress(percentage);
+            int[][] states = new int[][]{
+                    new int[]{},
+            };
+            int[] colors;
+            ColorStateList colorStateList;
+
+            if (percentage <= 20) {
+                int color = ContextCompat.getColor(getContext(), R.color.debtGoalVeryLow);
+                paidBackAmountTv.setTextColor(color);
+                remainingAmountTv.setTextColor(color);
+                colors = new int[]{ color };
+                colorStateList = new ColorStateList(states, colors);
+            } else if (percentage <= 40) {
+                int color = ContextCompat.getColor(getContext(), R.color.debtGoalLow);
+                paidBackAmountTv.setTextColor(color);
+                remainingAmountTv.setTextColor(color);
+                colors = new int[]{ color };
+                colorStateList = new ColorStateList(states, colors);
+            } else if (percentage <= 60) {
+                int color = ContextCompat.getColor(getContext(), R.color.debtGoalMedium);
+                paidBackAmountTv.setTextColor(color);
+                remainingAmountTv.setTextColor(color);
+                colors = new int[]{ color };
+                colorStateList = new ColorStateList(states, colors);
+            } else if (percentage <= 80) {
+                int color = ContextCompat.getColor(getContext(), R.color.debtGoalHigh);
+                paidBackAmountTv.setTextColor(color);
+                remainingAmountTv.setTextColor(color);
+                colors = new int[]{ color };
+                colorStateList = new ColorStateList(states, colors);
+            } else {
+                int color = ContextCompat.getColor(getContext(), R.color.debtGoalVeryHigh);
+                paidBackAmountTv.setTextColor(color);
+                remainingAmountTv.setTextColor(color);
+                colors = new int[]{ color };
+                colorStateList = new ColorStateList(states, colors);
+            }
+
+            progressBar.setProgressTintList(colorStateList);
 
             TextView startDate = convertView.findViewById(R.id.itemDebtStartDateTv);
             startDate.setText("Start date: " + formatDateWithoutTime(currentDebt.getCreationDate()));
@@ -70,10 +121,6 @@ public class DebtAdapter extends ArrayAdapter<Debt> {
             } else if(currentDebt.isClosed() == Debt.NOT_CLOSED) {
                 closed.setText("Open");
             }
-
-            ProgressBar progressBar = convertView.findViewById(R.id.itemDebtProgressBar);
-            int percentage = (int) (currentDebt.getAmountPaidBack() * 100/currentDebt.getAmount());
-            progressBar.setProgress(percentage);
         }
 
         return convertView;

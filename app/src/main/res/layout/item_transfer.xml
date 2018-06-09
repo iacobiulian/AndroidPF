@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:textColor="@color/textPrimary"
-            android:textSize="@dimen/category_text"
+            android:textSize="24sp"
             tools:text="140" />
 
         <TextView
@@ -30,7 +30,7 @@
             android:layout_marginStart="8dp"
             android:gravity="center_vertical"
             android:textColor="@color/textPrimary"
-            android:textSize="@dimen/category_text"
+            android:textSize="24sp"
             tools:text="Currency" />
 
     </LinearLayout>
@@ -42,23 +42,31 @@
         android:padding="4dp">
 
         <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:textColor="@color/textPrimary"
+            android:textSize="16sp"
+            android:text="@string/from" />
+
+        <TextView
             android:id="@+id/itemTransferFromTv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="4dp"
+            android:layout_marginStart="4dp"
             android:gravity="center_vertical"
-            android:textColor="@color/textPrimary"
+            android:textColor="@color/colorExpense"
             android:textSize="16sp"
             tools:text="Bank" />
 
         <TextView
-            android:id="@+id/historyCategoryTv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:textColor="@color/textPrimary"
             android:textSize="16sp"
-            android:text="@string/line" />
+            android:text="@string/to" />
 
         <TextView
             android:id="@+id/itemTransferToTv"
@@ -66,7 +74,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
             android:gravity="center_vertical"
-            android:textColor="@color/textPrimary"
+            android:textColor="@color/colorIncome"
             android:textSize="16sp"
             tools:text="Cash" />
 

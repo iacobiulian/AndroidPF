@@ -1,40 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
 
-    <item
-        android:id="@+id/navMenuAccounts"
-        android:icon="@drawable/nav_accounts"
-        android:title="@string/accounts" />
+    <item android:title="@string/journal">
 
-    <item
-        android:id="@+id/navMenuStats"
-        android:icon="@drawable/nav_statistics"
-        android:title="@string/statistics" />
+        <menu>
 
-    <item
-        android:id="@+id/navMenuHistory"
-        android:icon="@drawable/nav_history"
-        android:title="@string/expIncHistory" />
+            <item
+                android:id="@+id/navMenuAccounts"
+                android:icon="@drawable/nav_account_wallet"
+                android:title="@string/accounts" />
 
-    <item
-        android:id="@+id/navMenuTransferHistory"
-        android:icon="@drawable/nav_history"
-        android:title="@string/transferHistory" />
+            <item
+                android:id="@+id/navMenuBudgets"
+                android:icon="@drawable/nav_budget"
+                android:title="@string/budgets" />
 
-    <item
-        android:id="@+id/navMenuBudgets"
-        android:icon="@drawable/nav_budgets"
-        android:title="@string/budgets" />
+            <item
+                android:id="@+id/navMenuGoals"
+                android:icon="@drawable/nav_goal"
+                android:title="@string/goals" />
 
-    <item
-        android:id="@+id/navMenuGoals"
-        android:icon="@drawable/nav_goals"
-        android:title="@string/goals" />
+            <item
+                android:id="@+id/navMenuDebts"
+                android:icon="@drawable/nav_debts"
+                android:title="@string/debts" />
 
-    <item
-        android:id="@+id/navMenuDebts"
-        android:icon="@drawable/nav_debts"
-        android:title="@string/debts" />
+        </menu>
+
+    </item>
+
+
+    <item android:title="@string/activityHistory">
+
+        <menu>
+
+
+            <item
+                android:id="@+id/navMenuHistory"
+                android:icon="@drawable/nav_history"
+                android:title="@string/expIncHistory" />
+
+            <item
+                android:id="@+id/navMenuTransferHistory"
+                android:icon="@drawable/nav_history"
+                android:title="@string/transferHistory" />
+
+            <item
+                android:id="@+id/navMenuStats"
+                android:icon="@drawable/nav_statistics"
+                android:title="@string/statistics" />
+
+        </menu>
+
+    </item>
 
     <item
         android:id="@+id/navMenuHelp"

@@ -312,13 +312,13 @@ public class MyUtils {
     public static List<Category> getExpenseCategories() {
         List<Category> expenseCategories = new ArrayList<>();
         expenseCategories.add(new Category("Communication, PC", R.drawable.categ_pc));
-        expenseCategories.add(new Category("Fees, Fines", R.drawable.categ_food));
+        expenseCategories.add(new Category("Fees, Fines", R.drawable.categ_fees_fines));
         expenseCategories.add(new Category("Food", R.drawable.categ_food));
         expenseCategories.add(new Category("Health care", R.drawable.categ_health));
         expenseCategories.add(new Category("Hobbies", R.drawable.categ_free_time));
         expenseCategories.add(new Category("Housing", R.drawable.categ_housing));
-        expenseCategories.add(new Category("Transportation", R.drawable.categ_transport));
-        expenseCategories.add(new Category("Vehicle", R.drawable.categ_transport));
+        expenseCategories.add(new Category("Transportation", R.drawable.categ_travel));
+        expenseCategories.add(new Category("Vehicle", R.drawable.categ_vehicle));
         return expenseCategories;
     }
 
@@ -344,7 +344,7 @@ public class MyUtils {
         List<Category> incomeCategories = new ArrayList<>();
         incomeCategories.add(new Category("Wage", R.drawable.categ_wage));
         incomeCategories.add(new Category("Gifts", R.drawable.categ_gift));
-        incomeCategories.add(new Category("Sale", R.drawable.categ_wage));
+        incomeCategories.add(new Category("Sale", R.drawable.categ_sale));
         incomeCategories.add(new Category("Gambling", R.drawable.categ_gambling));
         return incomeCategories;
     }

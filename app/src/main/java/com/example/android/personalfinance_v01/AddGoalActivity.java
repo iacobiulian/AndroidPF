@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -72,6 +73,18 @@ public class AddGoalActivity extends AppCompatActivity {
         targetAmountEt = findViewById(R.id.addGoalTargetAmountEt);
         savedAlreadyEt = findViewById(R.id.addGoalSavedAlreadyEt);
         savedAlreadyEt.setText("0");
+        savedAlreadyEt.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean hasFocus) {
+                if(hasFocus) {
+                    savedAlreadyEt.setText("");
+                } else {
+                    if(TextUtils.isEmpty(savedAlreadyEt.getText().toString())) {
+                        savedAlreadyEt.setText("0");
+                    }
+                }
+            }
+        });
         targetDateEt = findViewById(R.id.addGoalTargetDateEt);
     }
 
