@@ -14,12 +14,14 @@ import android.widget.PopupMenu;
 import com.example.android.personalfinance_v01.CustomAdapters.DebtAdapter;
 import com.example.android.personalfinance_v01.DataPersistance.DatabaseHelper;
 import com.example.android.personalfinance_v01.MyClasses.Debt;
+import com.example.android.personalfinance_v01.MyClasses.Goal;
 import com.example.android.personalfinance_v01.MyClasses.MyUtils;
 import com.github.clans.fab.FloatingActionButton;
 
 public class DebtListActivity extends AppCompatActivity {
 
     private ListView listView;
+    private AlertDialog alertDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,9 +58,15 @@ public class DebtListActivity extends AppCompatActivity {
                         switch (menuItem.getItemId()) {
                             case R.id.debtListMenuPay:
                                 View dialogView = getLayoutInflater().inflate(R.layout.dialog_enter_amount, listView,false);
-                                AlertDialog alertDialog = initAlertDialog(dialogView);
+                                alertDialog = initAlertDialog(dialogView);
                                 initAlertDialogButtons(dialogView, alertDialog, currentDebt);
                                 alertDialog.show();
+                                break;
+                            case R.id.debtListMenuDetails:
+                                Bundle bundle = new Bundle();
+                                bundle.putSerializable("debt", currentDebt);
+                                MyUtils.startActivityWithBundle(DebtListActivity.this, DetailedDebtActivity.class,
+                                        bundle);
                                 break;
                             case R.id.debtListMenuClose:
                                 closeDebt(currentDebt);
@@ -99,6 +107,22 @@ public class DebtListActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        if(alertDialog != null)
+            alertDialog.dismiss();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        if(alertDialog != null)
+            alertDialog.dismiss();
+    }
+
     private AlertDialog initAlertDialog(View dialogView) {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(DebtListActivity.this);
         alertDialogBuilder.setView(dialogView);
@@ -113,19 +137,33 @@ public class DebtListActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 double amountInput = MyUtils.getDoubleFromEditText(amountEt);
+                if(amountInput < 0) {
+                    return;
+                }
+                int debtId = new DatabaseHelper(DebtListActivity.this).getDebtID(debtForUpdate);
+                debtForUpdate.getAddedAmounts().add(amountInput);
+                debtForUpdate.getAddedAmountsDates().add(MyUtils.getCurrentDateTime());
+                String amounts = MyUtils.fromDoubleListToString(debtForUpdate.getAddedAmounts());
+                String times = MyUtils.fromLongListToString(debtForUpdate.getAddedAmountsDates());
                 double newAmount = debtForUpdate.getAmountPaidBack() + amountInput;
-                modifyDebtAmount(debtForUpdate, newAmount);
+                modifyDebtAmount(debtId, newAmount);
+                updateGoalAmountLists(debtId, amounts, times);
+                MyUtils.getDebtsFromDatabase(DebtListActivity.this);
                 alertDialog.hide();
             }
         });
     }
 
-    private void modifyDebtAmount(Debt debtModified, double newAmount) {
+    private void updateGoalAmountLists(int debtId, String amounts, String times) {
         DatabaseHelper databaseHelper = new DatabaseHelper(DebtListActivity.this);
 
-        databaseHelper.updateDebtAmount(databaseHelper.getDebtID(debtModified), newAmount);
+        databaseHelper.updateDebtAmountsList(debtId, amounts, times);
+    }
 
-        MyUtils.getDebtsFromDatabase(DebtListActivity.this);
+    private void modifyDebtAmount(int debtId, double newAmount) {
+        DatabaseHelper databaseHelper = new DatabaseHelper(DebtListActivity.this);
+
+        databaseHelper.updateDebtAmount(debtId, newAmount);
     }
 
     private void closeDebt(Debt debtToBeClosed) {

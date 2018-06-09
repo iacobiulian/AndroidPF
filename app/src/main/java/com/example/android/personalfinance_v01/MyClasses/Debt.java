@@ -2,11 +2,14 @@ package com.example.android.personalfinance_v01.MyClasses;
 
 import android.text.TextUtils;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+
 /**
  * Created by iacob on 09-Mar
  */
 
-public class Debt {
+public class Debt implements Serializable{
     public static final int I_LEND = 0;
     public static final int I_BORROW = 1;
 
@@ -20,6 +23,8 @@ public class Debt {
     private int closed;
     private long creationDate;
     private long paybackDate;
+    private ArrayList<Double> addedAmounts;
+    private ArrayList<Long> addedAmountsDates;
 
     public Debt(int type, String payee, double amount, long creationDate, long paybackDate) {
         this.type = type;
@@ -29,9 +34,11 @@ public class Debt {
         this.closed = NOT_CLOSED;
         this.creationDate = creationDate;
         this.paybackDate = paybackDate;
+        addedAmounts = new ArrayList<>();
+        addedAmountsDates = new ArrayList<>();
     }
 
-    Debt(int type, String payee, double amount, double amountPaidBack, int closed, long creationDate, long paybackDate) {
+    Debt(int type, String payee, double amount, double amountPaidBack, int closed, long creationDate, long paybackDate, ArrayList<Double> amountsList, ArrayList<Long> timesList) {
         this.type = type;
         this.payee = payee;
         this.amount = amount;
@@ -39,6 +46,10 @@ public class Debt {
         this.closed = closed;
         this.creationDate = creationDate;
         this.paybackDate = paybackDate;
+        this.addedAmounts = new ArrayList<>();
+        this.addedAmounts.addAll(amountsList);
+        this.addedAmountsDates = new ArrayList<>();
+        this.addedAmountsDates.addAll(timesList);
     }
 
     public int getType() {
@@ -67,6 +78,14 @@ public class Debt {
 
     public long getPaybackDate() {
         return paybackDate;
+    }
+
+    public ArrayList<Double> getAddedAmounts() {
+        return addedAmounts;
+    }
+
+    public ArrayList<Long> getAddedAmountsDates() {
+        return addedAmountsDates;
     }
 
     public boolean isValid() {

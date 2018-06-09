@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
+import android.text.TextUtils;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -32,6 +33,7 @@ public class MyUtils {
     public static final String PLUS_SIGN = "+";
     public static final String MINUS_SIGN = "-";
     public static final String INTENT_KEY = "intentCode";
+    private static final String STRING_DELIMITOR = ",";
 
     //Global Balance Account list
     public static ArrayList<BalanceAccount> accountList = new ArrayList<>();
@@ -128,8 +130,13 @@ public class MyUtils {
             int closed = cursor.getInt(5);
             long dateCreated = cursor.getLong(6);
             long dateDue = cursor.getLong(7);
+            String amountsList = cursor.getString(8);
+            String timesList = cursor.getString(9);
 
-            list.add(new Debt(type, payee, amount, amountPaid, closed, dateCreated, dateDue));
+            ArrayList<Double> amounts = fromStringToDoubleList(amountsList);
+            ArrayList<Long> times = fromStringToLongList(timesList);
+
+            list.add(new Debt(type, payee, amount, amountPaid, closed, dateCreated, dateDue, amounts, times));
         }
 
         return list;
@@ -145,9 +152,13 @@ public class MyUtils {
             double savedAmount = cursor.getDouble(3);
             long targetDate = cursor.getLong(4);
             int status = cursor.getInt(5);
+            String amountsList = cursor.getString(6);
+            String timesList = cursor.getString(7);
 
+            ArrayList<Double> amounts = fromStringToDoubleList(amountsList);
+            ArrayList<Long> times = fromStringToLongList(timesList);
 
-            list.add(new Goal(name, targetAmount, savedAmount, targetDate, status));
+            list.add(new Goal(name, targetAmount, savedAmount, targetDate, status, amounts, times));
         }
 
         return list;
@@ -301,13 +312,13 @@ public class MyUtils {
         }
     }
 
+    //region Categories
+
     public static void modifyBudgetCurrentAmount(Context context, Budget budgetModified, double newCurrentAmount) {
         DatabaseHelper databaseHelper = new DatabaseHelper(context);
 
         databaseHelper.updateBudgetCurrentAmount(databaseHelper.getBudgetId(budgetModified), newCurrentAmount);
     }
-
-    //region Categories
 
     public static List<Category> getExpenseCategories() {
         List<Category> expenseCategories = new ArrayList<>();
@@ -357,6 +368,9 @@ public class MyUtils {
 
         return hashMap;
     }
+    //endregion
+
+    //region Utility functions
 
     private static Category searchIncomeCategoryList(String categoryName) {
         for (Category item : getIncomeCategories()) {
@@ -366,9 +380,6 @@ public class MyUtils {
         }
         return null;
     }
-    //endregion
-
-    //region Utility functions
 
     public static void createNotification(Context context, Intent intent, String title, String content, int iconId) {
         //TODO NOTIFICATIONS WHERE NEEDED
@@ -460,6 +471,62 @@ public class MyUtils {
         Intent intent = new Intent(fromActivity, toActivity);
         intent.putExtras(bundle);
         fromActivity.startActivity(intent);
+    }
+
+    public static String fromDoubleListToString(ArrayList<Double> arr) {
+        if (arr.size() == 0) {
+            return "";
+        }
+
+        StringBuilder stringBuilder = new StringBuilder();
+        for (double number : arr) {
+            stringBuilder.append(number);
+            stringBuilder.append(STRING_DELIMITOR);
+        }
+
+        return stringBuilder.toString();
+    }
+
+    public static ArrayList<Double> fromStringToDoubleList(String s) {
+        ArrayList<Double> arr = new ArrayList<>();
+
+        if(!TextUtils.isEmpty(s)) {
+            String[] stringArr = s.split(STRING_DELIMITOR);
+
+            for (String item : stringArr) {
+                arr.add(Double.parseDouble(item));
+            }
+        }
+
+        return arr;
+    }
+
+    public static String fromLongListToString(ArrayList<Long> arr) {
+        if (arr.size() == 0) {
+            return "";
+        }
+
+        StringBuilder stringBuilder = new StringBuilder();
+        for (long number : arr) {
+            stringBuilder.append(number);
+            stringBuilder.append(STRING_DELIMITOR);
+        }
+
+        return stringBuilder.toString();
+    }
+
+    public static ArrayList<Long> fromStringToLongList(String s) {
+        ArrayList<Long> arr = new ArrayList<>();
+
+        if(!TextUtils.isEmpty(s)) {
+            String[] stringArr = s.split(STRING_DELIMITOR);
+
+            for (String item : stringArr) {
+                arr.add(Long.parseLong(item));
+            }
+        }
+
+        return arr;
     }
     //endregion
 }

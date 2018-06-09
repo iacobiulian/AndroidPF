@@ -8,8 +8,13 @@
         android:title="@string/payDebtAmount" />
 
     <item
-        android:id="@+id/debtListMenuClose"
+        android:id="@+id/debtListMenuDetails"
         android:orderInCategory="2"
+        android:title="@string/seeDebtDetails" />
+
+    <item
+        android:id="@+id/debtListMenuClose"
+        android:orderInCategory="3"
         android:title="@string/closeDebt" />
 
     <item

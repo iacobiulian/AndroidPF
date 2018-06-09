@@ -98,4 +98,6 @@
     <string name="remaining">Remaining</string>
     <string name="budget">Budget</string>
     <string name="spent">Spent</string>
+    <string name="seeGoalDetails">Goal Details</string>
+    <string name="seeDebtDetails">See Debt Details</string>
 </resources>

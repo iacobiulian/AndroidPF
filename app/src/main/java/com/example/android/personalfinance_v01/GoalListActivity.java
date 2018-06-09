@@ -20,6 +20,7 @@ import com.example.android.personalfinance_v01.MyClasses.MyUtils;
 public class GoalListActivity extends AppCompatActivity {
 
     private ListView listView;
+    private AlertDialog alertDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,9 +57,15 @@ public class GoalListActivity extends AppCompatActivity {
                         switch (menuItem.getItemId()) {
                             case R.id.goalListMenuSave:
                                 View dialogView = getLayoutInflater().inflate(R.layout.dialog_enter_amount, listView,false);
-                                AlertDialog alertDialog = initAlertDialog(dialogView);
+                                alertDialog = initAlertDialog(dialogView);
                                 initAlertDialogButtons(dialogView, alertDialog, currentGoal);
                                 alertDialog.show();
+                                break;
+                            case R.id.goalListMenuDetails:
+                                Bundle bundle = new Bundle();
+                                bundle.putSerializable("goal", currentGoal);
+                                MyUtils.startActivityWithBundle(GoalListActivity.this, DetailedGoalActivity.class,
+                                        bundle);
                                 break;
                             case R.id.goalListMenuReached:
                                 reachGoal(currentGoal, currentGoal.getGoalAmount());
@@ -98,6 +105,22 @@ public class GoalListActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        if(alertDialog != null)
+            alertDialog.dismiss();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        if(alertDialog != null)
+            alertDialog.dismiss();
+    }
+
     private AlertDialog initAlertDialog(View dialogView) {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(GoalListActivity.this);
         alertDialogBuilder.setView(dialogView);
@@ -112,19 +135,33 @@ public class GoalListActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 double amountInput = MyUtils.getDoubleFromEditText(amountEt);
+                if(amountInput < 0 ) {
+                    return;
+                }
+                int goalId = new DatabaseHelper(GoalListActivity.this).getGoalId(goalForUpdate);
+                goalForUpdate.getAddedAmounts().add(amountInput);
+                goalForUpdate.getAddedAmountsDates().add(MyUtils.getCurrentDateTime());
+                String amounts = MyUtils.fromDoubleListToString(goalForUpdate.getAddedAmounts());
+                String times = MyUtils.fromLongListToString(goalForUpdate.getAddedAmountsDates());
                 double newAmount = goalForUpdate.getSavedAmount() + amountInput;
-                modifySavedAmount(goalForUpdate, newAmount);
+                modifySavedAmount(goalId, newAmount);
+                updateGoalAmountLists(goalId, amounts, times);
+                MyUtils.getGoalsFromDatabase(GoalListActivity.this);
                 alertDialog.hide();
             }
         });
     }
 
-    private void modifySavedAmount(Goal goalModified, double newAmount) {
+    private void updateGoalAmountLists(int goalId, String amounts, String times) {
         DatabaseHelper databaseHelper = new DatabaseHelper(GoalListActivity.this);
 
-        databaseHelper.updateGoalSavedAmount(databaseHelper.getGoalId(goalModified), newAmount);
+        databaseHelper.updateGoalAmountsList(goalId, amounts, times);
+    }
 
-        MyUtils.getGoalsFromDatabase(GoalListActivity.this);
+    private void modifySavedAmount(int goalId, double newAmount) {
+        DatabaseHelper databaseHelper = new DatabaseHelper(GoalListActivity.this);
+
+        databaseHelper.updateGoalSavedAmount(goalId, newAmount);
     }
 
     private void reachGoal(Goal reachedGoal, double targetAmount) {

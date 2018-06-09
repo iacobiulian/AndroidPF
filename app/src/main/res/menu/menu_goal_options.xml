@@ -8,8 +8,13 @@
         android:title="@string/addSavedAmount" />
 
     <item
-        android:id="@+id/goalListMenuReached"
+        android:id="@+id/goalListMenuDetails"
         android:orderInCategory="2"
+        android:title="@string/seeGoalDetails" />
+
+    <item
+        android:id="@+id/goalListMenuReached"
+        android:orderInCategory="3"
         android:title="@string/goalReached" />
 
     <item

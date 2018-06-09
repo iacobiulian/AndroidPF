@@ -65,7 +65,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + DebtEntry.COLUMN_AMOUNT_PAID + " REAL, "
                 + DebtEntry.COLUMN_CLOSED + " INTEGER, "
                 + DebtEntry.COLUMN_DATE_CREATED + " INTEGER, "
-                + DebtEntry.COLUMN_DATE_DUE + " INTEGER);";
+                + DebtEntry.COLUMN_DATE_DUE + " INTEGER, "
+                + DebtEntry.COLUMN_AMOUNTS_LIST + " TEXT, "
+                + DebtEntry.COLUMN_AMOUNTS_TIME_LIST + " TEXT);";
 
         String createTableGoals = "CREATE TABLE " + GoalEntry.TABLE_NAME + "("
                 + GoalEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
@@ -73,7 +75,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + GoalEntry.COLUMN_TARGET_AMOUNT + " REAL, "
                 + GoalEntry.COLUMN_SAVED_AMOUNT + " REAL, "
                 + GoalEntry.COLUMN_TARGET_DATE + " INTEGER, "
-                + GoalEntry.COLUMN_STATUS + " INTEGER);";
+                + GoalEntry.COLUMN_STATUS + " INTEGER, "
+                + GoalEntry.COLUMN_AMOUNTS_LIST + " TEXT, "
+                + GoalEntry.COLUMN_AMOUNTS_TIME_LIST + " TEXT);";
 
         String createTableBudgets = "CREATE TABLE " + BudgetEntry.TABLE_NAME + "("
                 + BudgetEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
@@ -94,19 +98,36 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-        String dropBalanceAccount = "DROP TABLE IF EXISTS " + BalanceAccountEntry.TABLE_NAME + ";";
-        String dropExpenseIncome = "DROP TABLE IF EXISTS " + ExpenseIncomeEntry.TABLE_NAME + ";";
-        String dropTransfer = "DROP TABLE IF EXISTS " + TransferEntry.TABLE_NAME + ";";
+//        String dropBalanceAccount = "DROP TABLE IF EXISTS " + BalanceAccountEntry.TABLE_NAME + ";";
+//        String dropExpenseIncome = "DROP TABLE IF EXISTS " + ExpenseIncomeEntry.TABLE_NAME + ";";
+//        String dropTransfer = "DROP TABLE IF EXISTS " + TransferEntry.TABLE_NAME + ";";
+//        String dropDebt = "DROP TABLE IF EXISTS " + DebtEntry.TABLE_NAME + ";";
+//        String dropGoal = "DROP TABLE IF EXISTS " + GoalEntry.TABLE_NAME + ";";
+//        String dropBudget = "DROP TABLE IF EXISTS " + BudgetEntry.TABLE_NAME + ";";
+//        sqLiteDatabase.execSQL(dropBalanceAccount);
+//        sqLiteDatabase.execSQL(dropExpenseIncome);
+//        sqLiteDatabase.execSQL(dropTransfer);
+//        sqLiteDatabase.execSQL(dropDebt);
+//        sqLiteDatabase.execSQL(dropGoal);
+//        sqLiteDatabase.execSQL(dropBudget);
+//        onCreate(sqLiteDatabase);
+
         String dropDebt = "DROP TABLE IF EXISTS " + DebtEntry.TABLE_NAME + ";";
-        String dropGoal = "DROP TABLE IF EXISTS " + GoalEntry.TABLE_NAME + ";";
-        String dropBudget = "DROP TABLE IF EXISTS " + BudgetEntry.TABLE_NAME + ";";
-        sqLiteDatabase.execSQL(dropBalanceAccount);
-        sqLiteDatabase.execSQL(dropExpenseIncome);
-        sqLiteDatabase.execSQL(dropTransfer);
+
+        String createTableDebts = "CREATE TABLE " + DebtEntry.TABLE_NAME + "("
+                + DebtEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + DebtEntry.COLUMN_TYPE + " INTEGER, "
+                + DebtEntry.COLUMN_PAYEE + " TEXT, "
+                + DebtEntry.COLUMN_AMOUNT + " REAL, "
+                + DebtEntry.COLUMN_AMOUNT_PAID + " REAL, "
+                + DebtEntry.COLUMN_CLOSED + " INTEGER, "
+                + DebtEntry.COLUMN_DATE_CREATED + " INTEGER, "
+                + DebtEntry.COLUMN_DATE_DUE + " INTEGER, "
+                + DebtEntry.COLUMN_AMOUNTS_LIST + " TEXT, "
+                + DebtEntry.COLUMN_AMOUNTS_TIME_LIST + " TEXT);";
+
         sqLiteDatabase.execSQL(dropDebt);
-        sqLiteDatabase.execSQL(dropGoal);
-        sqLiteDatabase.execSQL(dropBudget);
-        onCreate(sqLiteDatabase);
+        sqLiteDatabase.execSQL(createTableDebts);
     }
 
     // region Account Database Methods
@@ -360,6 +381,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         debtContentValues.put(DebtEntry.COLUMN_CLOSED, debt.isClosed());
         debtContentValues.put(DebtEntry.COLUMN_DATE_CREATED, debt.getCreationDate());
         debtContentValues.put(DebtEntry.COLUMN_DATE_DUE, debt.getPaybackDate());
+        debtContentValues.put(GoalEntry.COLUMN_AMOUNTS_LIST, "");
+        debtContentValues.put(GoalEntry.COLUMN_AMOUNTS_TIME_LIST, "");
 
         long result = db.insert(DebtEntry.TABLE_NAME, null, debtContentValues);
 
@@ -419,6 +442,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(updateQuery);
     }
 
+    public void updateDebtAmountsList(int debtId, String newAmountsList, String newTimeList) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String updateQuery = "UPDATE " + DebtEntry.TABLE_NAME + " SET "
+                + DebtEntry.COLUMN_AMOUNTS_LIST + " = '" + newAmountsList + "', "
+                + DebtEntry.COLUMN_AMOUNTS_TIME_LIST + " = '" + newTimeList + "' "
+                + "WHERE " + DebtEntry._ID + " = '" + debtId + "';";
+        db.execSQL(updateQuery);
+    }
+
     /**
      * @param id Database id of the account being deleted
      */
@@ -446,6 +478,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         goalContentValues.put(GoalEntry.COLUMN_SAVED_AMOUNT, goal.getSavedAmount());
         goalContentValues.put(GoalEntry.COLUMN_TARGET_DATE, goal.getTargetDate());
         goalContentValues.put(GoalEntry.COLUMN_STATUS, goal.getStatus());
+        goalContentValues.put(GoalEntry.COLUMN_AMOUNTS_LIST, "");
+        goalContentValues.put(GoalEntry.COLUMN_AMOUNTS_TIME_LIST, "");
 
         long result = db.insert(GoalEntry.TABLE_NAME, null, goalContentValues);
 
@@ -502,6 +536,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         String updateQuery = "UPDATE " + GoalEntry.TABLE_NAME + " SET "
                 + GoalEntry.COLUMN_SAVED_AMOUNT + " = '" + newSavedAmount + "' "
+                + "WHERE " + GoalEntry._ID + " = '" + goalId + "';";
+        db.execSQL(updateQuery);
+    }
+
+    public void updateGoalAmountsList(int goalId, String newAmountsList, String newTimeList) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String updateQuery = "UPDATE " + GoalEntry.TABLE_NAME + " SET "
+                + GoalEntry.COLUMN_AMOUNTS_LIST + " = '" + newAmountsList + "', "
+                + GoalEntry.COLUMN_AMOUNTS_TIME_LIST + " = '" + newTimeList + "' "
                 + "WHERE " + GoalEntry._ID + " = '" + goalId + "';";
         db.execSQL(updateQuery);
     }

@@ -75,8 +75,15 @@
             android:name=".BudgetListActivity"
             android:label="@string/budgets"
             android:parentActivityName=".MainActivity" />
-        <activity android:name=".DetailedBudgetActivity"
+        <activity
+            android:name=".DetailedBudgetActivity"
             android:parentActivityName=".BudgetListActivity" />
+        <activity
+            android:name=".DetailedGoalActivity"
+            android:parentActivityName=".GoalListActivity" />
+        <activity
+            android:name=".DetailedDebtActivity"
+            android:parentActivityName=".DebtListActivity" />
     </application>
 
 </manifest>

@@ -8,7 +8,7 @@ import android.provider.BaseColumns;
 
 public final class DatabaseContract {
     public static final String DATABASE_NAME = "personal_finance.db";
-    public static final int DATABASE_VERSION = 10;
+    public static final int DATABASE_VERSION = 13;
     private DatabaseContract() {
     }
 
@@ -53,6 +53,8 @@ public final class DatabaseContract {
         public static final String COLUMN_CLOSED = "closed";
         public static final String COLUMN_DATE_CREATED = "date_created";
         public static final String COLUMN_DATE_DUE = "date_due";
+        public static final String COLUMN_AMOUNTS_LIST = "amounts_list";
+        public static final String COLUMN_AMOUNTS_TIME_LIST = "amounts_time_list";
     }
 
     public final static class GoalEntry implements BaseColumns {
@@ -64,6 +66,8 @@ public final class DatabaseContract {
         public static final String COLUMN_SAVED_AMOUNT = "saved_amount";
         public static final String COLUMN_TARGET_DATE = "target_date";
         public static final String COLUMN_STATUS = "status";
+        public static final String COLUMN_AMOUNTS_LIST = "amounts_list";
+        public static final String COLUMN_AMOUNTS_TIME_LIST = "amounts_time_list";
     }
 
     public final static class BudgetEntry implements BaseColumns {
