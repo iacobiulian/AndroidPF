@@ -1,7 +1,11 @@
 package com.example.android.personalfinance_v01;
 
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
+import android.content.res.ColorStateList;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -55,6 +59,7 @@ public class DetailedBudgetActivity extends AppCompatActivity {
         initChart();
     }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @SuppressLint("SetTextI18n")
     private void initFields() {
         if (currentBudget != null) {
@@ -70,22 +75,61 @@ public class DetailedBudgetActivity extends AppCompatActivity {
             ProgressBar progressBar = findViewById(R.id.detailedBudgetProgressBar);
             int percentage = (int) (currentBudget.getCurrentAmount() * 100 / currentBudget.getTotalAmount());
             progressBar.setProgress(percentage);
+            int[][] states = new int[][]{
+                    new int[]{},
+            };
+            int[] colors;
+            ColorStateList colorStateList;
 
             TextView goalAmountTv = findViewById(R.id.detailedBudgetAmountTv);
-            goalAmountTv.setText("Budget: " + formatDecimalTwoPlaces(currentBudget.getTotalAmount()));
+            goalAmountTv.setText(formatDecimalTwoPlaces(currentBudget.getTotalAmount()));
 
             TextView savedAmountTv = findViewById(R.id.detailedBudgetSavedAmountTv);
-            savedAmountTv.setText("Spent: " + formatDecimalTwoPlaces(currentBudget.getCurrentAmount()));
+            savedAmountTv.setText(formatDecimalTwoPlaces(currentBudget.getCurrentAmount()));
 
             TextView remainingAmountTv = findViewById(R.id.detailedBudgetRemainingAmountTv);
-            remainingAmountTv.setText("Remaining: " + formatDecimalTwoPlaces(currentBudget.getTotalAmount() -
+            remainingAmountTv.setText(formatDecimalTwoPlaces(currentBudget.getTotalAmount() -
                     currentBudget.getCurrentAmount()));
 
             TextView averageSpentTv = findViewById(R.id.detailedBudgetAverage);
-            averageSpentTv.setText("Average spent " + formatDecimalTwoPlaces(getAverageSpent()));
+            averageSpentTv.setText(getString(R.string.averageSpent) + ": " + formatDecimalTwoPlaces(getAverageSpent()));
 
             TextView recommendedSpentTv = findViewById(R.id.detailedBudgetRecommended);
-            recommendedSpentTv.setText("Recommended spent " + formatDecimalTwoPlaces(getRecommendedSpent()));
+            recommendedSpentTv.setText(getString(R.string.recommendedSpent) + ": " + formatDecimalTwoPlaces(getRecommendedSpent()));
+
+            if (percentage <= 20) {
+                int color = ContextCompat.getColor(this, R.color.debtGoalVeryHigh);
+                savedAmountTv.setTextColor(color);
+                remainingAmountTv.setTextColor(color);
+                colors = new int[]{ color };
+                colorStateList = new ColorStateList(states, colors);
+            } else if (percentage <= 40) {
+                int color = ContextCompat.getColor(this, R.color.debtGoalHigh);
+                savedAmountTv.setTextColor(color);
+                remainingAmountTv.setTextColor(color);
+                colors = new int[]{ color };
+                colorStateList = new ColorStateList(states, colors);
+            } else if (percentage <= 60) {
+                int color = ContextCompat.getColor(this, R.color.debtGoalMedium);
+                savedAmountTv.setTextColor(color);
+                remainingAmountTv.setTextColor(color);
+                colors = new int[]{ color };
+                colorStateList = new ColorStateList(states, colors);
+            } else if (percentage <= 80) {
+                int color = ContextCompat.getColor(this, R.color.debtGoalLow);
+                savedAmountTv.setTextColor(color);
+                remainingAmountTv.setTextColor(color);
+                colors = new int[]{ color };
+                colorStateList = new ColorStateList(states, colors);
+            } else {
+                int color = ContextCompat.getColor(this, R.color.debtGoalVeryLow);
+                savedAmountTv.setTextColor(color);
+                remainingAmountTv.setTextColor(color);
+                colors = new int[]{ color };
+                colorStateList = new ColorStateList(states, colors);
+            }
+
+            progressBar.setProgressTintList(colorStateList);
 
             if (currentBudget.getType() == Budget.NONE) {
                 averageSpentTv.setVisibility(View.GONE);
@@ -113,14 +157,14 @@ public class DetailedBudgetActivity extends AppCompatActivity {
     private void initPeriod() {
         Calendar calendar = Calendar.getInstance();
         calendar.setFirstDayOfWeek(Calendar.MONDAY);
-        calendar.set(Calendar.HOUR_OF_DAY,0);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
 
         switch (currentBudget.getType()) {
             case Budget.NONE:
             case Budget.WEEKLY:
                 periodNames = new String[]{"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"};
                 calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-                Log.e(TAG, "initPeriod: " + calendar.getTime() );
+                Log.e(TAG, "initPeriod: " + calendar.getTime());
                 initSpecificPeriod(calendar.getTime(), 7, Calendar.DATE);
                 break;
             case Budget.MONTHLY:
@@ -164,7 +208,7 @@ public class DetailedBudgetActivity extends AppCompatActivity {
             ArrayList<ExpenseIncome> filteredTimeList =
                     new ArrayList<>(filterTimeExpenseIncomeList(filteredCategList, lowerBound, upperBound));
 
-            if(!filteredTimeList.isEmpty()) {
+            if (!filteredTimeList.isEmpty()) {
                 for (ExpenseIncome expinc : filteredTimeList) {
                     period[i] += expinc.getAmount();
                 }
@@ -262,7 +306,7 @@ public class DetailedBudgetActivity extends AppCompatActivity {
         return currentBudget.getTotalAmount() / currentBudget.getType();
     }
 
-    public class MyXAxisValueFormatter implements IAxisValueFormatter {
+    private class MyXAxisValueFormatter implements IAxisValueFormatter {
 
         private String[] values;
 

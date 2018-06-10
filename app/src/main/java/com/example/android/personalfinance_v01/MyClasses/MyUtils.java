@@ -33,7 +33,7 @@ public class MyUtils {
     public static final String PLUS_SIGN = "+";
     public static final String MINUS_SIGN = "-";
     public static final String INTENT_KEY = "intentCode";
-    private static final String STRING_DELIMITOR = ",";
+    private static final String STRING_DELIMITER = ",";
 
     //Global Balance Account list
     public static ArrayList<BalanceAccount> accountList = new ArrayList<>();
@@ -438,6 +438,11 @@ public class MyUtils {
         return df.format(unixTime);
     }
 
+    public static String formatDateDayMonth(long unixTime) {
+        DateFormat df = new SimpleDateFormat("d MMM", Locale.ENGLISH);
+        return df.format(unixTime);
+    }
+
     public static float returnFloat(double d) {
         return (float) d;
     }
@@ -481,7 +486,7 @@ public class MyUtils {
         StringBuilder stringBuilder = new StringBuilder();
         for (double number : arr) {
             stringBuilder.append(number);
-            stringBuilder.append(STRING_DELIMITOR);
+            stringBuilder.append(STRING_DELIMITER);
         }
 
         return stringBuilder.toString();
@@ -491,7 +496,7 @@ public class MyUtils {
         ArrayList<Double> arr = new ArrayList<>();
 
         if(!TextUtils.isEmpty(s)) {
-            String[] stringArr = s.split(STRING_DELIMITOR);
+            String[] stringArr = s.split(STRING_DELIMITER);
 
             for (String item : stringArr) {
                 arr.add(Double.parseDouble(item));
@@ -509,7 +514,7 @@ public class MyUtils {
         StringBuilder stringBuilder = new StringBuilder();
         for (long number : arr) {
             stringBuilder.append(number);
-            stringBuilder.append(STRING_DELIMITOR);
+            stringBuilder.append(STRING_DELIMITER);
         }
 
         return stringBuilder.toString();
@@ -519,7 +524,7 @@ public class MyUtils {
         ArrayList<Long> arr = new ArrayList<>();
 
         if(!TextUtils.isEmpty(s)) {
-            String[] stringArr = s.split(STRING_DELIMITOR);
+            String[] stringArr = s.split(STRING_DELIMITER);
 
             for (String item : stringArr) {
                 arr.add(Long.parseLong(item));

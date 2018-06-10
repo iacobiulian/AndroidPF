@@ -9,7 +9,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
-        android:textSize="@dimen/debt_text_big"
+        android:textSize="@dimen/text_big"
         tools:text="New house" />
 
     <ProgressBar
@@ -40,8 +40,8 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="4dp"
                 android:gravity="center_horizontal"
-                android:text="@string/budget"
-                android:textSize="@dimen/debt_text_small" />
+                android:text="@string/goal"
+                android:textSize="@dimen/text_small" />
 
             <TextView
                 android:id="@+id/itemGoalAmountTv"
@@ -66,8 +66,8 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="4dp"
                 android:gravity="center_horizontal"
-                android:text="@string/spent"
-                android:textSize="@dimen/debt_text_small" />
+                android:text="@string/saved"
+                android:textSize="@dimen/text_small" />
 
             <TextView
                 android:id="@+id/itemGoalSavedAmountTv"
@@ -93,7 +93,7 @@
                 android:layout_margin="4dp"
                 android:gravity="center_horizontal"
                 android:text="@string/remaining"
-                android:textSize="@dimen/debt_text_small" />
+                android:textSize="@dimen/text_small" />
 
             <TextView
                 android:id="@+id/itemGoalRemainingAmountTv"
@@ -117,7 +117,7 @@
         android:layout_below="@id/itemDebtAmountsLinLay"
         android:layout_marginTop="8dp"
         android:padding="4dp"
-        android:textSize="@dimen/debt_text_small"
+        android:textSize="@dimen/text_small"
         tools:text="Target creationDate" />
 
     <TextView
@@ -126,7 +126,7 @@
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@id/itemGoalNameTv"
         android:layout_alignParentEnd="true"
-        android:textSize="@dimen/debt_text_big"
+        android:textSize="@dimen/text_big"
         tools:text="Ongoing" />
 
 </RelativeLayout>

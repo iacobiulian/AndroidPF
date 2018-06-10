@@ -52,7 +52,7 @@
                 android:layout_margin="4dp"
                 android:gravity="center_horizontal"
                 android:text="@string/budget"
-                android:textSize="@dimen/debt_text_small" />
+                android:textSize="@dimen/text_small" />
 
             <TextView
                 android:id="@+id/itemBudgetAmountTv"
@@ -78,7 +78,7 @@
                 android:layout_margin="4dp"
                 android:gravity="center_horizontal"
                 android:text="@string/spent"
-                android:textSize="@dimen/debt_text_small" />
+                android:textSize="@dimen/text_small" />
 
             <TextView
                 android:id="@+id/itemBudgetSavedAmountTv"
@@ -104,7 +104,7 @@
                 android:layout_margin="4dp"
                 android:gravity="center_horizontal"
                 android:text="@string/remaining"
-                android:textSize="@dimen/debt_text_small" />
+                android:textSize="@dimen/text_small" />
 
             <TextView
                 android:id="@+id/itemBudgetRemainingAmountTv"
@@ -127,7 +127,7 @@
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@id/itemBudgetCategoryTv"
         android:layout_alignParentEnd="true"
-        android:textSize="@dimen/debt_text_big"
+        android:textSize="@dimen/text_big"
         tools:text="Weekly" />
 
 </RelativeLayout>
