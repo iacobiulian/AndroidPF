@@ -2,27 +2,37 @@ package com.example.android.personalfinance_v01;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.content.Context;
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.example.android.personalfinance_v01.CustomAdapters.ExpenseIncomePagerAdapter;
 import com.example.android.personalfinance_v01.CustomAdapters.MyXAxisValueFormatter;
+import com.example.android.personalfinance_v01.DataPersistance.DatabaseHelper;
+import com.example.android.personalfinance_v01.Fragments.DetailedDebtChartFragment;
+import com.example.android.personalfinance_v01.Fragments.DetailedDebtHistoryFragment;
 import com.example.android.personalfinance_v01.MyClasses.Debt;
+import com.example.android.personalfinance_v01.MyClasses.Goal;
+import com.example.android.personalfinance_v01.MyClasses.HistoryItem;
 import com.example.android.personalfinance_v01.MyClasses.MyUtils;
 import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.util.ArrayList;
@@ -31,23 +41,27 @@ import java.util.Objects;
 import static com.example.android.personalfinance_v01.MyClasses.MyUtils.formatDateWithoutTime;
 import static com.example.android.personalfinance_v01.MyClasses.MyUtils.formatDecimalTwoPlaces;
 
-public class DetailedDebtActivity extends AppCompatActivity {
+public class DetailedDebtTabbedActivity extends AppCompatActivity {
 
+    private static final int FRAGMENT_CHART = 0;
+    private static final int FRAGMENT_HISTORY = 1;
+    ArrayList<HistoryItem> theList = new ArrayList<>();
+    boolean wasDeleted = false;
     Debt currentDebt;
     private int CHART_SIZE;
+    private ViewPager viewPager;
+    private DetailedDebtChartFragment chartFragment;
+    private DetailedDebtHistoryFragment historyFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_detailed_debt);
+        setContentView(R.layout.activity_detailed_debt_tabbed);
 
         currentDebt = (Debt) Objects.requireNonNull(getIntent().getExtras()).getSerializable("debt");
         if (currentDebt == null) {
             return;
         }
-
-        //TODO set the title
-        setTitle(currentDebt.getPayee());
 
         if (currentDebt.getAddedAmounts().size() >= 5) {
             CHART_SIZE = 5;
@@ -55,35 +69,90 @@ public class DetailedDebtActivity extends AppCompatActivity {
             CHART_SIZE = currentDebt.getAddedAmounts().size();
         }
 
-        initFields();
+        chartFragment = new DetailedDebtChartFragment();
+        historyFragment = new DetailedDebtHistoryFragment();
 
-        initChart();
+        if (currentDebt.getType() == Debt.I_LEND) {
+            setTitle("Me to " + currentDebt.getPayee());
+        } else {
+            setTitle(currentDebt.getPayee() + " to Me");
+        }
+
+        initToolbar();
+
+        initTheList();
+
+        viewPager = findViewById(R.id.detailedDebtHistoryViewPager);
+        initViewPager(viewPager);
+
+        TabLayout tabLayout = findViewById(R.id.detailedDebtHistoryTabLayout);
+        tabLayout.setupWithViewPager(viewPager);
+    }
+
+    private void initToolbar() {
+        Toolbar toolbar = findViewById(R.id.detailedDebtHistoryToolbar);
+        setSupportActionBar(toolbar);
+
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+    }
+
+    private void initViewPager(ViewPager viewPager) {
+        ExpenseIncomePagerAdapter adapter = new ExpenseIncomePagerAdapter(getSupportFragmentManager());
+        adapter.addFragment(chartFragment, "Details");
+        adapter.addFragment(historyFragment, "History");
+        viewPager.setAdapter(adapter);
+
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if (wasDeleted) {
+                    restartThis();
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+            }
+        });
+    }
+
+    private void restartThis() {
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("debt", currentDebt);
+
+        Intent intent = new Intent(DetailedDebtTabbedActivity.this, DetailedDebtTabbedActivity.class);
+        intent.putExtras(bundle);
+        this.startActivity(intent);
+        this.overridePendingTransition(0, 0);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @SuppressLint("SetTextI18n")
-    private void initFields() {
+    public void initFields() {
         if (currentDebt != null) {
-            TextView fromTv = findViewById(R.id.detailedDebtFromTv);
-            TextView toTv = findViewById(R.id.detailedDebtToTv);
             if (currentDebt.getType() == Debt.I_LEND) {
-                fromTv.setText(R.string.me);
-                toTv.setText(currentDebt.getPayee());
+                chartFragment.fromTv.setText(R.string.me);
+                chartFragment.toTv.setText(currentDebt.getPayee());
             } else {
-                fromTv.setText(currentDebt.getPayee());
-                toTv.setText(R.string.me);
+                chartFragment.fromTv.setText(currentDebt.getPayee());
+                chartFragment.toTv.setText(R.string.me);
             }
 
-            TextView initialAmountTv = findViewById(R.id.detailedDebtInitialAmountTv);
-            initialAmountTv.setText(formatDecimalTwoPlaces(currentDebt.getAmount()));
+            chartFragment.initialAmountTv.setText(formatDecimalTwoPlaces(currentDebt.getAmount()));
 
-            TextView paidBackAmountTv = findViewById(R.id.detailedDebtPaidBackAmountTv);
+            TextView paidBackAmountTv = chartFragment.paidBackAmountTv;
             paidBackAmountTv.setText(formatDecimalTwoPlaces(currentDebt.getAmountPaidBack()));
 
-            TextView remainingAmountTv = findViewById(R.id.detailedDebtRemainingAmountTv);
+            TextView remainingAmountTv = chartFragment.remainingAmountTv;
             remainingAmountTv.setText(formatDecimalTwoPlaces(currentDebt.getAmount() - currentDebt.getAmountPaidBack()));
 
-            ProgressBar progressBar = findViewById(R.id.detailedDebtProgressBar);
+            ProgressBar progressBar = chartFragment.progressBar;
             int percentage = (int) (currentDebt.getAmountPaidBack() * 100 / currentDebt.getAmount());
             progressBar.setMax(100);
             progressBar.setProgress(percentage);
@@ -127,29 +196,25 @@ public class DetailedDebtActivity extends AppCompatActivity {
 
             progressBar.setProgressTintList(colorStateList);
 
-            TextView startDate = findViewById(R.id.detailedDebtStartDateTv);
-            startDate.setText("Start date: " + formatDateWithoutTime(currentDebt.getCreationDate()));
+            chartFragment.startDate.setText("Start date: " + formatDateWithoutTime(currentDebt.getCreationDate()));
 
-            TextView dueDate = findViewById(R.id.detailedDebtEndDateTv);
-            dueDate.setText("Due date: " + formatDateWithoutTime(currentDebt.getPaybackDate()));
+            chartFragment.dueDate.setText("Due date: " + formatDateWithoutTime(currentDebt.getPaybackDate()));
 
-            TextView closed = findViewById(R.id.detailedDebtClosed);
             if (currentDebt.isClosed() == Debt.CLOSED) {
-                closed.setText("Closed");
+                chartFragment.closed.setText("Closed");
             } else if (currentDebt.isClosed() == Debt.NOT_CLOSED) {
-                closed.setText("Open");
+                chartFragment.closed.setText("Open");
             }
 
         }
     }
 
-    private void initChart() {
-        TextView emptyTextView = findViewById(R.id.detailedDebtEmptyTv);
-        emptyTextView.setVisibility(View.GONE);
+    public void initChart() {
+        chartFragment.emptyTextView.setVisibility(View.GONE);
 
         ArrayList<Double> amounts = currentDebt.getAddedAmounts();
 
-        BarChart barChart = findViewById(R.id.detailedDebtExpLineChart);
+        BarChart barChart = chartFragment.barChart;
         barChart.setDrawBarShadow(true);
         barChart.setMaxVisibleValueCount(12);
         barChart.setPinchZoom(false);
@@ -182,9 +247,18 @@ public class DetailedDebtActivity extends AppCompatActivity {
             xAxis.setGranularity(1f);
         } else {
             barChart.setVisibility(View.GONE);
-            emptyTextView.setVisibility(View.VISIBLE);
+            chartFragment.emptyTextView.setVisibility(View.VISIBLE);
         }
 
+    }
+
+    private void initTheList() {
+        ArrayList<Double> amountsList = currentDebt.getAddedAmounts();
+        ArrayList<Long> datesList = currentDebt.getAddedAmountsDates();
+
+        for (int i = 0; i < amountsList.size(); i++) {
+            theList.add(new HistoryItem(amountsList.get(i), datesList.get(i)));
+        }
     }
 
     private String[] getPeriodNames() {
@@ -211,5 +285,35 @@ public class DetailedDebtActivity extends AppCompatActivity {
         }
 
         return entries;
+    }
+
+
+    public void updateList() {
+        historyFragment.updateListView(theList);
+    }
+
+    public void deleteHistoryItem(AdapterView<?> adapterView, int i) {
+        HistoryItem historyItem = (HistoryItem) adapterView.getItemAtPosition(i);
+        theList.remove(historyItem);
+
+        double removedAmount = currentDebt.getAddedAmounts().get(i);
+        double newAmount = currentDebt.getAmountPaidBack() - removedAmount;
+        currentDebt.getAddedAmounts().remove(i);
+        currentDebt.getAddedAmountsDates().remove(i);
+        currentDebt.setAmountPaidBack(newAmount);
+        modifyDebtAmountsTimes(DetailedDebtTabbedActivity.this, currentDebt, currentDebt.getAddedAmounts(), currentDebt.getAddedAmountsDates(), newAmount);
+
+
+        historyFragment.updateListView(theList);
+        wasDeleted = true;
+    }
+
+    private void modifyDebtAmountsTimes(Context context, Debt debtModified, ArrayList<Double> amounts, ArrayList<Long> times, double newAmount) {
+        DatabaseHelper databaseHelper = new DatabaseHelper(context);
+        String amountsString = MyUtils.fromDoubleListToString(amounts);
+        String timesString = MyUtils.fromLongListToString(times);
+
+        databaseHelper.updateDebtAmountsList(databaseHelper.getDebtID(debtModified), amountsString, timesString);
+        databaseHelper.updateDebtAmount(databaseHelper.getDebtID(debtModified), newAmount);
     }
 }

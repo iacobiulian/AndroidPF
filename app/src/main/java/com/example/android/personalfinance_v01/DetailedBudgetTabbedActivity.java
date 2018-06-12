@@ -62,7 +62,7 @@ public class DetailedBudgetTabbedActivity extends AppCompatActivity {
         if (currentBudget == null)
             return;
 
-        //setTitle("");
+        setTitle(currentBudget.getCategory().getName() + " " + getType() + " Budget");
         MyUtils.getExpenseIncomeFromDatabase(this);
 
         chartFragment = new DetailedBudgetChartFragment();

@@ -2,27 +2,36 @@ package com.example.android.personalfinance_v01;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.content.Context;
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.example.android.personalfinance_v01.CustomAdapters.ExpenseIncomePagerAdapter;
 import com.example.android.personalfinance_v01.CustomAdapters.MyXAxisValueFormatter;
+import com.example.android.personalfinance_v01.DataPersistance.DatabaseHelper;
+import com.example.android.personalfinance_v01.Fragments.DetailedGoalChartFragment;
+import com.example.android.personalfinance_v01.Fragments.DetailedGoalHistoryFragment;
 import com.example.android.personalfinance_v01.MyClasses.Goal;
+import com.example.android.personalfinance_v01.MyClasses.HistoryItem;
 import com.example.android.personalfinance_v01.MyClasses.MyUtils;
 import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.util.ArrayList;
@@ -31,15 +40,23 @@ import java.util.Objects;
 import static com.example.android.personalfinance_v01.MyClasses.MyUtils.formatDateWithoutTime;
 import static com.example.android.personalfinance_v01.MyClasses.MyUtils.formatDecimalTwoPlaces;
 
-public class DetailedGoalActivity extends AppCompatActivity {
+public class DetailedGoalTabbedActivity extends AppCompatActivity {
 
+    private static final String TAG = "DetailedGoalTabbedActiv";
+    private static final int FRAGMENT_CHART = 0;
+    private static final int FRAGMENT_HISTORY = 1;
+    ArrayList<HistoryItem> theList = new ArrayList<>();
+    boolean wasDeleted = false;
+    Goal currentGoal;
     private int CHART_SIZE;
-    private Goal currentGoal;
+    private ViewPager viewPager;
+    private DetailedGoalChartFragment chartFragment;
+    private DetailedGoalHistoryFragment historyFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_detailed_goal);
+        setContentView(R.layout.activity_detailed_goal_tabbed);
 
         currentGoal = (Goal) Objects.requireNonNull(getIntent().getExtras()).getSerializable("goal");
         if (currentGoal == null) {
@@ -54,23 +71,72 @@ public class DetailedGoalActivity extends AppCompatActivity {
             CHART_SIZE = currentGoal.getAddedAmounts().size();
         }
 
-        initFields();
+        chartFragment = new DetailedGoalChartFragment();
+        historyFragment = new DetailedGoalHistoryFragment();
 
+        initToolbar();
 
-        initChart();
+        initTheList();
+
+        viewPager = findViewById(R.id.detailedGoalHistoryViewPager);
+        initViewPager(viewPager);
+
+        TabLayout tabLayout = findViewById(R.id.detailedGoalHistoryTabLayout);
+        tabLayout.setupWithViewPager(viewPager);
+    }
+
+    private void initToolbar() {
+        Toolbar toolbar = findViewById(R.id.detailedGoalHistoryToolbar);
+        setSupportActionBar(toolbar);
+
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+    }
+
+    private void initViewPager(ViewPager viewPager) {
+        ExpenseIncomePagerAdapter adapter = new ExpenseIncomePagerAdapter(getSupportFragmentManager());
+        adapter.addFragment(chartFragment, "Details");
+        adapter.addFragment(historyFragment, "History");
+        viewPager.setAdapter(adapter);
+
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if (wasDeleted) {
+                    restartThis();
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+            }
+        });
+    }
+
+    private void restartThis() {
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("goal", currentGoal);
+
+        Intent intent = new Intent(DetailedGoalTabbedActivity.this, DetailedGoalTabbedActivity.class);
+        intent.putExtras(bundle);
+        this.startActivity(intent);
+        this.overridePendingTransition(0, 0);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @SuppressLint("SetTextI18n")
-    private void initFields() {
+    public void initFields() {
         if (currentGoal != null) {
-            TextView nameTv = findViewById(R.id.detailedGoalNameTv);
-            nameTv.setText(currentGoal.getName());
+            chartFragment.nameTv.setText(currentGoal.getName());
 
-            TextView statusTv = findViewById(R.id.detailedGoalStatus);
-            statusTv.setText(getStatusString());
+            chartFragment.statusTv.setText(getStatusString());
 
-            ProgressBar progressBar = findViewById(R.id.detailedGoalProgressBar);
+            ProgressBar progressBar = chartFragment.progressBar;
             int percentage = (int) (currentGoal.getSavedAmount() * 100 / currentGoal.getGoalAmount());
             progressBar.setMax(100);
             progressBar.setProgress(percentage);
@@ -80,13 +146,13 @@ public class DetailedGoalActivity extends AppCompatActivity {
             int[] colors;
             ColorStateList colorStateList;
 
-            TextView goalAmountTv = findViewById(R.id.detailedGoalAmountTv);
+            TextView goalAmountTv = chartFragment.goalAmountTv;
             goalAmountTv.setText(formatDecimalTwoPlaces(currentGoal.getGoalAmount()));
 
-            TextView savedAmountTv = findViewById(R.id.detailedGoalSavedAmountTv);
+            TextView savedAmountTv = chartFragment.savedAmountTv;
             savedAmountTv.setText(formatDecimalTwoPlaces(currentGoal.getSavedAmount()));
 
-            TextView remainingAmountTv = findViewById(R.id.detailedGoalRemainingAmountTv);
+            TextView remainingAmountTv = chartFragment.remainingAmountTv;
             remainingAmountTv.setText(formatDecimalTwoPlaces(currentGoal.getGoalAmount() - currentGoal.getSavedAmount()));
 
             if (percentage <= 20) {
@@ -123,22 +189,19 @@ public class DetailedGoalActivity extends AppCompatActivity {
 
             progressBar.setProgressTintList(colorStateList);
 
-            TextView targetDateTv = findViewById(R.id.detailedGoalTargetDateTv);
-            targetDateTv.setText("Target date: " + formatDateWithoutTime(currentGoal.getTargetDate()));
+            chartFragment.targetDateTv.setText("Target date: " + formatDateWithoutTime(currentGoal.getTargetDate()));
 
-            TextView recommendedSpentTv = findViewById(R.id.detailedGoalRecommended);
-            recommendedSpentTv.setText(getString(R.string.recommendedSpent) + ": " + formatDecimalTwoPlaces(getRecommendedSpent()));
+            chartFragment.recommendedSpentTv.setText(getString(R.string.recommendedSpent) + ": " + formatDecimalTwoPlaces(getRecommendedSpent()));
 
         }
     }
 
-    private void initChart() {
-        TextView emptyTextView = findViewById(R.id.detailedGoalEmptyTv);
-        emptyTextView.setVisibility(View.GONE);
+    public void initChart() {
+        chartFragment.emptyTextView.setVisibility(View.GONE);
 
         ArrayList<Double> amounts = currentGoal.getAddedAmounts();
 
-        BarChart barChart = findViewById(R.id.detailedGoalExpLineChart);
+        BarChart barChart = chartFragment.barChart;
         barChart.setDrawBarShadow(true);
         barChart.setMaxVisibleValueCount(12);
         barChart.setPinchZoom(false);
@@ -171,9 +234,18 @@ public class DetailedGoalActivity extends AppCompatActivity {
             xAxis.setGranularity(1f);
         } else {
             barChart.setVisibility(View.GONE);
-            emptyTextView.setVisibility(View.VISIBLE);
+            chartFragment.emptyTextView.setVisibility(View.VISIBLE);
         }
 
+    }
+
+    private void initTheList() {
+        ArrayList<Double> amountsList = currentGoal.getAddedAmounts();
+        ArrayList<Long> datesList = currentGoal.getAddedAmountsDates();
+
+        for (int i = 0; i < amountsList.size(); i++) {
+            theList.add(new HistoryItem(amountsList.get(i), datesList.get(i)));
+        }
     }
 
     private String[] getPeriodNames() {
@@ -217,4 +289,32 @@ public class DetailedGoalActivity extends AppCompatActivity {
         return "";
     }
 
+    public void updateList() {
+        historyFragment.updateListView(theList);
+    }
+
+    public void deleteHistoryItem(AdapterView<?> adapterView, int i) {
+        HistoryItem historyItem = (HistoryItem) adapterView.getItemAtPosition(i);
+        theList.remove(historyItem);
+
+        double removedAmount = currentGoal.getAddedAmounts().get(i);
+        double newAmount = currentGoal.getSavedAmount() - removedAmount;
+        currentGoal.getAddedAmounts().remove(i);
+        currentGoal.getAddedAmountsDates().remove(i);
+        currentGoal.setSavedAmount(newAmount);
+        modifyGoalAmountsTimes(DetailedGoalTabbedActivity.this, currentGoal, currentGoal.getAddedAmounts(), currentGoal.getAddedAmountsDates(), newAmount);
+
+
+        historyFragment.updateListView(theList);
+        wasDeleted = true;
+    }
+
+    private void modifyGoalAmountsTimes(Context context, Goal goalModified, ArrayList<Double> amounts, ArrayList<Long> times, double newAmount) {
+        DatabaseHelper databaseHelper = new DatabaseHelper(context);
+        String amountsString = MyUtils.fromDoubleListToString(amounts);
+        String timesString = MyUtils.fromLongListToString(times);
+
+        databaseHelper.updateGoalAmountsList(databaseHelper.getGoalId(goalModified), amountsString, timesString);
+        databaseHelper.updateGoalSavedAmount(databaseHelper.getGoalId(goalModified), newAmount);
+    }
 }

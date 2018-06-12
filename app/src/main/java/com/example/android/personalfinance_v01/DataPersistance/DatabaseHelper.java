@@ -548,7 +548,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + "WHERE " + GoalEntry._ID + " = '" + goalId + "';";
         db.execSQL(updateQuery);
     }
-
     /**
      * @param id Database id of the goal being deleted
      */
@@ -633,6 +632,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         String updateQuery = "UPDATE " + BudgetEntry.TABLE_NAME + " SET "
                 + BudgetEntry.COLUMN_CURRENT_AMOUNT + " = '" + newCurrentAmount + "' "
+                + "WHERE " + BudgetEntry._ID + " = '" + budgetId + "';";
+        db.execSQL(updateQuery);
+    }
+
+    public void updateBudgetResetDate(int budgetId, long newResetDate) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String updateQuery = "UPDATE " + BudgetEntry.TABLE_NAME + " SET "
+                + BudgetEntry.COLUMN_RESET_DATE + " = '" + newResetDate + "' "
                 + "WHERE " + BudgetEntry._ID + " = '" + budgetId + "';";
         db.execSQL(updateQuery);
     }

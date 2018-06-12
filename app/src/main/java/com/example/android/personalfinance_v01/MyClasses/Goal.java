@@ -71,6 +71,10 @@ public class Goal implements Serializable{
         return addedAmountsDates;
     }
 
+    public void setSavedAmount(double savedAmount) {
+        this.savedAmount = savedAmount;
+    }
+
     public boolean isValid() {
         if (this.goalAmount < 0)
             return false;

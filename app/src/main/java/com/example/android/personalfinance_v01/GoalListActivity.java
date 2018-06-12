@@ -64,7 +64,7 @@ public class GoalListActivity extends AppCompatActivity {
                             case R.id.goalListMenuDetails:
                                 Bundle bundle = new Bundle();
                                 bundle.putSerializable("goal", currentGoal);
-                                MyUtils.startActivityWithBundle(GoalListActivity.this, DetailedGoalActivity.class,
+                                MyUtils.startActivityWithBundle(GoalListActivity.this, DetailedGoalTabbedActivity.class,
                                         bundle);
                                 break;
                             case R.id.goalListMenuReached:

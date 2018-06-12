@@ -1,5 +1,7 @@
 package com.example.android.personalfinance_v01.MyClasses;
 
+import android.util.Log;
+
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
@@ -9,6 +11,7 @@ public class Budget implements Serializable {
     public static final int WEEKLY = 7;
     public static final int MONTHLY = 30;
     public static final int YEARLY = 365;
+    private static final String TAG = "Budget";
 
     private int type;
     private Category category;
@@ -87,10 +90,13 @@ public class Budget implements Serializable {
         calendar.setFirstDayOfWeek(Calendar.MONDAY);
 
         Date rightNow = calendar.getTime();
+        Log.e(TAG, "isResetBudget: rightNow " + MyUtils.formatDateWithTime(rightNow.getTime()) );
+        Log.e(TAG, "isResetBudget: resetDate " + MyUtils.formatDateWithTime(resetDate) );
         long currentResetDate = this.resetDate;
 
         if(rightNow.after(new Date(this.resetDate))) {
             setResetDate(getNextResetDate(currentResetDate));
+            Log.e(TAG, "isResetBudget: nextResetDate " + MyUtils.formatDateWithTime(rightNow.getTime()) );
             return true;
         }
 

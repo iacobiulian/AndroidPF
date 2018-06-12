@@ -76,15 +76,6 @@
             android:label="@string/budgets"
             android:parentActivityName=".MainActivity" />
         <activity
-            android:name=".DetailedBudgetActivity"
-            android:parentActivityName=".BudgetListActivity" />
-        <activity
-            android:name=".DetailedGoalActivity"
-            android:parentActivityName=".GoalListActivity" />
-        <activity
-            android:name=".DetailedDebtActivity"
-            android:parentActivityName=".DebtListActivity" />
-        <activity
             android:name=".DetailedAccountHistoryActivity"
             android:label=""
             android:parentActivityName=".AccountListActivity"
@@ -93,6 +84,16 @@
             android:name=".DetailedBudgetTabbedActivity"
             android:label=""
             android:parentActivityName=".BudgetListActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".DetailedGoalTabbedActivity"
+            android:label=""
+            android:parentActivityName=".GoalListActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".DetailedDebtTabbedActivity"
+            android:label=""
+            android:parentActivityName=".DebtListActivity"
             android:theme="@style/AppTheme.NoActionBar" />
     </application>
 

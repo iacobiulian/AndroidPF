@@ -65,7 +65,7 @@ public class DebtListActivity extends AppCompatActivity {
                             case R.id.debtListMenuDetails:
                                 Bundle bundle = new Bundle();
                                 bundle.putSerializable("debt", currentDebt);
-                                MyUtils.startActivityWithBundle(DebtListActivity.this, DetailedDebtActivity.class,
+                                MyUtils.startActivityWithBundle(DebtListActivity.this, DetailedDebtTabbedActivity.class,
                                         bundle);
                                 break;
                             case R.id.debtListMenuClose:

@@ -11,6 +11,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -36,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
     //TODO https://github.com/evernote/android-job
 
     public static final int TYPE_TRANSFER = 3;
+    private static final String TAG = "MainActivity";
 
     //Navigation drawer
     DrawerLayout drawerLayout;
@@ -279,7 +281,9 @@ public class MainActivity extends AppCompatActivity {
 
         for (Budget item : MyUtils.budgetList) {
             if (item.isResetBudget()) {
+                Log.e(TAG, "checkBudgetsReset: we are inside if");
                 MyUtils.modifyBudgetCurrentAmount(MainActivity.this, item, 0.0);
+                MyUtils.modifyBudgetResetDate(MainActivity.this, item, item.getResetDate());
             }
         }
 

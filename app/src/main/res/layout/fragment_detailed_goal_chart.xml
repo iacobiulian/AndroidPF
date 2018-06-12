@@ -4,39 +4,28 @@
     android:layout_height="match_parent"
     android:padding="12dp">
 
-    <ImageView
-        android:id="@+id/detailedBudgetImageView"
+    <TextView
+        android:id="@+id/detailedGoalNameTv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
-        android:layout_gravity="center"
-        android:layout_marginEnd="8dp"
-        android:contentDescription="@string/img"
-        android:src="@drawable/ic_money_small" />
-
-    <TextView
-        android:id="@+id/detailedBudgetCategoryTv"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_toEndOf="@+id/detailedBudgetImageView"
-        android:gravity="center_vertical"
-        android:textColor="@color/textPrimary"
-        android:textSize="@dimen/category_text"
-        tools:text="Food" />
+        android:textSize="@dimen/text_big"
+        tools:text="New house" />
 
     <ProgressBar
-        android:id="@+id/detailedBudgetProgressBar"
-        style="@style/Base.Widget.AppCompat.ProgressBar.Horizontal"
+        android:id="@+id/detailedGoalProgressBar"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/detailedBudgetImageView"
-        android:padding="8dp" />
+        android:layout_below="@id/detailedGoalNameTv"
+        android:padding="8dp"
+        android:progress="30" />
 
     <LinearLayout
-        android:id="@+id/detailedBudgetAmountsLinLay"
+        android:id="@+id/detailedGoalAmountsLinLay"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/detailedBudgetProgressBar"
+        android:layout_below="@id/detailedGoalProgressBar"
         android:layout_marginBottom="8dp"
         android:orientation="horizontal">
 
@@ -51,11 +40,11 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="4dp"
                 android:gravity="center_horizontal"
-                android:text="@string/budget"
+                android:text="@string/goal"
                 android:textSize="@dimen/text_small" />
 
             <TextView
-                android:id="@+id/detailedBudgetAmountTv"
+                android:id="@+id/detailedGoalAmountTv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/initialTv"
@@ -77,11 +66,11 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="4dp"
                 android:gravity="center_horizontal"
-                android:text="@string/spent"
+                android:text="@string/saved"
                 android:textSize="@dimen/text_small" />
 
             <TextView
-                android:id="@+id/detailedBudgetSavedAmountTv"
+                android:id="@+id/detailedGoalSavedAmountTv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/paidTv"
@@ -107,7 +96,7 @@
                 android:textSize="@dimen/text_small" />
 
             <TextView
-                android:id="@+id/detailedBudgetRemainingAmountTv"
+                android:id="@+id/detailedGoalRemainingAmountTv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/remainingTv"
@@ -121,43 +110,45 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/detailedBudgetStatus"
+        android:id="@+id/detailedGoalTargetDateTv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@id/detailedBudgetCategoryTv"
+        android:layout_alignParentStart="true"
+        android:layout_below="@id/detailedGoalAmountsLinLay"
+        android:layout_marginTop="8dp"
+        android:padding="4dp"
+        android:textSize="@dimen/text_small"
+        tools:text="Target creationDate" />
+
+    <TextView
+        android:id="@+id/detailedGoalStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@id/detailedGoalNameTv"
         android:layout_alignParentEnd="true"
         android:textSize="@dimen/text_big"
-        tools:text="Weekly" />
+        tools:text="Ongoing" />
 
     <TextView
-        android:id="@+id/detailedBudgetAverage"
+        android:id="@+id/detailedGoalRecommended"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/detailedBudgetAmountsLinLay"
-        android:padding="4dp"
-        android:textSize="@dimen/text_big"
-        tools:text="Average: 250" />
-
-    <TextView
-        android:id="@+id/detailedBudgetRecommended"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/detailedBudgetAverage"
+        android:layout_below="@id/detailedGoalTargetDateTv"
         android:padding="4dp"
         android:textSize="@dimen/text_big"
         tools:text="Recommended: 250" />
 
     <com.github.mikephil.charting.charts.BarChart
-        android:id="@+id/detailedBudgetExpLineChart"
+        android:id="@+id/detailedGoalExpLineChart"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/detailedBudgetRecommended">
+        android:layout_below="@id/detailedGoalRecommended">
 
 
     </com.github.mikephil.charting.charts.BarChart>
 
     <TextView
-        android:id="@+id/detailedBudgetEmptyTv"
+        android:id="@+id/detailedGoalEmptyTv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"

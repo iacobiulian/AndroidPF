@@ -52,6 +52,10 @@ public class Debt implements Serializable{
         this.addedAmountsDates.addAll(timesList);
     }
 
+    public void setAmountPaidBack(double amountPaidBack) {
+        this.amountPaidBack = amountPaidBack;
+    }
+
     public int getType() {
         return type;
     }

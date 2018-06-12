@@ -320,6 +320,12 @@ public class MyUtils {
         databaseHelper.updateBudgetCurrentAmount(databaseHelper.getBudgetId(budgetModified), newCurrentAmount);
     }
 
+    public static void modifyBudgetResetDate(Context context, Budget budgetModified, long newResetDate) {
+        DatabaseHelper databaseHelper = new DatabaseHelper(context);
+
+        databaseHelper.updateBudgetResetDate(databaseHelper.getBudgetId(budgetModified), newResetDate);
+    }
+
     public static List<Category> getExpenseCategories() {
         List<Category> expenseCategories = new ArrayList<>();
         expenseCategories.add(new Category("Communication, PC", R.drawable.categ_pc));
