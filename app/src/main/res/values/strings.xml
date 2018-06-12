@@ -62,7 +62,7 @@
     <string name="section_format">Hello World from section: %1$d</string>
     <string name="addExpenseIncome">Add expense or income</string>
     <string name="charts">Charts</string>
-    <string name="no_data">No chart data to display</string>
+    <string name="no_data">No data to display</string>
     <string name="unselect">Unselect all</string>
     <string name="selectAll">Select all</string>
     <string name="save">Save</string>
@@ -98,10 +98,12 @@
     <string name="remaining">Remaining</string>
     <string name="budget">Budget</string>
     <string name="spent">Spent</string>
-    <string name="seeGoalDetails">Goal Details</string>
+    <string name="seeGoalDetails">See Goal Details</string>
     <string name="seeDebtDetails">See Debt Details</string>
     <string name="recommendedSpent">Recommended spent</string>
     <string name="averageSpent">Average spent</string>
     <string name="saved">Saved</string>
     <string name="goal">Goal amount</string>
+    <string name="title_activity_detailed_account_history">DetailedAccountHistoryActivity</string>
+    <string name="see_acc_history">See Account history</string>
 </resources>

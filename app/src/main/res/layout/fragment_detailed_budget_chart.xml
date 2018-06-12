@@ -1,0 +1,169 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="12dp">
+
+    <ImageView
+        android:id="@+id/fragmentDetailedBudgetImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_gravity="center"
+        android:layout_marginEnd="8dp"
+        android:contentDescription="@string/img"
+        android:src="@drawable/ic_money_small" />
+
+    <TextView
+        android:id="@+id/fragmentDetailedBudgetCategoryTv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@+id/fragmentDetailedBudgetImageView"
+        android:gravity="center_vertical"
+        android:textColor="@color/textPrimary"
+        android:textSize="@dimen/category_text"
+        tools:text="Food" />
+
+    <ProgressBar
+        android:id="@+id/fragmentDetailedBudgetProgressBar"
+        style="@style/Base.Widget.AppCompat.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/fragmentDetailedBudgetImageView"
+        android:padding="8dp" />
+
+    <LinearLayout
+        android:id="@+id/fragmentDetailedBudgetAmountsLinLay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/fragmentDetailedBudgetProgressBar"
+        android:layout_marginBottom="8dp"
+        android:orientation="horizontal">
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2">
+
+            <TextView
+                android:id="@+id/initialTv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:gravity="center_horizontal"
+                android:text="@string/budget"
+                android:textSize="@dimen/text_small" />
+
+            <TextView
+                android:id="@+id/fragmentDetailedBudgetAmountTv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/initialTv"
+                android:layout_margin="4dp"
+                android:gravity="center_horizontal"
+                android:textSize="14sp"
+                tools:text="300" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2">
+
+            <TextView
+                android:id="@+id/paidTv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:gravity="center_horizontal"
+                android:text="@string/spent"
+                android:textSize="@dimen/text_small" />
+
+            <TextView
+                android:id="@+id/fragmentDetailedBudgetSavedAmountTv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/paidTv"
+                android:layout_margin="4dp"
+                android:gravity="center_horizontal"
+                android:textSize="14sp"
+                tools:text="200" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2">
+
+            <TextView
+                android:id="@+id/remainingTv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:gravity="center_horizontal"
+                android:text="@string/remaining"
+                android:textSize="@dimen/text_small" />
+
+            <TextView
+                android:id="@+id/fragmentDetailedBudgetRemainingAmountTv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/remainingTv"
+                android:layout_margin="4dp"
+                android:gravity="center_horizontal"
+                android:textSize="14sp"
+                tools:text="200" />
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/fragmentDetailedBudgetStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@id/fragmentDetailedBudgetCategoryTv"
+        android:layout_alignParentEnd="true"
+        android:textSize="@dimen/text_big"
+        tools:text="Weekly" />
+
+    <TextView
+        android:id="@+id/fragmentDetailedBudgetAverage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/fragmentDetailedBudgetAmountsLinLay"
+        android:padding="4dp"
+        android:textSize="@dimen/text_big"
+        tools:text="Average: 250" />
+
+    <TextView
+        android:id="@+id/fragmentDetailedBudgetRecommended"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/fragmentDetailedBudgetAverage"
+        android:padding="4dp"
+        android:textSize="@dimen/text_big"
+        tools:text="Recommended: 250" />
+
+    <com.github.mikephil.charting.charts.BarChart
+        android:id="@+id/fragmentDetailedBudgetExpLineChart"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/fragmentDetailedBudgetRecommended">
+
+
+    </com.github.mikephil.charting.charts.BarChart>
+
+    <TextView
+        android:id="@+id/fragmentDetailedBudgetEmptyTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:text="@string/no_data"
+        android:textColor="@color/textPrimary"
+        android:textSize="24sp" />
+
+</RelativeLayout>

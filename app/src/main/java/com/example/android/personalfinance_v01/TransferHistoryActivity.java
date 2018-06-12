@@ -255,10 +255,20 @@ public class TransferHistoryActivity extends AppCompatActivity {
         DatabaseHelper databaseHelper = new DatabaseHelper(TransferHistoryActivity.this);
 
         databaseHelper.deleteTransfer(databaseHelper.getTransferID(transfer));
+        updateAccounts(transfer.getFromAccount(), transfer.getToAccount(), transfer.getAmount());
 
         MyUtils.getTransfersFromDatabase(TransferHistoryActivity.this);
 
         updateTransferList();
+    }
+
+    private void updateAccounts(BalanceAccount fromAcc, BalanceAccount toAcc, double transferAmount) {
+        DatabaseHelper databaseHelper = new DatabaseHelper(TransferHistoryActivity.this);
+        double newFromAccBalance = fromAcc.getBalance() + transferAmount;
+        double newToAccBalance = toAcc.getBalance() - transferAmount;
+
+        databaseHelper.updateAccountBalanceAmount(databaseHelper.getAccountID(fromAcc), newFromAccBalance);
+        databaseHelper.updateAccountBalanceAmount(databaseHelper.getAccountID(toAcc), newToAccBalance);
     }
 
     private ArrayList<Transfer> filterTransferList(ArrayList<Transfer> list, TransferFilter filter) {

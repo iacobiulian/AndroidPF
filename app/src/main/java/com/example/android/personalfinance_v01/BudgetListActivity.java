@@ -68,7 +68,7 @@ public class BudgetListActivity extends AppCompatActivity {
                             case R.id.menuBudgetDetails:
                                 Bundle bundle = new Bundle();
                                 bundle.putSerializable("budget", currentBudget);
-                                MyUtils.startActivityWithBundle(BudgetListActivity.this, DetailedBudgetActivity.class,
+                                MyUtils.startActivityWithBundle(BudgetListActivity.this, DetailedBudgetTabbedActivity.class,
                                         bundle);
                                 break;
                             case R.id.menuBudgetDelete:

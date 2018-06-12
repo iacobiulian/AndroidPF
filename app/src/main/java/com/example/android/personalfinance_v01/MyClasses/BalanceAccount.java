@@ -57,6 +57,10 @@ public class BalanceAccount implements Serializable {
         this.balance += amount;
     }
 
+    public void setBalance(double balance) {
+        this.balance = balance;
+    }
+
     @Override
     public boolean equals(Object obj) {
 

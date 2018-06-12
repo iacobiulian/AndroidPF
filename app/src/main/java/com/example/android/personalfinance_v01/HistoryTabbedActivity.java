@@ -410,10 +410,6 @@ public class HistoryTabbedActivity extends AppCompatActivity {
             }
         }
 
-        //MyUtils.makeToast(this, "Showing " + filteredList.size() + " items");
-
-        Log.e(TAG, "EXPINCOMELIST SIZE: " + filteredList.size());
-
         return filteredList;
     }
 
@@ -455,6 +451,7 @@ public class HistoryTabbedActivity extends AppCompatActivity {
         }
 
         databaseHelper.updateAccountBalanceAmount(databaseHelper.getAccountID(expenseIncome.getAccount()), newBalance);
+        expenseIncome.getAccount().setBalance(newBalance);
     }
 
     private void updateBudgets(ExpenseIncome expenseIncome, DatabaseHelper databaseHelper) {

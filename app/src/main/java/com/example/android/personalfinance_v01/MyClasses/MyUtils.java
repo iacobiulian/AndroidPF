@@ -478,6 +478,8 @@ public class MyUtils {
         fromActivity.startActivity(intent);
     }
 
+
+
     public static String fromDoubleListToString(ArrayList<Double> arr) {
         if (arr.size() == 0) {
             return "";

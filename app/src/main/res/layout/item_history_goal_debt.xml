@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_margin="8dp"
+    android:orientation="vertical"
+    android:padding="8dp">
+
+    <LinearLayout
+        android:id="@+id/historyMoneyAmountLinLay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="4dp">
+
+        <TextView
+            android:id="@+id/historySignTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:gravity="center_vertical"
+            tools:text="-"
+            android:textColor="@color/textPrimary"
+            android:textSize="@dimen/category_text" />
+
+        <TextView
+            android:id="@+id/historyMoneyAmountTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            tools:text="140"
+            android:textColor="@color/textPrimary"
+            android:textSize="@dimen/category_text" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/historyDateTimeTv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:padding="4dp"
+        tools:text="Wed, 18 June, 2002, 15:44"
+        android:textColor="@color/textPrimary" />
+</LinearLayout>

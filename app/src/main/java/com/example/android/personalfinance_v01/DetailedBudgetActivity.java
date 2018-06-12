@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.example.android.personalfinance_v01.CustomAdapters.MyXAxisValueFormatter;
 import com.example.android.personalfinance_v01.MyClasses.Budget;
 import com.example.android.personalfinance_v01.MyClasses.Category;
 import com.example.android.personalfinance_v01.MyClasses.ExpenseIncome;
@@ -51,6 +52,10 @@ public class DetailedBudgetActivity extends AppCompatActivity {
         MyUtils.getExpenseIncomeFromDatabase(DetailedBudgetActivity.this);
 
         currentBudget = (Budget) Objects.requireNonNull(getIntent().getExtras()).getSerializable("budget");
+        if(currentBudget == null)
+            return;
+
+        setTitle(currentBudget.getCategory().getName() + " Budget");
 
         initPeriod();
 
@@ -277,6 +282,7 @@ public class DetailedBudgetActivity extends AppCompatActivity {
             XAxis xAxis = barChart.getXAxis();
             xAxis.setValueFormatter(new MyXAxisValueFormatter(periodNames));
             xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+            xAxis.setGranularity(1f);
         } else {
             barChart.setVisibility(View.GONE);
             emptyTextView.setVisibility(View.VISIBLE);
@@ -304,19 +310,5 @@ public class DetailedBudgetActivity extends AppCompatActivity {
 
     private double getRecommendedSpent() {
         return currentBudget.getTotalAmount() / currentBudget.getType();
-    }
-
-    private class MyXAxisValueFormatter implements IAxisValueFormatter {
-
-        private String[] values;
-
-        MyXAxisValueFormatter(String[] values) {
-            this.values = values;
-        }
-
-        @Override
-        public String getFormattedValue(float value, AxisBase axis) {
-            return values[(int) value];
-        }
     }
 }

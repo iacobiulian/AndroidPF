@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.example.android.personalfinance_v01.CustomAdapters.MyXAxisValueFormatter;
 import com.example.android.personalfinance_v01.MyClasses.Debt;
 import com.example.android.personalfinance_v01.MyClasses.MyUtils;
 import com.github.mikephil.charting.charts.BarChart;
@@ -44,6 +45,9 @@ public class DetailedDebtActivity extends AppCompatActivity {
         if (currentDebt == null) {
             return;
         }
+
+        //TODO set the title
+        setTitle(currentDebt.getPayee());
 
         if (currentDebt.getAddedAmounts().size() >= 5) {
             CHART_SIZE = 5;
@@ -207,21 +211,5 @@ public class DetailedDebtActivity extends AppCompatActivity {
         }
 
         return entries;
-    }
-
-    private class MyXAxisValueFormatter implements IAxisValueFormatter {
-
-        private String[] values;
-
-        MyXAxisValueFormatter(String[] values) {
-            this.values = values;
-        }
-
-        @Override
-        public String getFormattedValue(float value, AxisBase axis) {
-            return values[(int) value];
-        }
-
-
     }
 }

@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.example.android.personalfinance_v01.CustomAdapters.MyXAxisValueFormatter;
 import com.example.android.personalfinance_v01.MyClasses.Goal;
 import com.example.android.personalfinance_v01.MyClasses.MyUtils;
 import com.github.mikephil.charting.charts.BarChart;
@@ -45,7 +46,7 @@ public class DetailedGoalActivity extends AppCompatActivity {
             return;
         }
 
-        //textView.setText(MyUtils.fromDoubleListToString(currentGoal.getAddedAmounts()) + " " + MyUtils.fromLongListToString(currentGoal.getAddedAmountsDates()));
+        setTitle(currentGoal.getName());
 
         if (currentGoal.getAddedAmounts().size() >= 5) {
             CHART_SIZE = 5;
@@ -54,6 +55,7 @@ public class DetailedGoalActivity extends AppCompatActivity {
         }
 
         initFields();
+
 
         initChart();
     }
@@ -215,19 +217,4 @@ public class DetailedGoalActivity extends AppCompatActivity {
         return "";
     }
 
-    private class MyXAxisValueFormatter implements IAxisValueFormatter {
-
-        private String[] values;
-
-        MyXAxisValueFormatter(String[] values) {
-            this.values = values;
-        }
-
-        @Override
-        public String getFormattedValue(float value, AxisBase axis) {
-            return values[(int) value];
-        }
-
-
-    }
 }

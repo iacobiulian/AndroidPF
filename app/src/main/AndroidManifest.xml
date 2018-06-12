@@ -84,6 +84,16 @@
         <activity
             android:name=".DetailedDebtActivity"
             android:parentActivityName=".DebtListActivity" />
+        <activity
+            android:name=".DetailedAccountHistoryActivity"
+            android:label=""
+            android:parentActivityName=".AccountListActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".DetailedBudgetTabbedActivity"
+            android:label=""
+            android:parentActivityName=".BudgetListActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

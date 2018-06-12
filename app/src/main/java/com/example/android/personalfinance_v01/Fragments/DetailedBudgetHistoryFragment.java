@@ -1,0 +1,86 @@
+package com.example.android.personalfinance_v01.Fragments;
+
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ListView;
+import android.widget.PopupMenu;
+import android.widget.TextView;
+
+import com.example.android.personalfinance_v01.CustomAdapters.ExpenseIncomeAdapter;
+import com.example.android.personalfinance_v01.DetailedBudgetTabbedActivity;
+import com.example.android.personalfinance_v01.MyClasses.ExpenseIncome;
+import com.example.android.personalfinance_v01.R;
+
+import java.util.ArrayList;
+
+public class DetailedBudgetHistoryFragment extends Fragment {
+
+    private static final String TAG = "REeeee";
+    View mainView;
+
+    ListView listView;
+    TextView emptyListView;
+    ExpenseIncomeAdapter expenseIncomeAdapter;
+
+    DetailedBudgetTabbedActivity parentActivity;
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        mainView = inflater.inflate(R.layout.fragment_history_expense, container, false);
+
+        initListView();
+
+        parentActivity = (DetailedBudgetTabbedActivity) getActivity();
+        parentActivity.updateExpenseList();
+
+        return mainView;
+    }
+
+    private void initListView() {
+        listView = mainView.findViewById(R.id.fragmentHistoryExpListView);
+        emptyListView = mainView.findViewById(R.id.fragmentHistoryExpEmptyTv);
+        listView.setEmptyView(emptyListView);
+        expenseIncomeAdapter = new ExpenseIncomeAdapter(getContext(), new ArrayList<ExpenseIncome>());
+        listView.setAdapter(expenseIncomeAdapter);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(final AdapterView<?> adapterView, View view, final int i, long l) {
+                final PopupMenu popupMenu = new PopupMenu(getContext(), view);
+                popupMenu.getMenuInflater().inflate(R.menu.menu_delete_item, popupMenu.getMenu());
+
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+                        switch (menuItem.getItemId()) {
+                            case R.id.menuDelete:
+                                parentActivity.deleteExpenseIncome(adapterView, i);
+                                break;
+                        }
+                        return false;
+                    }
+                });
+
+                popupMenu.show();
+            }
+        });
+    }
+
+    public void updateListView(ArrayList<ExpenseIncome> expenseIncomeList) {
+        if (!expenseIncomeAdapter.isEmpty()) {
+            Log.e(TAG, "updateListView: inside if" );
+            expenseIncomeAdapter.clear();
+        }
+        Log.e(TAG, "updateListView: outside if if" );
+        expenseIncomeAdapter.addAll(expenseIncomeList);
+        expenseIncomeAdapter.notifyDataSetChanged();
+    }
+}
