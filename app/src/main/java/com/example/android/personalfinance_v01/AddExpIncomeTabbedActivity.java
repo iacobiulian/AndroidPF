@@ -118,13 +118,16 @@ public class AddExpIncomeTabbedActivity extends AppCompatActivity {
 
         if (isTransferActivity()) {
             viewPager.setCurrentItem(FRAGMENT_TRANSFER);
+            setTitle("Add transfer");
             return;
         }
 
         if (isIncomeActivity()) {
             viewPager.setCurrentItem(FRAGMENT_INCOME, false);
+            setTitle("Add income");
         } else {
             viewPager.setCurrentItem(FRAGMENT_EXPENSE, false);
+            setTitle("Add expense");
         }
     }
 

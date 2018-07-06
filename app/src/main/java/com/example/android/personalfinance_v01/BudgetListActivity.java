@@ -100,6 +100,8 @@ public class BudgetListActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 double amountInput = MyUtils.getDoubleFromEditText(amountEt);
+                if (amountInput < 0)
+                    return;
                 modifyBudgetTotalAmount(budgetForUpdate, amountInput);
                 alertDialog.hide();
             }

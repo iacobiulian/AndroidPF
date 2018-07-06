@@ -104,9 +104,9 @@ public class DetailedBudgetTabbedActivity extends AppCompatActivity {
             chartFragment.remainingAmountTv.setText(formatDecimalTwoPlaces(currentBudget.getTotalAmount() -
                     currentBudget.getCurrentAmount()));
 
-            chartFragment.averageSpentTv.setText(getString(R.string.averageSpent) + ": " + formatDecimalTwoPlaces(getAverageSpent()));
+            chartFragment.averageSpentTv.setText(getString(R.string.averageSpent) + " each day: " + formatDecimalTwoPlaces(getAverageSpent()));
 
-            chartFragment.recommendedSpentTv.setText(getString(R.string.recommendedSpent) + ": " + formatDecimalTwoPlaces(getRecommendedSpent()));
+            chartFragment.recommendedSpentTv.setText(getString(R.string.recommendedSpent) + " each day: " + formatDecimalTwoPlaces(getRecommendedSpent()));
 
             if (percentage <= 20) {
                 int color = ContextCompat.getColor(this, R.color.debtGoalVeryHigh);

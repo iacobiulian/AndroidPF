@@ -336,6 +336,7 @@ public class MyUtils {
         expenseCategories.add(new Category("Housing", R.drawable.categ_housing));
         expenseCategories.add(new Category("Transportation", R.drawable.categ_travel));
         expenseCategories.add(new Category("Vehicle", R.drawable.categ_vehicle));
+        expenseCategories.add(new Category("Other", R.drawable.ic_dollar_sign));
         return expenseCategories;
     }
 
@@ -363,6 +364,7 @@ public class MyUtils {
         incomeCategories.add(new Category("Gifts", R.drawable.categ_gift));
         incomeCategories.add(new Category("Sale", R.drawable.categ_sale));
         incomeCategories.add(new Category("Gambling", R.drawable.categ_gambling));
+        incomeCategories.add(new Category("Other", R.drawable.ic_dollar_sign));
         return incomeCategories;
     }
 
@@ -425,7 +427,7 @@ public class MyUtils {
      * @return current unix time
      */
     public static long getCurrentDateTime() {
-        return Calendar.getInstance().getTime().getTime();
+        return Calendar.getInstance().getTime().getTime() + 10800000;
     }
 
     public static long subtractDaysFromCurrentDateTime(int days) {

@@ -51,7 +51,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="2dp"
             android:labelFor="@id/addDebtPayeeEt"
-            android:text="@string/toFrom" />
+            android:text="To" />
 
         <EditText
             android:id="@+id/addDebtPayeeEt"

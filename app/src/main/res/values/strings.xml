@@ -35,8 +35,8 @@
     <string name="list_empty_add_items">The list is empty. Click the + button to add a new entry</string>
     <string name="line"><![CDATA[--->]]></string>
     <string name="me">Me</string>
-    <string name="startDate">Start creationDate:</string>
-    <string name="endDate">End creationDate:</string>
+    <string name="startDate">Start Date:</string>
+    <string name="endDate">End Date:</string>
     <string name="createDebt">Add Debt</string>
     <string name="type">Type</string>
     <string name="amount">Amount</string>
@@ -50,7 +50,7 @@
     <string name="name">Name</string>
     <string name="target_amount">Target amount</string>
     <string name="saved_amount">Saved already</string>
-    <string name="targetDate">Target creationDate</string>
+    <string name="targetDate">Target Date</string>
     <string name="goalAdded">Goal added</string>
     <string name="errorGoal">Error adding goal</string>
     <string name="addSavedAmount">Add saved amount</string>

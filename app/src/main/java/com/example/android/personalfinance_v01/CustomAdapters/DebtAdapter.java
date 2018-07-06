@@ -48,7 +48,7 @@ public class DebtAdapter extends ArrayAdapter<Debt> {
         if (currentDebt != null) {
             TextView fromTv = convertView.findViewById(R.id.itemDebtFromTv);
             TextView toTv = convertView.findViewById(R.id.itemDebtToTv);
-            if (currentDebt.getType() == Debt.I_LEND) {
+            if (currentDebt.getType() == Debt.I_BORROW) {
                 fromTv.setText(R.string.me);
                 toTv.setText(currentDebt.getPayee());
             } else {

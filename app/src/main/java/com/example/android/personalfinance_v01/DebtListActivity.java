@@ -168,8 +168,10 @@ public class DebtListActivity extends AppCompatActivity {
 
     private void closeDebt(Debt debtToBeClosed) {
         DatabaseHelper databaseHelper = new DatabaseHelper(DebtListActivity.this);
+        int id = databaseHelper.getDebtID(debtToBeClosed);
 
-        databaseHelper.updateDebtClose(databaseHelper.getDebtID(debtToBeClosed));
+        databaseHelper.updateDebtClose(id);
+        databaseHelper.updateDebtAmount(id, debtToBeClosed.getAmount());
 
         MyUtils.getDebtsFromDatabase(DebtListActivity.this);
     }
