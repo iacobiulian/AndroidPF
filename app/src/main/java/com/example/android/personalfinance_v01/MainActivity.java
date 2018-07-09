@@ -3,15 +3,16 @@ package com.example.android.personalfinance_v01;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -37,7 +38,10 @@ public class MainActivity extends AppCompatActivity {
     //TODO https://github.com/evernote/android-job
 
     public static final int TYPE_TRANSFER = 3;
-    private static final String TAG = "MainActivity";
+    public static final int ERROR_INPUT_ZERO = -1;
+    public static final int BUDGET_HALF_SPENT = 10;
+    public static final int BUDGET_EXCEEDED = 20;
+    public static final int BUDGET_ALREADY_EXCEEDED = 30;
 
     //Navigation drawer
     DrawerLayout drawerLayout;
@@ -88,9 +92,11 @@ public class MainActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                MyUtils.startActivity(MainActivity.this, CreateAccountActivity.class);
+                MyUtils.startActivity(MainActivity.this, AddAccountActivity.class);
             }
         });
+
+        showSnackbarIfNeeded();
     }
 
     public void initNotificationChannels(Context context) {
@@ -148,19 +154,19 @@ public class MainActivity extends AppCompatActivity {
                         MyUtils.startActivity(MainActivity.this, TransferHistoryActivity.class);
                         break;
                     case (R.id.navMenuAccounts):
-                        MyUtils.startActivity(MainActivity.this, AccountListActivity.class);
+                        MyUtils.startActivity(MainActivity.this, ListAccountActivity.class);
                         break;
                     case (R.id.navMenuStats):
                         MyUtils.startActivity(MainActivity.this, ChartsActivity.class);
                         break;
                     case (R.id.navMenuBudgets):
-                        MyUtils.startActivity(MainActivity.this, BudgetListActivity.class);
+                        MyUtils.startActivity(MainActivity.this, ListBudgetActivity.class);
                         break;
                     case (R.id.navMenuDebts):
-                        MyUtils.startActivity(MainActivity.this, DebtListActivity.class);
+                        MyUtils.startActivity(MainActivity.this, ListDebtActivity.class);
                         break;
                     case (R.id.navMenuGoals):
-                        MyUtils.startActivity(MainActivity.this, GoalListActivity.class);
+                        MyUtils.startActivity(MainActivity.this, ListGoalActivity.class);
                         break;
                 }
                 return true;
@@ -248,9 +254,9 @@ public class MainActivity extends AppCompatActivity {
 
         long lastUsed = getLastUsedDate(balanceAccount);
         if (lastUsed == 0) {
-            accLastUsed.setText("Never used");
+            accLastUsed.setText(getResources().getString(R.string.neverUsed));
         } else {
-            accLastUsed.setText("Last used " + MyUtils.formatDateWithoutTime(lastUsed));
+            accLastUsed.setText(String.format(getResources().getString(R.string.lastUsed), MyUtils.formatDateWithoutTime(lastUsed)));
         }
     }
 
@@ -281,13 +287,69 @@ public class MainActivity extends AppCompatActivity {
 
         for (Budget item : MyUtils.budgetList) {
             if (item.isResetBudget()) {
-                Log.e(TAG, "checkBudgetsReset: we are inside if");
                 MyUtils.modifyBudgetCurrentAmount(MainActivity.this, item, 0.0);
                 MyUtils.modifyBudgetResetDate(MainActivity.this, item, item.getResetDate());
             }
         }
 
         MyUtils.getBudgetsFromDatabase(MainActivity.this);
+    }
+
+    private void showSnackbarIfNeeded() {
+        Intent intent = getIntent();
+        if (intent == null) {
+            return;
+        }
+
+        Bundle bundle = getIntent().getExtras();
+
+        if (bundle == null) {
+            return;
+        }
+
+        int code = bundle.getInt(AddExpIncomeTabbedActivity.DONE_CODE);
+        Budget budget = (Budget) bundle.getSerializable(AddExpIncomeTabbedActivity.NOTIF_BUDGET);
+
+        switch (code) {
+            case 0:
+                return;
+            case ERROR_INPUT_ZERO:
+                Snackbar snackbar = MyUtils.makeSnackbarError(findViewById(R.id.mainDrawerLayout), getString(R.string.errorInputZero), Snackbar.LENGTH_SHORT);
+                snackbar.setAction(R.string.tryAgain, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        //TODO CHANGE TYPE DEPENDING ON THE FRAGMENT USER CAME FROM
+                        MyUtils.startActivityWithCode(MainActivity.this, AddExpIncomeTabbedActivity.class, ExpenseIncome.TYPE_EXPENSE);
+                    }
+                });
+                snackbar.show();
+                break;
+            case BUDGET_ALREADY_EXCEEDED:
+                makeBudgetNotificationSnackbar(budget, R.string.notificationAlreadyExceededBudgetBody);
+                break;
+            case BUDGET_EXCEEDED:
+                makeBudgetNotificationSnackbar(budget, R.string.notificationExceededBudgetBody);
+                break;
+            case BUDGET_HALF_SPENT:
+                makeBudgetNotificationSnackbar(budget, R.string.notificationExceededHalfBudgetBody);
+                break;
+        }
+    }
+
+    private void makeBudgetNotificationSnackbar(Budget budget, int messageStringId) {
+        final Intent intent = new Intent(MainActivity.this, DetailedBudgetTabbedActivity.class);
+        intent.putExtra("budget", budget);
+
+        String message = String.format(getResources().getString(messageStringId),
+                budget.getTypeString(), budget.getCategory().getName());
+        Snackbar snackbar = MyUtils.makeSnackbar(findViewById(R.id.mainDrawerLayout), message, Snackbar.LENGTH_LONG);
+        snackbar.setAction(getString(R.string.takeMeThere), new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                MainActivity.this.startActivity(intent);
+            }
+        });
+        snackbar.show();
     }
 }
 

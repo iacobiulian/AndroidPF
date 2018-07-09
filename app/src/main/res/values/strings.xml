@@ -1,72 +1,12 @@
 <resources>
+    <!-- General Strings -->
+    <string name="app_name">Personal Finance</string>
     <string name="open">Open</string>
     <string name="close">Close</string>
-    <string name="app_name">Personal Finance</string>
-    <string name="settings">Settings</string>
-    <string name="exit">Exit</string>
     <string name="home">Home</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="expIncHistory">Record History</string>
-    <string name="new_transaction">New transaction</string>
-    <string name="income">Income</string>
-    <string name="expense">Expense</string>
-    <string name="error">Error occurred</string>
-    <string name="statistics">Statistics</string>
-    <string name="debts">Debts</string>
-    <string name="goals">Goals</string>
-    <string name="help">Help</string>
-    <string name="activityHistory">History</string>
-    <string name="accounts">Accounts</string>
-    <string name="account_name">Account name</string>
-    <string name="initial_balance">Initial balance</string>
-    <string name="currency">Currency</string>
-    <string name="createAccount">Create balance account</string>
-    <string name="editAccount">Edit account</string>
-    <string name="alphaNumericCharacters">abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789</string>
-    <string name="account_not_found">Account not found</string>
-    <string name="account_added">Account created</string>
-    <string name="error_account_create">Error creating account</string>
-    <string name="error_account_update">Error updating account</string>
-    <string name="record_created">Record created</string>
-    <string name="edit">Edit</string>
-    <string name="delete">Delete</string>
-    <string name="list_empty_add_items">The list is empty. Click the + button to add a new entry</string>
-    <string name="line"><![CDATA[--->]]></string>
     <string name="me">Me</string>
-    <string name="startDate">Start Date:</string>
-    <string name="endDate">End Date:</string>
-    <string name="createDebt">Add Debt</string>
-    <string name="type">Type</string>
-    <string name="amount">Amount</string>
-    <string name="toFrom">To/From</string>
-    <string name="debt_added">Debt created</string>
-    <string name="error_debt">Error adding debt</string>
-    <string name="payDebtAmount">Pay amount</string>
-    <string name="closeDebt">Close debt</string>
-    <string name="submit">Submit</string>
-    <string name="addGoal">Add Goal</string>
     <string name="name">Name</string>
-    <string name="target_amount">Target amount</string>
-    <string name="saved_amount">Saved already</string>
-    <string name="targetDate">Target Date</string>
-    <string name="goalAdded">Goal added</string>
-    <string name="errorGoal">Error adding goal</string>
-    <string name="addSavedAmount">Add saved amount</string>
-    <string name="goalReached">Set goal as reached</string>
-    <string name="tab_text_1">Tab 1</string>
-    <string name="tab_text_2">Tab 2</string>
-    <string name="tab_text_3">Tab 3</string>
-    <string name="action_settings">Settings</string>
-    <string name="section_format">Hello World from section: %1$d</string>
-    <string name="addExpenseIncome">Add expense or income</string>
-    <string name="charts">Charts</string>
-    <string name="no_data">No data to display</string>
-    <string name="unselect">Unselect all</string>
-    <string name="selectAll">Select all</string>
-    <string name="save">Save</string>
-    <string name="title_activity_history_tabbed">HistoryTabbedActivity</string>
+    <string name="alphaNumericCharacters">abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789</string>
     <string name="all">All</string>
     <string name="day">Day</string>
     <string name="week">Week</string>
@@ -74,36 +14,101 @@
     <string name="year">Year</string>
     <string name="custom">Custom</string>
     <string name="img">Image</string>
-    <string name="transfer">Transfer</string>
-    <string name="transferHistory">Transfer History</string>
-    <string name="category">Category</string>
-    <string name="addBudget">Add budget</string>
-    <string name="budgets">Budgets</string>
-    <string name="editBudgetAmount">Edit budget amount</string>
-    <string name="seeBudgetDetails">See Budget Details</string>
-
-    <string name="notificationExceededHalfBudgetTitle">Half gone</string>
-    <string name="notificationExceededHalfBudgetBody">You exceeded half your %1$s budget for %2$s</string>
-    <string name="notificationExceededBudgetTitle">Budget exceeded</string>
-    <string name="notificationExceededBudgetBody">You exceeded %1$s budget for %2$s</string>
-    <string name="notificationAlreadyExceededBudgetTitle">Slow down!</string>
-    <string name="notificationAlreadyExceededBudgetBody">You already exceeded the %1$s budget for %2$s</string>
-    <string name="nothingHere">There\'s nothing here!</string>
-    <string name="clickThePlus">Click the + to add a new item</string>
-    <string name="journal">Journal</string>
-    <string name="to">to</string>
-    <string name="from">From</string>
     <string name="paid">Paid</string>
     <string name="initial">Initial</string>
     <string name="remaining">Remaining</string>
-    <string name="budget">Budget</string>
-    <string name="spent">Spent</string>
-    <string name="seeGoalDetails">See Goal Details</string>
-    <string name="seeDebtDetails">See Debt Details</string>
+    <string name="list_empty_add_items">The list is empty. Click the + button to add a new entry</string>
+    <string name="nothingHere">There\'s nothing here!</string>
+    <string name="clickThePlus">Click the + to add a new item</string>
+    <string name="no_data">No data to display</string>
     <string name="recommendedSpent">Recommended spent</string>
     <string name="averageSpent">Average spent</string>
+
+    <!-- Dialog and menu Strings -->
+    <string name="journal">Journal</string>
     <string name="saved">Saved</string>
-    <string name="goal">Goal amount</string>
+    <string name="statistics">Statistics</string>
+    <string name="activityHistory">History</string>
+    <string name="debts">Debts</string>
+    <string name="goals">Goals</string>
+    <string name="budgets">Budgets</string>
+    <string name="expIncHistory">Record History</string>
+    <string name="transferHistory">Transfer History</string>
+    <string name="about">About</string>
+    <string name="startDate">Start Date</string>
+    <string name="endDate">End Date</string>
+    <string name="save">Save</string>
+    <string name="amount">Amount</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
+    <string name="submit">Submit</string>
+    <string name="targetDate">Target Date</string>
+    <string name="unselect">Unselect all</string>
+    <string name="selectAll">Select all</string>
+    <string name="addSavedAmount">Add saved amount</string>
+    <string name="neverUsed">Never used</string>
+    <string name="lastUsed">Last used %1$s</string>
+
+    <!-- BalanceAccount -->
+    <string name="accounts">Accounts</string>
+    <string name="createAccount">Create balance account</string>
+    <string name="editAccount">Edit account</string>
+    <string name="account_name">Account name</string>
+    <string name="account_not_found">Account not found</string>
+    <string name="account_added">Account created</string>
     <string name="title_activity_detailed_account_history">DetailedAccountHistoryActivity</string>
     <string name="see_acc_history">See Account history</string>
+    <string name="initial_balance">Initial balance</string>
+    <string name="currency">Currency</string>
+
+    <!-- ExpenseIncome / Transfer -->
+    <string name="income">Income</string>
+    <string name="expense">Expense</string>
+    <string name="transfer">Transfer</string>
+    <string name="record_created">Record created</string>
+    <string name="addExpenseIncome">Add expense or income</string>
+    <string name="to">To</string>
+    <string name="from">From</string>
+
+    <!-- Budget -->
+    <string name="budget">Budget</string>
+    <string name="addBudget">Add budget</string>
+    <string name="spent">Spent</string>
+    <string name="editBudgetAmount">Edit budget amount</string>
+    <string name="seeBudgetDetails">See Budget Details</string>
+    <string name="notificationExceededHalfBudgetTitle">Half gone</string>
+    <string name="notificationExceededHalfBudgetBody">You exceeded half your %1$s%2$s budget</string>
+    <string name="notificationExceededBudgetTitle">Budget exceeded</string>
+    <string name="notificationExceededBudgetBody">You exceeded your %1$s%2$s budget</string>
+    <string name="notificationAlreadyExceededBudgetTitle">Slow down!</string>
+    <string name="notificationAlreadyExceededBudgetBody">You already exceeded your %1$s%2$s budget</string>
+    <string name="category">Category</string>
+
+    <!-- Goal -->
+    <string name="addGoal">Add Goal</string>
+    <string name="goalAdded">Goal added</string>
+    <string name="goalReached">Set goal as reached</string>
+    <string name="seeGoalDetails">See Goal Details</string>
+    <string name="goal">Goal amount</string>
+    <string name="target_amount">Target amount</string>
+    <string name="saved_amount">Saved already</string>
+
+    <!-- Debt -->
+    <string name="payDebtAmount">Pay amount</string>
+    <string name="createDebt">Add Debt</string>
+    <string name="debt_added">Debt created</string>
+    <string name="closeDebt">Close debt</string>
+    <string name="seeDebtDetails">See Debt Details</string>
+    <string name="type">Type</string>
+    <string name="toFrom">To/From</string>
+
+    <!-- Error Strings -->
+    <string name="error">Error occurred</string>
+    <string name="error_account_create">Error creating account</string>
+    <string name="error_account_update">Error updating account</string>
+    <string name="error_debt">Error adding debt</string>
+    <string name="errorGoal">Error adding goal</string>
+    <string name="takeMeThere">Take me there</string>
+    <string name="tryAgain">Try Again</string>
+    <string name="errorInputZero">Amount cannot be zero</string>
 </resources>

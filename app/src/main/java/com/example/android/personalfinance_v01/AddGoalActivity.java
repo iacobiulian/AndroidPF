@@ -61,7 +61,7 @@ public class AddGoalActivity extends AppCompatActivity {
         switch (id) {
             case R.id.actionDone:
                 insertGoalIntoDb();
-                MyUtils.startActivity(AddGoalActivity.this, GoalListActivity.class);
+                MyUtils.startActivity(AddGoalActivity.this, ListGoalActivity.class);
                 break;
         }
 

@@ -22,7 +22,7 @@ import com.example.android.personalfinance_v01.MyClasses.MyUtils;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-public class CreateDebtActivity extends AppCompatActivity {
+public class AddDebtActivity extends AppCompatActivity {
 
     Toolbar toolbar;
 
@@ -73,7 +73,7 @@ public class CreateDebtActivity extends AppCompatActivity {
         switch (id) {
             case R.id.actionDone:
                 insertDebtIntoDb();
-                MyUtils.startActivity(CreateDebtActivity.this, DebtListActivity.class);
+                MyUtils.startActivity(AddDebtActivity.this, ListDebtActivity.class);
                 break;
         }
 
@@ -136,7 +136,7 @@ public class CreateDebtActivity extends AppCompatActivity {
                     }
                 };
 
-                DatePickerDialog datePickerDialog =  new DatePickerDialog(CreateDebtActivity.this, android.R.style.Theme_Holo_Dialog_MinWidth,
+                DatePickerDialog datePickerDialog =  new DatePickerDialog(AddDebtActivity.this, android.R.style.Theme_Holo_Dialog_MinWidth,
                         dateSetListener, year, month, day);
                 datePickerDialog.show();
             }
@@ -169,7 +169,7 @@ public class CreateDebtActivity extends AppCompatActivity {
         Debt newDebt = createDebt();
 
         if(newDebt.isValid()) {
-            DatabaseHelper databaseHelper =  new DatabaseHelper(CreateDebtActivity.this);
+            DatabaseHelper databaseHelper =  new DatabaseHelper(AddDebtActivity.this);
             boolean inserted = databaseHelper.addDebtData(newDebt);
 
             if (inserted)

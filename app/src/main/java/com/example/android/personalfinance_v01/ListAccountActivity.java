@@ -17,9 +17,9 @@ import com.example.android.personalfinance_v01.MyClasses.MyUtils;
 import com.example.android.personalfinance_v01.MyClasses.Transfer;
 import com.github.clans.fab.FloatingActionButton;
 
-public class AccountListActivity extends AppCompatActivity {
+public class ListAccountActivity extends AppCompatActivity {
 
-    private static final String TAG = "AccountListActivity";
+    private static final String TAG = "ListAccountActivity";
     ListView listView;
     FloatingActionButton fab;
 
@@ -33,12 +33,12 @@ public class AccountListActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                MyUtils.startActivity(AccountListActivity.this, CreateAccountActivity.class);
+                MyUtils.startActivity(ListAccountActivity.this, AddAccountActivity.class);
             }
         });
 
         //ListView
-        MyUtils.getBalanceAccountsFromDatabase(AccountListActivity.this);
+        MyUtils.getBalanceAccountsFromDatabase(ListAccountActivity.this);
 
         listView = findViewById(R.id.accountListView);
         final BalanceAccountAdapter balanceAccountAdapter = new BalanceAccountAdapter(this, MyUtils.accountList);
@@ -48,7 +48,7 @@ public class AccountListActivity extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(final AdapterView<?> adapterView, View view, final int i, long l) {
-                final PopupMenu popupMenu = new PopupMenu(AccountListActivity.this, view);
+                final PopupMenu popupMenu = new PopupMenu(ListAccountActivity.this, view);
                 popupMenu.getMenuInflater().inflate(R.menu.menu_edit_delete_item, popupMenu.getMenu());
 
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
@@ -62,7 +62,7 @@ public class AccountListActivity extends AppCompatActivity {
                                 BalanceAccount balanceAccount = (BalanceAccount) adapterView.getItemAtPosition(i);
                                 Bundle bundle = new Bundle();
                                 bundle.putSerializable("acc", balanceAccount);
-                                MyUtils.startActivityWithBundle(AccountListActivity.this, DetailedAccountHistoryActivity.class,
+                                MyUtils.startActivityWithBundle(ListAccountActivity.this, DetailedAccountHistoryActivity.class,
                                         bundle);
                                 break;
                             case R.id.optionMenuDelete:
@@ -81,18 +81,18 @@ public class AccountListActivity extends AppCompatActivity {
 
     private void editBalanceAccount(AdapterView<?> adapterView, int index) {
         BalanceAccount accountForEdit = (BalanceAccount) adapterView.getItemAtPosition(index);
-        DatabaseHelper databaseHelper = new DatabaseHelper(AccountListActivity.this);
+        DatabaseHelper databaseHelper = new DatabaseHelper(ListAccountActivity.this);
 
         Bundle bundle = new Bundle();
         bundle.putSerializable("accountForEdit", accountForEdit);
         bundle.putInt("idForEdit", databaseHelper.getAccountID(accountForEdit));
 
-        MyUtils.startActivityWithBundle(AccountListActivity.this, CreateAccountActivity.class, bundle);
+        MyUtils.startActivityWithBundle(ListAccountActivity.this, AddAccountActivity.class, bundle);
     }
 
     private void deleteBalanceAccount(AdapterView<?> adapterView, int index) {
         BalanceAccount accountForDeletion = (BalanceAccount) adapterView.getItemAtPosition(index);
-        DatabaseHelper databaseHelper = new DatabaseHelper(AccountListActivity.this);
+        DatabaseHelper databaseHelper = new DatabaseHelper(ListAccountActivity.this);
 
         databaseHelper.deleteAccount(databaseHelper.getAccountID(accountForDeletion));
 
@@ -109,6 +109,6 @@ public class AccountListActivity extends AppCompatActivity {
             }
         }
 
-        MyUtils.getBalanceAccountsFromDatabase(AccountListActivity.this);
+        MyUtils.getBalanceAccountsFromDatabase(ListAccountActivity.this);
     }
 }

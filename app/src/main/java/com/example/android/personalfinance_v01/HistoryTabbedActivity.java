@@ -245,6 +245,8 @@ public class HistoryTabbedActivity extends AppCompatActivity {
         cbList.add(cb7);
         CheckBox cb8 = dialogView.findViewById(R.id.dialogFilterExpCheckBox8);
         cbList.add(cb8);
+        CheckBox cb9 = dialogView.findViewById(R.id.dialogFilterExpCheckBox9);
+        cbList.add(cb9);
 
         int i = 0;
         for (Map.Entry<String, Boolean> e : chartsFilter.getExpCategoryMap().entrySet()) {
@@ -296,6 +298,8 @@ public class HistoryTabbedActivity extends AppCompatActivity {
         cbList.add(cb3);
         CheckBox cb4 = dialogView.findViewById(R.id.dialogFilterIncCheckBox4);
         cbList.add(cb4);
+        CheckBox cb5 = dialogView.findViewById(R.id.dialogFilterIncCheckBox5);
+        cbList.add(cb5);
 
         int i = 0;
         for (Map.Entry<String, Boolean> e : chartsFilter.getIncCategoryMap().entrySet()) {

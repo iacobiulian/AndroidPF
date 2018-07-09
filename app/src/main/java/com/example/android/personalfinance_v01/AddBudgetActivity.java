@@ -3,7 +3,6 @@ package com.example.android.personalfinance_v01;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,11 +16,9 @@ import com.example.android.personalfinance_v01.CustomAdapters.CategoryAdapter;
 import com.example.android.personalfinance_v01.DataPersistance.DatabaseHelper;
 import com.example.android.personalfinance_v01.MyClasses.Budget;
 import com.example.android.personalfinance_v01.MyClasses.Category;
-import com.example.android.personalfinance_v01.MyClasses.Debt;
 import com.example.android.personalfinance_v01.MyClasses.ExpenseIncome;
 import com.example.android.personalfinance_v01.MyClasses.MyUtils;
 
-import java.util.ArrayList;
 import java.util.Date;
 
 public class AddBudgetActivity extends AppCompatActivity {
@@ -59,7 +56,7 @@ public class AddBudgetActivity extends AppCompatActivity {
         switch (id) {
             case R.id.actionDone:
                 insertBudgetIntoDb();
-                MyUtils.startActivity(AddBudgetActivity.this, BudgetListActivity.class);
+                MyUtils.startActivity(AddBudgetActivity.this, ListBudgetActivity.class);
                 break;
         }
 

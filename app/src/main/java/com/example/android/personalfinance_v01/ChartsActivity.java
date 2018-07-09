@@ -21,8 +21,8 @@ import android.widget.Spinner;
 
 import com.example.android.personalfinance_v01.CustomAdapters.BalanceAccountSpinnerAdapter;
 import com.example.android.personalfinance_v01.CustomAdapters.ExpenseIncomePagerAdapter;
-import com.example.android.personalfinance_v01.Fragments.ExpenseStatsFragment;
-import com.example.android.personalfinance_v01.Fragments.IncomeStatsFragment;
+import com.example.android.personalfinance_v01.Fragments.StatsExpenseFragment;
+import com.example.android.personalfinance_v01.Fragments.StatsIncomeFragment;
 import com.example.android.personalfinance_v01.MyClasses.BalanceAccount;
 import com.example.android.personalfinance_v01.MyClasses.ExpenseIncome;
 import com.example.android.personalfinance_v01.MyClasses.ExpenseIncomeFilter;
@@ -39,8 +39,8 @@ public class ChartsActivity extends AppCompatActivity {
     public static BalanceAccount ALL_ACCOUNTS_OPTION = new BalanceAccount("All accounts", 0.0, "");
     private ExpenseIncomeFilter chartsFilter = new ExpenseIncomeFilter(ALL_ACCOUNTS_OPTION, 0);
     private ViewPager viewPager;
-    private ExpenseStatsFragment expenseStatsFragment;
-    private IncomeStatsFragment incomeStatsFragment;
+    private StatsExpenseFragment statsExpenseFragment;
+    private StatsIncomeFragment statsIncomeFragment;
     private LinearLayout linearLayout;
 
     @Override
@@ -236,6 +236,8 @@ public class ChartsActivity extends AppCompatActivity {
         cbList.add(cb7);
         CheckBox cb8 = dialogView.findViewById(R.id.dialogFilterExpCheckBox8);
         cbList.add(cb8);
+        CheckBox cb9 = dialogView.findViewById(R.id.dialogFilterExpCheckBox9);
+        cbList.add(cb9);
 
         int i = 0;
         for (Map.Entry<String, Boolean> e : chartsFilter.getExpCategoryMap().entrySet()) {
@@ -287,6 +289,8 @@ public class ChartsActivity extends AppCompatActivity {
         cbList.add(cb3);
         CheckBox cb4 = dialogView.findViewById(R.id.dialogFilterIncCheckBox4);
         cbList.add(cb4);
+        CheckBox cb5 = dialogView.findViewById(R.id.dialogFilterIncCheckBox5);
+        cbList.add(cb5);
 
         int i = 0;
         for (Map.Entry<String, Boolean> e : chartsFilter.getIncCategoryMap().entrySet()) {
@@ -359,12 +363,12 @@ public class ChartsActivity extends AppCompatActivity {
     }
 
     private void initViewPager(ViewPager viewPager) {
-        expenseStatsFragment = new ExpenseStatsFragment();
-        incomeStatsFragment = new IncomeStatsFragment();
+        statsExpenseFragment = new StatsExpenseFragment();
+        statsIncomeFragment = new StatsIncomeFragment();
 
         ExpenseIncomePagerAdapter adapter = new ExpenseIncomePagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(expenseStatsFragment, "Expenses");
-        adapter.addFragment(incomeStatsFragment, "Income");
+        adapter.addFragment(statsExpenseFragment, "Expenses");
+        adapter.addFragment(statsIncomeFragment, "Income");
         viewPager.setAdapter(adapter);
 
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -375,7 +379,7 @@ public class ChartsActivity extends AppCompatActivity {
 
             @Override
             public void onPageSelected(int position) {
-                if (!expenseStatsFragment.isAdded()) {
+                if (!statsExpenseFragment.isAdded()) {
                     return;
                 }
 
@@ -423,16 +427,16 @@ public class ChartsActivity extends AppCompatActivity {
     }
 
     public void updateExpenseChart() {
-        expenseStatsFragment.setPieChartValues(fromListToMap(filterExpenseIncomeList(MyUtils.expenseIncomeList, chartsFilter)));
+        statsExpenseFragment.setPieChartValues(fromListToMap(filterExpenseIncomeList(MyUtils.expenseIncomeList, chartsFilter)));
     }
 
     public void updateIncomeChart() {
-        incomeStatsFragment.setPieChartValues(fromListToMap(filterExpenseIncomeList(MyUtils.expenseIncomeList, chartsFilter)));
+        statsIncomeFragment.setPieChartValues(fromListToMap(filterExpenseIncomeList(MyUtils.expenseIncomeList, chartsFilter)));
     }
 
     public void updateCharts() {
-        expenseStatsFragment.setPieChartValues(fromListToMap(filterExpenseIncomeList(MyUtils.expenseIncomeList, chartsFilter)));
-        incomeStatsFragment.setPieChartValues(fromListToMap(filterExpenseIncomeList(MyUtils.expenseIncomeList, chartsFilter)));
+        statsExpenseFragment.setPieChartValues(fromListToMap(filterExpenseIncomeList(MyUtils.expenseIncomeList, chartsFilter)));
+        statsIncomeFragment.setPieChartValues(fromListToMap(filterExpenseIncomeList(MyUtils.expenseIncomeList, chartsFilter)));
     }
 
 }

@@ -17,7 +17,7 @@ import com.example.android.personalfinance_v01.MyClasses.MyUtils;
 
 import java.util.Arrays;
 
-public class CreateAccountActivity extends AppCompatActivity {
+public class AddAccountActivity extends AppCompatActivity {
 
     //Becomes true if we are editing an existing account instead of creating a new one
     boolean isEditActivity = false;
@@ -74,7 +74,7 @@ public class CreateAccountActivity extends AppCompatActivity {
                 } else {
                     updateDb();
                 }
-                MyUtils.startActivity(CreateAccountActivity.this, AccountListActivity.class);
+                MyUtils.startActivity(AddAccountActivity.this, ListAccountActivity.class);
                 break;
         }
 
@@ -133,7 +133,7 @@ public class CreateAccountActivity extends AppCompatActivity {
         BalanceAccount balanceAccount = createBalanceAccount();
 
         if (balanceAccount != null) {
-            DatabaseHelper databaseHelper = new DatabaseHelper(CreateAccountActivity.this);
+            DatabaseHelper databaseHelper = new DatabaseHelper(AddAccountActivity.this);
             boolean inserted = databaseHelper.addAccountData(balanceAccount);
 
             if (inserted)
@@ -152,7 +152,7 @@ public class CreateAccountActivity extends AppCompatActivity {
         BalanceAccount balanceAccount = createBalanceAccount();
 
         if (balanceAccount != null) {
-            DatabaseHelper databaseHelper = new DatabaseHelper(CreateAccountActivity.this);
+            DatabaseHelper databaseHelper = new DatabaseHelper(AddAccountActivity.this);
             databaseHelper.updateAccount(idForEdit, balanceAccount);
         } else {
             Toast.makeText(this, R.string.error_account_update, Toast.LENGTH_SHORT).show();

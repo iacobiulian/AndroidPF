@@ -33,7 +33,7 @@ import java.util.Map;
  * Created by iacob on 20-Mar
  */
 
-public class IncomeStatsFragment extends Fragment {
+public class StatsExpenseFragment extends Fragment {
 
     View mainView;
 
@@ -45,10 +45,10 @@ public class IncomeStatsFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        mainView = inflater.inflate(R.layout.fragment_stats_income, container, false);
+        mainView = inflater.inflate(R.layout.fragment_stats_expense, container, false);
 
-        pieChart = mainView.findViewById(R.id.fragmentStatsIncPieChart);
-        emptyDataSetTv = mainView.findViewById(R.id.fragmentStatsIncEmptyTv);
+        pieChart = mainView.findViewById(R.id.fragmentStatsExpPieChart);
+        emptyDataSetTv = mainView.findViewById(R.id.fragmentStatsExpEmptyTv);
         emptyDataSetTv.setVisibility(View.GONE);
 
         initPieChartStyle();
@@ -66,7 +66,7 @@ public class IncomeStatsFragment extends Fragment {
         });
 
         ChartsActivity chartsActivity = (ChartsActivity) getActivity();
-        chartsActivity.updateIncomeChart();
+        chartsActivity.updateExpenseChart();
 
         return mainView;
     }
@@ -86,6 +86,7 @@ public class IncomeStatsFragment extends Fragment {
         colors.add(Color.DKGRAY);
         colors.add(Color.MAGENTA);
         colors.add(Color.GRAY); //8
+        colors.add(Color.YELLOW); //9
 
         return colors;
     }
@@ -128,11 +129,11 @@ public class IncomeStatsFragment extends Fragment {
         });
     }
 
-    public void setPieChartValues(HashMap<String, Double> incomeMap) {
+    public void setPieChartValues(HashMap<String, Double> expenseMap) {
         ArrayList<PieEntry> yValues = new ArrayList<>();
         total = 0.0f;
 
-        if(incomeMap.isEmpty()) {
+        if (expenseMap.isEmpty()) {
             pieChart.setVisibility(View.GONE);
             emptyDataSetTv.setVisibility(View.VISIBLE);
             return;
@@ -141,7 +142,7 @@ public class IncomeStatsFragment extends Fragment {
             pieChart.setVisibility(View.VISIBLE);
         }
 
-        for (Map.Entry<String, Double> entry : incomeMap.entrySet()) {
+        for (Map.Entry<String, Double> entry : expenseMap.entrySet()) {
             yValues.add(new PieEntry(MyUtils.returnFloat(entry.getValue()), entry.getKey()));
             total += entry.getValue();
         }

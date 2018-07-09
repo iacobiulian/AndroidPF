@@ -2,13 +2,14 @@ package com.example.android.personalfinance_v01;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.example.android.personalfinance_v01.CustomAdapters.ExpenseIncomePagerAdapter;
@@ -27,11 +28,14 @@ import java.util.Objects;
 
 public class AddExpIncomeTabbedActivity extends AppCompatActivity {
 
-    private static final String TAG = "AddExpIncomeTabbedActiv";
+    public static final String DONE_CODE = "doneCode";
+    public static final String NOTIF_BUDGET = "notificationBudget";
 
     private static final int FRAGMENT_EXPENSE = 0;
     private static final int FRAGMENT_INCOME = 1;
     private static final int FRAGMENT_TRANSFER = 2;
+    public static int doneCode = 0;
+    private Budget notificationBudget = null;
 
     private AddExpenseFragment expenseFragment;
     private AddIncomeFragment incomeFragment;
@@ -78,23 +82,38 @@ public class AddExpIncomeTabbedActivity extends AppCompatActivity {
                 switch (viewPager.getCurrentItem()) {
                     case FRAGMENT_EXPENSE:
                         ExpenseIncome expense = expenseFragment.getExpense();
-                        insertExpenseIncomeIntoDb(expense);
-                        subtractMoneyFromAccount(MyUtils.getSelectedAccount(), expense.getAmount());
-                        subtractMoneyFromBudgets(expense);
+                        if (expense.getAmount() > 0) {
+                            insertExpenseIncomeIntoDb(expense);
+                            subtractMoneyFromAccount(MyUtils.getSelectedAccount(), expense.getAmount());
+                            subtractMoneyFromBudgets(expense);
+                        } else {
+                            doneCode = MainActivity.ERROR_INPUT_ZERO;
+                        }
                         break;
                     case FRAGMENT_INCOME:
                         ExpenseIncome income = incomeFragment.getIncome();
-                        insertExpenseIncomeIntoDb(incomeFragment.getIncome());
-                        addMoneyToAccount(MyUtils.getSelectedAccount(), income.getAmount());
+                        if (income.getAmount() > 0) {
+                            insertExpenseIncomeIntoDb(incomeFragment.getIncome());
+                            addMoneyToAccount(MyUtils.getSelectedAccount(), income.getAmount());
+                        } else {
+                            doneCode = MainActivity.ERROR_INPUT_ZERO;
+                        }
                         break;
                     case FRAGMENT_TRANSFER:
                         Transfer transfer = transferFragment.getTransfer();
-                        insertTransferIntoDb(transfer);
-                        subtractMoneyFromAccount(transfer.getFromAccount(), transfer.getAmount());
-                        addMoneyToAccount(transfer.getToAccount(), transfer.getAmount());
+                        if (transfer.getAmount() > 0) {
+                            insertTransferIntoDb(transfer);
+                            subtractMoneyFromAccount(transfer.getFromAccount(), transfer.getAmount());
+                            addMoneyToAccount(transfer.getToAccount(), transfer.getAmount());
+                        } else {
+                            doneCode = MainActivity.ERROR_INPUT_ZERO;
+                        }
                         break;
                 }
-                MyUtils.startActivity(AddExpIncomeTabbedActivity.this, MainActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putInt(DONE_CODE, doneCode);
+                bundle.putSerializable(NOTIF_BUDGET, notificationBudget);
+                MyUtils.startActivityWithBundle(AddExpIncomeTabbedActivity.this, MainActivity.class, bundle);
                 break;
         }
 
@@ -203,10 +222,16 @@ public class AddExpIncomeTabbedActivity extends AppCompatActivity {
                 MyUtils.modifyBudgetCurrentAmount(AddExpIncomeTabbedActivity.this, item, newAmount);
                 if (item.isExceeded()) {
                     makeBudgetNotification(item, R.string.notificationAlreadyExceededBudgetTitle, R.string.notificationAlreadyExceededBudgetBody);
+                    doneCode = MainActivity.BUDGET_ALREADY_EXCEEDED;
+                    notificationBudget = item;
                 } else if (item.getTotalAmount() < newAmount) {
                     makeBudgetNotification(item, R.string.notificationExceededBudgetTitle, R.string.notificationExceededBudgetBody);
+                    doneCode = MainActivity.BUDGET_EXCEEDED;
+                    notificationBudget = item;
                 } else if (!item.isExceededHalf() && newAmount > item.getTotalAmount() / 2) {
                     makeBudgetNotification(item, R.string.notificationExceededHalfBudgetTitle, R.string.notificationExceededHalfBudgetBody);
+                    doneCode = MainActivity.BUDGET_HALF_SPENT;
+                    notificationBudget = item;
                 }
             }
         }

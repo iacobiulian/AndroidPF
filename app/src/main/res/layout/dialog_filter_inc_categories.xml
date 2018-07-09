@@ -32,6 +32,12 @@
         android:layout_height="wrap_content"
         tools:text="Test" />
 
+    <CheckBox
+        android:id="@+id/dialogFilterIncCheckBox5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="Test" />
+
     <Button
         android:id="@+id/dialogFilterIncUnselectBtn"
         style="@style/buttonStyle"

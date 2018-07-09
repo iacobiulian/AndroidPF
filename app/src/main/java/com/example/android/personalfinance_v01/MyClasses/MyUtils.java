@@ -1,15 +1,26 @@
 package com.example.android.personalfinance_v01.MyClasses;
 
+import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.android.personalfinance_v01.DataPersistance.DatabaseHelper;
@@ -459,6 +470,62 @@ public class MyUtils {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
     }
 
+    public static Toast makeImageToast(final Activity activity, int duration, String message, int imageId) {
+        LayoutInflater inflater = activity.getLayoutInflater();
+        View layout = inflater.inflate(R.layout.toast_custom, (ViewGroup) activity.findViewById(R.id.toast_layout_root));
+
+        TextView textView = layout.findViewById(R.id.toastText);
+        textView.setText(message);
+
+        ImageView imageView = layout.findViewById(R.id.toastImage);
+        if (imageId == 0) {
+            imageView.setVisibility(View.GONE);
+        } else {
+            imageView.setImageResource(imageId);
+        }
+
+        Toast toast = new Toast(activity);
+        toast.setGravity(Gravity.BOTTOM, 0, 0);
+        toast.setView(layout);
+        toast.setDuration(duration);
+
+        return toast;
+    }
+
+    public static Snackbar makeSnackbar(View rootView, String message, int length) {
+        Snackbar snackbar = Snackbar.make(rootView, message, length);
+        snackbar.setActionTextColor(Color.YELLOW);
+        View view = snackbar.getView();
+        TextView tv = view.findViewById(android.support.design.R.id.snackbar_text);
+        tv.setTextSize(14f);
+        return snackbar;
+    }
+
+    public static Snackbar makeSnackbarCenterText(View rootView, String message, int length) {
+        Snackbar snackbar = Snackbar.make(rootView, message, length);
+        View view = snackbar.getView();
+        TextView tv = view.findViewById(android.support.design.R.id.snackbar_text);
+        tv.setTextSize(16f);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+            tv.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        } else {
+            tv.setGravity(Gravity.CENTER_HORIZONTAL);
+        }
+        return snackbar;
+    }
+
+    public static Snackbar makeSnackbarError(View rootView, String message, int length) {
+        Snackbar snackbar = Snackbar.make(rootView, message, length);
+        View view = snackbar.getView();
+        view.setBackgroundColor(Color.RED);
+        TextView tv = view.findViewById(android.support.design.R.id.snackbar_text);
+        tv.setTextColor(Color.WHITE);
+        tv.setTextSize(16f);
+        snackbar.setActionTextColor(Color.BLACK);
+        return snackbar;
+    }
+
     public static double getDoubleFromEditText(EditText editText) {
         double value = -1.0;
         try {
@@ -487,7 +554,6 @@ public class MyUtils {
     }
 
 
-
     public static String fromDoubleListToString(ArrayList<Double> arr) {
         if (arr.size() == 0) {
             return "";
@@ -505,7 +571,7 @@ public class MyUtils {
     public static ArrayList<Double> fromStringToDoubleList(String s) {
         ArrayList<Double> arr = new ArrayList<>();
 
-        if(!TextUtils.isEmpty(s)) {
+        if (!TextUtils.isEmpty(s)) {
             String[] stringArr = s.split(STRING_DELIMITER);
 
             for (String item : stringArr) {
@@ -533,7 +599,7 @@ public class MyUtils {
     public static ArrayList<Long> fromStringToLongList(String s) {
         ArrayList<Long> arr = new ArrayList<>();
 
-        if(!TextUtils.isEmpty(s)) {
+        if (!TextUtils.isEmpty(s)) {
             String[] stringArr = s.split(STRING_DELIMITER);
 
             for (String item : stringArr) {

@@ -17,7 +17,7 @@ import com.example.android.personalfinance_v01.MyClasses.Goal;
 import com.github.clans.fab.FloatingActionButton;
 import com.example.android.personalfinance_v01.MyClasses.MyUtils;
 
-public class GoalListActivity extends AppCompatActivity {
+public class ListGoalActivity extends AppCompatActivity {
 
     private ListView listView;
     private AlertDialog alertDialog;
@@ -32,12 +32,12 @@ public class GoalListActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                MyUtils.startActivity(GoalListActivity.this, AddGoalActivity.class);
+                MyUtils.startActivity(ListGoalActivity.this, AddGoalActivity.class);
             }
         });
 
         //ListView
-        MyUtils.getGoalsFromDatabase(GoalListActivity.this);
+        MyUtils.getGoalsFromDatabase(ListGoalActivity.this);
         listView = findViewById(R.id.goalListView);
         final GoalAdapter goalAdapter = new GoalAdapter(this, MyUtils.goalList);
         listView.setEmptyView(findViewById(R.id.goalListEmptyView));
@@ -48,7 +48,7 @@ public class GoalListActivity extends AppCompatActivity {
             public void onItemClick(final AdapterView<?> adapterView, View view, final int i, long l) {
                 final Goal currentGoal = (Goal) adapterView.getItemAtPosition(i);
 
-                final PopupMenu popupMenu = new PopupMenu(GoalListActivity.this, view);
+                final PopupMenu popupMenu = new PopupMenu(ListGoalActivity.this, view);
                 popupMenu.getMenuInflater().inflate(R.menu.menu_goal_options, popupMenu.getMenu());
 
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
@@ -64,7 +64,7 @@ public class GoalListActivity extends AppCompatActivity {
                             case R.id.goalListMenuDetails:
                                 Bundle bundle = new Bundle();
                                 bundle.putSerializable("goal", currentGoal);
-                                MyUtils.startActivityWithBundle(GoalListActivity.this, DetailedGoalTabbedActivity.class,
+                                MyUtils.startActivityWithBundle(ListGoalActivity.this, DetailedGoalTabbedActivity.class,
                                         bundle);
                                 break;
                             case R.id.goalListMenuReached:
@@ -79,7 +79,7 @@ public class GoalListActivity extends AppCompatActivity {
                     }
                 });
 
-                final PopupMenu popupMenuDelete = new PopupMenu(GoalListActivity.this, view);
+                final PopupMenu popupMenuDelete = new PopupMenu(ListGoalActivity.this, view);
                 popupMenuDelete.getMenuInflater().inflate(R.menu.menu_delete_item, popupMenuDelete.getMenu());
 
                 popupMenuDelete.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
@@ -122,7 +122,7 @@ public class GoalListActivity extends AppCompatActivity {
     }
 
     private AlertDialog initAlertDialog(View dialogView) {
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(GoalListActivity.this);
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ListGoalActivity.this);
         alertDialogBuilder.setView(dialogView);
 
         return alertDialogBuilder.create();
@@ -138,7 +138,7 @@ public class GoalListActivity extends AppCompatActivity {
                 if(amountInput < 0 ) {
                     return;
                 }
-                int goalId = new DatabaseHelper(GoalListActivity.this).getGoalId(goalForUpdate);
+                int goalId = new DatabaseHelper(ListGoalActivity.this).getGoalId(goalForUpdate);
                 goalForUpdate.getAddedAmounts().add(amountInput);
                 goalForUpdate.getAddedAmountsDates().add(MyUtils.getCurrentDateTime());
                 String amounts = MyUtils.fromDoubleListToString(goalForUpdate.getAddedAmounts());
@@ -146,40 +146,40 @@ public class GoalListActivity extends AppCompatActivity {
                 double newAmount = goalForUpdate.getSavedAmount() + amountInput;
                 modifySavedAmount(goalId, newAmount);
                 updateGoalAmountLists(goalId, amounts, times);
-                MyUtils.getGoalsFromDatabase(GoalListActivity.this);
+                MyUtils.getGoalsFromDatabase(ListGoalActivity.this);
                 alertDialog.hide();
             }
         });
     }
 
     private void updateGoalAmountLists(int goalId, String amounts, String times) {
-        DatabaseHelper databaseHelper = new DatabaseHelper(GoalListActivity.this);
+        DatabaseHelper databaseHelper = new DatabaseHelper(ListGoalActivity.this);
 
         databaseHelper.updateGoalAmountsList(goalId, amounts, times);
     }
 
     private void modifySavedAmount(int goalId, double newAmount) {
-        DatabaseHelper databaseHelper = new DatabaseHelper(GoalListActivity.this);
+        DatabaseHelper databaseHelper = new DatabaseHelper(ListGoalActivity.this);
 
         databaseHelper.updateGoalSavedAmount(goalId, newAmount);
     }
 
     private void reachGoal(Goal reachedGoal, double targetAmount) {
-        DatabaseHelper databaseHelper = new DatabaseHelper(GoalListActivity.this);
+        DatabaseHelper databaseHelper = new DatabaseHelper(ListGoalActivity.this);
 
         int goalId = databaseHelper.getGoalId(reachedGoal);
 
         databaseHelper.updateGoalReached(goalId);
         databaseHelper.updateGoalSavedAmount(goalId, targetAmount);
 
-        MyUtils.getGoalsFromDatabase(GoalListActivity.this);
+        MyUtils.getGoalsFromDatabase(ListGoalActivity.this);
     }
 
     private void deleteGoal(Goal goalForDeletion) {
-        DatabaseHelper databaseHelper = new DatabaseHelper(GoalListActivity.this);
+        DatabaseHelper databaseHelper = new DatabaseHelper(ListGoalActivity.this);
 
         databaseHelper.deleteGoal(databaseHelper.getGoalId(goalForDeletion));
 
-        MyUtils.getGoalsFromDatabase(GoalListActivity.this);
+        MyUtils.getGoalsFromDatabase(ListGoalActivity.this);
     }
 }

@@ -17,7 +17,7 @@ import com.example.android.personalfinance_v01.MyClasses.Budget;
 import com.example.android.personalfinance_v01.MyClasses.MyUtils;
 import com.github.clans.fab.FloatingActionButton;
 
-public class BudgetListActivity extends AppCompatActivity {
+public class ListBudgetActivity extends AppCompatActivity {
     BudgetAdapter budgetAdapter;
 
     @Override
@@ -25,16 +25,16 @@ public class BudgetListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_budget);
 
-        MyUtils.getBudgetsFromDatabase(BudgetListActivity.this);
+        MyUtils.getBudgetsFromDatabase(ListBudgetActivity.this);
 
-        budgetAdapter = new BudgetAdapter(BudgetListActivity.this, MyUtils.budgetList);
+        budgetAdapter = new BudgetAdapter(ListBudgetActivity.this, MyUtils.budgetList);
 
         //Floating action button
         FloatingActionButton fab = findViewById(R.id.budgetListFab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                MyUtils.startActivity(BudgetListActivity.this, AddBudgetActivity.class);
+                MyUtils.startActivity(ListBudgetActivity.this, AddBudgetActivity.class);
             }
         });
 
@@ -52,7 +52,7 @@ public class BudgetListActivity extends AppCompatActivity {
 
                 final Budget currentBudget = (Budget) adapterView.getItemAtPosition(i);
 
-                final PopupMenu popupMenu = new PopupMenu(BudgetListActivity.this, view);
+                final PopupMenu popupMenu = new PopupMenu(ListBudgetActivity.this, view);
                 popupMenu.getMenuInflater().inflate(R.menu.menu_budget_edit_delete, popupMenu.getMenu());
 
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
@@ -68,7 +68,7 @@ public class BudgetListActivity extends AppCompatActivity {
                             case R.id.menuBudgetDetails:
                                 Bundle bundle = new Bundle();
                                 bundle.putSerializable("budget", currentBudget);
-                                MyUtils.startActivityWithBundle(BudgetListActivity.this, DetailedBudgetTabbedActivity.class,
+                                MyUtils.startActivityWithBundle(ListBudgetActivity.this, DetailedBudgetTabbedActivity.class,
                                         bundle);
                                 break;
                             case R.id.menuBudgetDelete:
@@ -87,7 +87,7 @@ public class BudgetListActivity extends AppCompatActivity {
     }
 
     private AlertDialog initAlertDialog(View dialogView) {
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(BudgetListActivity.this);
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ListBudgetActivity.this);
         alertDialogBuilder.setView(dialogView);
 
         return alertDialogBuilder.create();
@@ -109,18 +109,18 @@ public class BudgetListActivity extends AppCompatActivity {
     }
 
     private void modifyBudgetTotalAmount(Budget budgetModified, double newTotalAmount) {
-        DatabaseHelper databaseHelper = new DatabaseHelper(BudgetListActivity.this);
+        DatabaseHelper databaseHelper = new DatabaseHelper(ListBudgetActivity.this);
 
         databaseHelper.updateBudgetTotalAmount(databaseHelper.getBudgetId(budgetModified), newTotalAmount);
 
-        MyUtils.getBudgetsFromDatabase(BudgetListActivity.this);
+        MyUtils.getBudgetsFromDatabase(ListBudgetActivity.this);
     }
 
     private void deleteBudget(Budget budgetForDeletion) {
-        DatabaseHelper databaseHelper = new DatabaseHelper(BudgetListActivity.this);
+        DatabaseHelper databaseHelper = new DatabaseHelper(ListBudgetActivity.this);
 
         databaseHelper.deleteBudget(databaseHelper.getBudgetId(budgetForDeletion));
 
-        MyUtils.getBudgetsFromDatabase(BudgetListActivity.this);
+        MyUtils.getBudgetsFromDatabase(ListBudgetActivity.this);
     }
 }

@@ -20,31 +20,31 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".AccountListActivity"
+            android:name=".ListAccountActivity"
             android:label="@string/accounts"
             android:parentActivityName=".MainActivity" />
         <activity
-            android:name=".CreateAccountActivity"
+            android:name=".AddAccountActivity"
             android:label="@string/createAccount"
-            android:parentActivityName=".AccountListActivity"
+            android:parentActivityName=".ListAccountActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".DebtListActivity"
+            android:name=".ListDebtActivity"
             android:label="@string/debts"
             android:parentActivityName=".MainActivity" />
         <activity
-            android:name=".CreateDebtActivity"
+            android:name=".AddDebtActivity"
             android:label="@string/createDebt"
-            android:parentActivityName=".DebtListActivity"
+            android:parentActivityName=".ListDebtActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".GoalListActivity"
+            android:name=".ListGoalActivity"
             android:label="@string/goals"
             android:parentActivityName=".MainActivity" />
         <activity
             android:name=".AddGoalActivity"
             android:label="@string/addGoal"
-            android:parentActivityName=".DebtListActivity"
+            android:parentActivityName=".ListDebtActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".AddExpIncomeTabbedActivity"
@@ -69,31 +69,31 @@
         <activity
             android:name=".AddBudgetActivity"
             android:label="@string/addBudget"
-            android:parentActivityName=".BudgetListActivity"
+            android:parentActivityName=".ListBudgetActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".BudgetListActivity"
+            android:name=".ListBudgetActivity"
             android:label="@string/budgets"
             android:parentActivityName=".MainActivity" />
         <activity
             android:name=".DetailedAccountHistoryActivity"
             android:label=""
-            android:parentActivityName=".AccountListActivity"
+            android:parentActivityName=".ListAccountActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".DetailedBudgetTabbedActivity"
             android:label=""
-            android:parentActivityName=".BudgetListActivity"
+            android:parentActivityName=".ListBudgetActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".DetailedGoalTabbedActivity"
             android:label=""
-            android:parentActivityName=".GoalListActivity"
+            android:parentActivityName=".ListGoalActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".DetailedDebtTabbedActivity"
             android:label=""
-            android:parentActivityName=".DebtListActivity"
+            android:parentActivityName=".ListDebtActivity"
             android:theme="@style/AppTheme.NoActionBar" />
     </application>
 

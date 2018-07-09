@@ -56,6 +56,12 @@
         android:layout_height="wrap_content"
         tools:text="Test" />
 
+    <CheckBox
+        android:id="@+id/dialogFilterExpCheckBox9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="Test" />
+
     <Button
         android:id="@+id/dialogFilterExpUnselectBtn"
         style="@style/buttonStyle"

@@ -98,36 +98,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-//        String dropBalanceAccount = "DROP TABLE IF EXISTS " + BalanceAccountEntry.TABLE_NAME + ";";
-//        String dropExpenseIncome = "DROP TABLE IF EXISTS " + ExpenseIncomeEntry.TABLE_NAME + ";";
-//        String dropTransfer = "DROP TABLE IF EXISTS " + TransferEntry.TABLE_NAME + ";";
-//        String dropDebt = "DROP TABLE IF EXISTS " + DebtEntry.TABLE_NAME + ";";
-//        String dropGoal = "DROP TABLE IF EXISTS " + GoalEntry.TABLE_NAME + ";";
-//        String dropBudget = "DROP TABLE IF EXISTS " + BudgetEntry.TABLE_NAME + ";";
-//        sqLiteDatabase.execSQL(dropBalanceAccount);
-//        sqLiteDatabase.execSQL(dropExpenseIncome);
-//        sqLiteDatabase.execSQL(dropTransfer);
-//        sqLiteDatabase.execSQL(dropDebt);
-//        sqLiteDatabase.execSQL(dropGoal);
-//        sqLiteDatabase.execSQL(dropBudget);
-//        onCreate(sqLiteDatabase);
-
+        String dropBalanceAccount = "DROP TABLE IF EXISTS " + BalanceAccountEntry.TABLE_NAME + ";";
+        String dropExpenseIncome = "DROP TABLE IF EXISTS " + ExpenseIncomeEntry.TABLE_NAME + ";";
+        String dropTransfer = "DROP TABLE IF EXISTS " + TransferEntry.TABLE_NAME + ";";
         String dropDebt = "DROP TABLE IF EXISTS " + DebtEntry.TABLE_NAME + ";";
-
-        String createTableDebts = "CREATE TABLE " + DebtEntry.TABLE_NAME + "("
-                + DebtEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + DebtEntry.COLUMN_TYPE + " INTEGER, "
-                + DebtEntry.COLUMN_PAYEE + " TEXT, "
-                + DebtEntry.COLUMN_AMOUNT + " REAL, "
-                + DebtEntry.COLUMN_AMOUNT_PAID + " REAL, "
-                + DebtEntry.COLUMN_CLOSED + " INTEGER, "
-                + DebtEntry.COLUMN_DATE_CREATED + " INTEGER, "
-                + DebtEntry.COLUMN_DATE_DUE + " INTEGER, "
-                + DebtEntry.COLUMN_AMOUNTS_LIST + " TEXT, "
-                + DebtEntry.COLUMN_AMOUNTS_TIME_LIST + " TEXT);";
-
+        String dropGoal = "DROP TABLE IF EXISTS " + GoalEntry.TABLE_NAME + ";";
+        String dropBudget = "DROP TABLE IF EXISTS " + BudgetEntry.TABLE_NAME + ";";
+        sqLiteDatabase.execSQL(dropBalanceAccount);
+        sqLiteDatabase.execSQL(dropExpenseIncome);
+        sqLiteDatabase.execSQL(dropTransfer);
         sqLiteDatabase.execSQL(dropDebt);
-        sqLiteDatabase.execSQL(createTableDebts);
+        sqLiteDatabase.execSQL(dropGoal);
+        sqLiteDatabase.execSQL(dropBudget);
+        onCreate(sqLiteDatabase);
     }
 
     // region Account Database Methods
