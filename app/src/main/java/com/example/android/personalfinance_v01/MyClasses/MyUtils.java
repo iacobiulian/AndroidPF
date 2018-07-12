@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Build;
@@ -497,7 +498,7 @@ public class MyUtils {
         snackbar.setActionTextColor(Color.YELLOW);
         View view = snackbar.getView();
         TextView tv = view.findViewById(android.support.design.R.id.snackbar_text);
-        tv.setTextSize(14f);
+        tv.setTextSize(16f);
         return snackbar;
     }
 

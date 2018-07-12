@@ -4,9 +4,32 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:paddingEnd="16dp"
+    android:paddingStart="16dp"
+    android:paddingTop="16dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/filterCategoryTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/filterCategories"
+            android:textColor="@color/textPrimary"
+            android:textSize="18sp" />
+
+        <CheckBox
+            android:id="@+id/dialogFilterIncCheckBoxAll"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            tools:text="" />
+
+    </RelativeLayout>
 
     <CheckBox
         android:id="@+id/dialogFilterIncCheckBox1"
@@ -38,28 +61,31 @@
         android:layout_height="wrap_content"
         tools:text="Test" />
 
-    <Button
-        android:id="@+id/dialogFilterIncUnselectBtn"
-        style="@style/buttonStyle"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:text="@string/unselect" />
+        android:orientation="horizontal">
 
-    <Button
-        android:id="@+id/dialogFilterIncSelectBtn"
-        style="@style/buttonStyle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:text="@string/selectAll" />
+        <Button
+            android:id="@+id/dialogFilterIncCancelBtn"
+            style="@style/buttonStyle"
+            android:layout_width="0px"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="#FFFFFF"
+            android:text="@string/cancel"
+            android:textColor="@color/colorAccent" />
 
-    <Button
-        android:id="@+id/dialogFilterIncSaveBtn"
-        style="@style/buttonStyle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:text="@string/save" />
+        <Button
+            android:id="@+id/dialogFilterIncSaveBtn"
+            style="@style/buttonStyle"
+            android:layout_width="0px"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="#FFFFFF"
+            android:text="@string/ok"
+            android:textColor="@color/colorAccent" />
+
+    </LinearLayout>
 
 </LinearLayout>

@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -267,22 +268,33 @@ public class HistoryTabbedActivity extends AppCompatActivity {
             }
         });
 
-        Button selectAllBtn = dialogView.findViewById(R.id.dialogFilterExpSelectBtn);
-        selectAllBtn.setOnClickListener(new View.OnClickListener() {
+        Button cancelBtn = dialogView.findViewById(R.id.dialogFilterExpCancelBtn);
+        cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                for (CheckBox item : cbList) {
-                    item.setChecked(true);
-                }
+                alertDialog.dismiss();
             }
         });
 
-        Button unSelectAllBtn = dialogView.findViewById(R.id.dialogFilterExpUnselectBtn);
-        unSelectAllBtn.setOnClickListener(new View.OnClickListener() {
+        boolean allCategsChecked = true;
+        for (Map.Entry<String, Boolean> e : chartsFilter.getIncCategoryMap().entrySet()) {
+            if(!e.getValue())
+                allCategsChecked = false;
+        }
+
+        final CheckBox checkBoxAll = dialogView.findViewById(R.id.dialogFilterExpCheckBoxAll);
+        checkBoxAll.setChecked(allCategsChecked);
+        checkBoxAll.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onClick(View view) {
-                for (CheckBox item : cbList) {
-                    item.setChecked(false);
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (b) {
+                    for (CheckBox item : cbList) {
+                        item.setChecked(true);
+                    }
+                } else {
+                    for (CheckBox item : cbList) {
+                        item.setChecked(false);
+                    }
                 }
             }
         });
@@ -314,28 +326,39 @@ public class HistoryTabbedActivity extends AppCompatActivity {
             public void onClick(View view) {
                 for (CheckBox item : cbList) {
                     chartsFilter.getIncCategoryMap().put(item.getText().toString(), item.isChecked());
-                    updateIncomeList();
-                    alertDialog.dismiss();
                 }
+                updateIncomeList();
+                alertDialog.dismiss();
             }
         });
 
-        Button selectAllBtn = dialogView.findViewById(R.id.dialogFilterIncSelectBtn);
-        selectAllBtn.setOnClickListener(new View.OnClickListener() {
+        Button cancelBtn = dialogView.findViewById(R.id.dialogFilterIncCancelBtn);
+        cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                for (CheckBox item : cbList) {
-                    item.setChecked(true);
-                }
+                alertDialog.dismiss();
             }
         });
 
-        Button unSelectAllBtn = dialogView.findViewById(R.id.dialogFilterIncUnselectBtn);
-        unSelectAllBtn.setOnClickListener(new View.OnClickListener() {
+        boolean allCategsChecked = true;
+        for (Map.Entry<String, Boolean> e : chartsFilter.getIncCategoryMap().entrySet()) {
+            if(!e.getValue())
+                allCategsChecked = false;
+        }
+
+        final CheckBox checkBoxAll = dialogView.findViewById(R.id.dialogFilterIncCheckBoxAll);
+        checkBoxAll.setChecked(allCategsChecked);
+        checkBoxAll.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onClick(View view) {
-                for (CheckBox item : cbList) {
-                    item.setChecked(false);
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (b) {
+                    for (CheckBox item : cbList) {
+                        item.setChecked(true);
+                    }
+                } else {
+                    for (CheckBox item : cbList) {
+                        item.setChecked(false);
+                    }
                 }
             }
         });
@@ -433,8 +456,7 @@ public class HistoryTabbedActivity extends AppCompatActivity {
         incomeHistoryFragment.updateListView(filterExpenseIncomeList(MyUtils.expenseIncomeList, expenseIncomeFilter));
     }
 
-    public void deleteExpenseIncome(AdapterView<?> adapterView, int index) {
-        ExpenseIncome expenseIncome = (ExpenseIncome) adapterView.getItemAtPosition(index);
+    public void deleteExpenseIncome(ExpenseIncome expenseIncome) {
         DatabaseHelper databaseHelper = new DatabaseHelper(HistoryTabbedActivity.this);
 
         databaseHelper.deleteExpenseIncome(databaseHelper.getExpenseIncomeID(expenseIncome));

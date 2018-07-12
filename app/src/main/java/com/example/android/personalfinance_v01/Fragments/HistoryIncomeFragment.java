@@ -2,6 +2,7 @@ package com.example.android.personalfinance_v01.Fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 import com.example.android.personalfinance_v01.CustomAdapters.ExpenseIncomeAdapter;
 import com.example.android.personalfinance_v01.HistoryTabbedActivity;
 import com.example.android.personalfinance_v01.MyClasses.ExpenseIncome;
+import com.example.android.personalfinance_v01.MyClasses.MyUtils;
 import com.example.android.personalfinance_v01.R;
 
 import java.util.ArrayList;
@@ -55,6 +57,8 @@ public class HistoryIncomeFragment extends Fragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(final AdapterView<?> adapterView, View view, final int i, long l) {
+                final ExpenseIncome currentExpInc = (ExpenseIncome) adapterView.getItemAtPosition(i);
+
                 final PopupMenu popupMenu = new PopupMenu(getContext(), view);
                 popupMenu.getMenuInflater().inflate(R.menu.menu_delete_item, popupMenu.getMenu());
 
@@ -63,7 +67,8 @@ public class HistoryIncomeFragment extends Fragment {
                     public boolean onMenuItemClick(MenuItem menuItem) {
                         switch (menuItem.getItemId()) {
                             case R.id.menuDelete:
-                                parentActivity.deleteExpenseIncome(adapterView, i);
+                                expenseIncomeAdapter.remove(currentExpInc);
+                                showUndoSnackbar(currentExpInc, expenseIncomeAdapter, i);
                                 break;
                         }
                         return false;
@@ -73,6 +78,35 @@ public class HistoryIncomeFragment extends Fragment {
                 popupMenu.show();
             }
         });
+    }
+
+    private void showUndoSnackbar(final ExpenseIncome expenseIncome, final ExpenseIncomeAdapter expenseIncomeAdapter, final int index) {
+        Snackbar snackbar = MyUtils.makeSnackbar(mainView.findViewById(R.id.fragmentHistoryIncRelLay), getString(R.string.income) + " " + getString(R.string.deleted), Snackbar.LENGTH_LONG);
+        snackbar.setAction(getString(R.string.undo), new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Undo clicked - add the item back
+                expenseIncomeAdapter.insert(expenseIncome, index);
+                expenseIncomeAdapter.notifyDataSetChanged();
+            }
+        });
+
+        snackbar.addCallback(new Snackbar.Callback() {
+
+            @Override
+            public void onDismissed(Snackbar snackbar, int event) {
+                if (event != Snackbar.Callback.DISMISS_EVENT_ACTION) {
+                    //Undo not clicked - delete item from db
+                    parentActivity.deleteExpenseIncome(expenseIncome);
+                }
+            }
+
+            @Override
+            public void onShown(Snackbar snackbar) {
+            }
+        });
+
+        snackbar.show();
     }
 
     public void updateListView(ArrayList<ExpenseIncome> expenseIncomeList) {

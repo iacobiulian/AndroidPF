@@ -43,7 +43,7 @@ public class DetailedAccountHistoryActivity extends AppCompatActivity {
             return;
         }
 
-        setTitle("Account" + currentAccount.getName());
+        setTitle(currentAccount.getName());
 
         expenseHistoryFragment = new AccountDetailsExpFragment();
         incomeHistoryFragment = new AccountDetailsIncFragment();

@@ -2,14 +2,12 @@ package com.example.android.personalfinance_v01;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
 
 import com.example.android.personalfinance_v01.CustomAdapters.ExpenseIncomePagerAdapter;
@@ -87,7 +85,7 @@ public class AddExpIncomeTabbedActivity extends AppCompatActivity {
                             subtractMoneyFromAccount(MyUtils.getSelectedAccount(), expense.getAmount());
                             subtractMoneyFromBudgets(expense);
                         } else {
-                            doneCode = MainActivity.ERROR_INPUT_ZERO;
+                            doneCode = MainActivity.ERROR_INPUT_ZERO_EXP;
                         }
                         break;
                     case FRAGMENT_INCOME:
@@ -96,7 +94,7 @@ public class AddExpIncomeTabbedActivity extends AppCompatActivity {
                             insertExpenseIncomeIntoDb(incomeFragment.getIncome());
                             addMoneyToAccount(MyUtils.getSelectedAccount(), income.getAmount());
                         } else {
-                            doneCode = MainActivity.ERROR_INPUT_ZERO;
+                            doneCode = MainActivity.ERROR_INPUT_ZERO_INC;
                         }
                         break;
                     case FRAGMENT_TRANSFER:
@@ -106,7 +104,7 @@ public class AddExpIncomeTabbedActivity extends AppCompatActivity {
                             subtractMoneyFromAccount(transfer.getFromAccount(), transfer.getAmount());
                             addMoneyToAccount(transfer.getToAccount(), transfer.getAmount());
                         } else {
-                            doneCode = MainActivity.ERROR_INPUT_ZERO;
+                            doneCode = MainActivity.ERROR_INPUT_ZERO_TRA;
                         }
                         break;
                 }
@@ -125,29 +123,56 @@ public class AddExpIncomeTabbedActivity extends AppCompatActivity {
         incomeFragment = new AddIncomeFragment();
 
         ExpenseIncomePagerAdapter adapter = new ExpenseIncomePagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(expenseFragment, "Add expense");
-        adapter.addFragment(incomeFragment, "Add income");
+        adapter.addFragment(expenseFragment, getString(R.string.addExpense));
+        adapter.addFragment(incomeFragment, getString(R.string.addIncome));
 
         if (MyUtils.accountList.size() > 1) {
             transferFragment = new AddTransferFragment();
-            adapter.addFragment(transferFragment, "Add transfer");
+            adapter.addFragment(transferFragment, getString(R.string.addTransfer));
         }
 
         viewPager.setAdapter(adapter);
 
         if (isTransferActivity()) {
             viewPager.setCurrentItem(FRAGMENT_TRANSFER);
-            setTitle("Add transfer");
+            setTitle(getString(R.string.addTransfer));
             return;
         }
 
         if (isIncomeActivity()) {
             viewPager.setCurrentItem(FRAGMENT_INCOME, false);
-            setTitle("Add income");
+            setTitle(getString(R.string.addIncome));
         } else {
             viewPager.setCurrentItem(FRAGMENT_EXPENSE, false);
-            setTitle("Add expense");
+            setTitle(getString(R.string.addExpense));
         }
+
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                switch (position) {
+                    case FRAGMENT_EXPENSE:
+                        setTitle(R.string.addExpense);
+                        break;
+                    case FRAGMENT_INCOME:
+                        setTitle(R.string.addIncome);
+                        break;
+                    case FRAGMENT_TRANSFER:
+                        setTitle(R.string.addTransfer);
+                        break;
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
     }
 
     /**

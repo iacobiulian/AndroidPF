@@ -1,6 +1,8 @@
 package com.example.android.personalfinance_v01;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
@@ -48,7 +50,7 @@ public class ListBudgetActivity extends AppCompatActivity {
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+            public void onItemClick(AdapterView<?> adapterView, View view, final int i, long l) {
 
                 final Budget currentBudget = (Budget) adapterView.getItemAtPosition(i);
 
@@ -72,7 +74,25 @@ public class ListBudgetActivity extends AppCompatActivity {
                                         bundle);
                                 break;
                             case R.id.menuBudgetDelete:
-                                deleteBudget(currentBudget);
+                                DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        switch (which) {
+                                            case DialogInterface.BUTTON_POSITIVE:
+                                                budgetAdapter.remove(currentBudget);
+                                                budgetAdapter.notifyDataSetChanged();
+                                                showUndoSnackbar(currentBudget, budgetAdapter, i);
+                                                break;
+
+                                            case DialogInterface.BUTTON_NEGATIVE:
+                                                break;
+                                        }
+                                    }
+                                };
+
+                                AlertDialog.Builder builder = new AlertDialog.Builder(ListBudgetActivity.this);
+                                builder.setMessage(getString(R.string.delete) + " " + getString(R.string.budget) + "?").setPositiveButton(getString(R.string.delete), dialogClickListener)
+                                        .setNegativeButton(getString(R.string.cancel), dialogClickListener).show();
                                 break;
                         }
                         budgetAdapter.notifyDataSetChanged();
@@ -84,6 +104,35 @@ public class ListBudgetActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void showUndoSnackbar(final Budget budget, final BudgetAdapter budgetAdapter, final int index) {
+        Snackbar snackbar = MyUtils.makeSnackbar(findViewById(R.id.budgetListRelLay), getString(R.string.budget) + " " + getString(R.string.deleted), Snackbar.LENGTH_LONG);
+        snackbar.setAction(getString(R.string.undo), new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Undo clicked - add the item back
+                budgetAdapter.insert(budget, index);
+                budgetAdapter.notifyDataSetChanged();
+            }
+        });
+
+        snackbar.addCallback(new Snackbar.Callback() {
+
+            @Override
+            public void onDismissed(Snackbar snackbar, int event) {
+                if (event != Snackbar.Callback.DISMISS_EVENT_ACTION) {
+                    //Undo not clicked - delete item from db
+                    deleteBudget(budget);
+                }
+            }
+
+            @Override
+            public void onShown(Snackbar snackbar) {
+            }
+        });
+
+        snackbar.show();
     }
 
     private AlertDialog initAlertDialog(View dialogView) {

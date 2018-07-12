@@ -1,6 +1,8 @@
 package com.example.android.personalfinance_v01;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
@@ -56,7 +58,7 @@ public class ListDebtActivity extends AppCompatActivity {
                     public boolean onMenuItemClick(MenuItem menuItem) {
                         switch (menuItem.getItemId()) {
                             case R.id.debtListMenuPay:
-                                View dialogView = getLayoutInflater().inflate(R.layout.dialog_enter_amount, listView,false);
+                                View dialogView = getLayoutInflater().inflate(R.layout.dialog_enter_amount, listView, false);
                                 alertDialog = initAlertDialog(dialogView);
                                 initAlertDialogButtons(dialogView, alertDialog, currentDebt);
                                 alertDialog.show();
@@ -72,8 +74,25 @@ public class ListDebtActivity extends AppCompatActivity {
                                 debtAdapter.notifyDataSetChanged();
                                 break;
                             case R.id.debtListMenuDelete:
-                                deleteDebt(currentDebt);
-                                debtAdapter.notifyDataSetChanged();
+                                DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        switch (which) {
+                                            case DialogInterface.BUTTON_POSITIVE:
+                                                debtAdapter.remove(currentDebt);
+                                                debtAdapter.notifyDataSetChanged();
+                                                showUndoSnackbar(currentDebt, debtAdapter, i);
+                                                break;
+
+                                            case DialogInterface.BUTTON_NEGATIVE:
+                                                break;
+                                        }
+                                    }
+                                };
+
+                                AlertDialog.Builder builder = new AlertDialog.Builder(ListDebtActivity.this);
+                                builder.setMessage(getString(R.string.delete) + " " + getString(R.string.debt) + "?").setPositiveButton(getString(R.string.delete), dialogClickListener)
+                                        .setNegativeButton(getString(R.string.cancel), dialogClickListener).show();
                                 break;
                         }
                         return false;
@@ -88,8 +107,9 @@ public class ListDebtActivity extends AppCompatActivity {
                     public boolean onMenuItemClick(MenuItem menuItem) {
                         switch (menuItem.getItemId()) {
                             case R.id.menuDelete:
-                                deleteDebt(currentDebt);
+                                debtAdapter.remove(currentDebt);
                                 debtAdapter.notifyDataSetChanged();
+                                showUndoSnackbar(currentDebt, debtAdapter, i);
                                 break;
                         }
                         return false;
@@ -106,11 +126,40 @@ public class ListDebtActivity extends AppCompatActivity {
         });
     }
 
+    private void showUndoSnackbar(final Debt debt, final DebtAdapter debtAdapter, final int index) {
+        Snackbar snackbar = MyUtils.makeSnackbar(findViewById(R.id.debtRelLay), getString(R.string.debt) + " " + getString(R.string.deleted), Snackbar.LENGTH_LONG);
+        snackbar.setAction(getString(R.string.undo), new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Undo clicked - add the item back
+                debtAdapter.insert(debt, index);
+                debtAdapter.notifyDataSetChanged();
+            }
+        });
+
+        snackbar.addCallback(new Snackbar.Callback() {
+
+            @Override
+            public void onDismissed(Snackbar snackbar, int event) {
+                if (event != Snackbar.Callback.DISMISS_EVENT_ACTION) {
+                    //Undo not clicked - delete item from db
+                    deleteDebt(debt);
+                }
+            }
+
+            @Override
+            public void onShown(Snackbar snackbar) {
+            }
+        });
+
+        snackbar.show();
+    }
+
     @Override
     protected void onPause() {
         super.onPause();
 
-        if(alertDialog != null)
+        if (alertDialog != null)
             alertDialog.dismiss();
     }
 
@@ -118,7 +167,7 @@ public class ListDebtActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
 
-        if(alertDialog != null)
+        if (alertDialog != null)
             alertDialog.dismiss();
     }
 
@@ -136,7 +185,7 @@ public class ListDebtActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 double amountInput = MyUtils.getDoubleFromEditText(amountEt);
-                if(amountInput < 0) {
+                if (amountInput < 0) {
                     return;
                 }
                 int debtId = new DatabaseHelper(ListDebtActivity.this).getDebtID(debtForUpdate);

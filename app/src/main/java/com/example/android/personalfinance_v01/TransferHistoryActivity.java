@@ -2,6 +2,7 @@ package com.example.android.personalfinance_v01;
 
 import android.app.DatePickerDialog;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -230,6 +231,8 @@ public class TransferHistoryActivity extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(final AdapterView<?> adapterView, View view, final int i, long l) {
+                final Transfer currentTransfer = (Transfer) adapterView.getItemAtPosition(i);
+
                 final PopupMenu popupMenu = new PopupMenu(TransferHistoryActivity.this, view);
                 popupMenu.getMenuInflater().inflate(R.menu.menu_delete_item, popupMenu.getMenu());
 
@@ -238,7 +241,9 @@ public class TransferHistoryActivity extends AppCompatActivity {
                     public boolean onMenuItemClick(MenuItem menuItem) {
                         switch (menuItem.getItemId()) {
                             case R.id.menuDelete:
-                                deleteTransfer(adapterView, i);
+                                transferAdapter.remove(currentTransfer);
+                                transferAdapter.notifyDataSetChanged();
+                                showUndoSnackbar(currentTransfer, transferAdapter, i);
                                 break;
                         }
                         return false;
@@ -250,8 +255,36 @@ public class TransferHistoryActivity extends AppCompatActivity {
         });
     }
 
-    public void deleteTransfer(AdapterView<?> adapterView, int index) {
-        Transfer transfer = (Transfer) adapterView.getItemAtPosition(index);
+    private void showUndoSnackbar(final Transfer transfer, final TransferAdapter transferAdapter, final int index) {
+        Snackbar snackbar = MyUtils.makeSnackbar(findViewById(R.id.historyTransferRelLay), getString(R.string.transfer) + " " + getString(R.string.deleted), Snackbar.LENGTH_LONG);
+        snackbar.setAction(getString(R.string.undo), new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Undo clicked - add the item back
+                transferAdapter.insert(transfer, index);
+                transferAdapter.notifyDataSetChanged();
+            }
+        });
+
+        snackbar.addCallback(new Snackbar.Callback() {
+
+            @Override
+            public void onDismissed(Snackbar snackbar, int event) {
+                if (event != Snackbar.Callback.DISMISS_EVENT_ACTION) {
+                    //Undo not clicked - delete item from db
+                    deleteTransfer(transfer);
+                }
+            }
+
+            @Override
+            public void onShown(Snackbar snackbar) {
+            }
+        });
+
+        snackbar.show();
+    }
+
+    public void deleteTransfer(Transfer transfer) {
         DatabaseHelper databaseHelper = new DatabaseHelper(TransferHistoryActivity.this);
 
         databaseHelper.deleteTransfer(databaseHelper.getTransferID(transfer));

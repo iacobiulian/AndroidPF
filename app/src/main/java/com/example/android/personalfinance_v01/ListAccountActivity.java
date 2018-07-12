@@ -1,8 +1,10 @@
 package com.example.android.personalfinance_v01;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -48,6 +50,7 @@ public class ListAccountActivity extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(final AdapterView<?> adapterView, View view, final int i, long l) {
+                final BalanceAccount currentAccount = (BalanceAccount) adapterView.getItemAtPosition(i);
                 final PopupMenu popupMenu = new PopupMenu(ListAccountActivity.this, view);
                 popupMenu.getMenuInflater().inflate(R.menu.menu_edit_delete_item, popupMenu.getMenu());
 
@@ -66,8 +69,25 @@ public class ListAccountActivity extends AppCompatActivity {
                                         bundle);
                                 break;
                             case R.id.optionMenuDelete:
-                                deleteBalanceAccount(adapterView, i);
-                                balanceAccountAdapter.notifyDataSetChanged();
+                                DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        switch (which) {
+                                            case DialogInterface.BUTTON_POSITIVE:
+                                                balanceAccountAdapter.remove(currentAccount);
+                                                balanceAccountAdapter.notifyDataSetChanged();
+                                                showUndoSnackbar(currentAccount, balanceAccountAdapter, i);
+                                                break;
+
+                                            case DialogInterface.BUTTON_NEGATIVE:
+                                                break;
+                                        }
+                                    }
+                                };
+
+                                AlertDialog.Builder builder = new AlertDialog.Builder(ListAccountActivity.this);
+                                builder.setMessage(getString(R.string.delete) + " " + getString(R.string.balanceAccount) + "?").setPositiveButton(getString(R.string.delete), dialogClickListener)
+                                        .setNegativeButton(getString(R.string.cancel), dialogClickListener).show();
                                 break;
                         }
                         return false;
@@ -77,6 +97,35 @@ public class ListAccountActivity extends AppCompatActivity {
                 popupMenu.show();
             }
         });
+    }
+
+    private void showUndoSnackbar(final BalanceAccount balanceAccount, final BalanceAccountAdapter balanceAccountAdapter, final int index) {
+        Snackbar snackbar = MyUtils.makeSnackbar(findViewById(R.id.accountListRelLay), getString(R.string.balanceAccount) + " " + getString(R.string.deleted), Snackbar.LENGTH_LONG);
+        snackbar.setAction(getString(R.string.undo), new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Undo clicked - add the item back
+                balanceAccountAdapter.insert(balanceAccount, index);
+                balanceAccountAdapter.notifyDataSetChanged();
+            }
+        });
+
+        snackbar.addCallback(new Snackbar.Callback() {
+
+            @Override
+            public void onDismissed(Snackbar snackbar, int event) {
+                if (event != Snackbar.Callback.DISMISS_EVENT_ACTION) {
+                    //Undo not clicked - delete item from db
+                    deleteBalanceAccount(balanceAccount);
+                }
+            }
+
+            @Override
+            public void onShown(Snackbar snackbar) {
+            }
+        });
+
+        snackbar.show();
     }
 
     private void editBalanceAccount(AdapterView<?> adapterView, int index) {
@@ -90,8 +139,7 @@ public class ListAccountActivity extends AppCompatActivity {
         MyUtils.startActivityWithBundle(ListAccountActivity.this, AddAccountActivity.class, bundle);
     }
 
-    private void deleteBalanceAccount(AdapterView<?> adapterView, int index) {
-        BalanceAccount accountForDeletion = (BalanceAccount) adapterView.getItemAtPosition(index);
+    private void deleteBalanceAccount(BalanceAccount accountForDeletion) {
         DatabaseHelper databaseHelper = new DatabaseHelper(ListAccountActivity.this);
 
         databaseHelper.deleteAccount(databaseHelper.getAccountID(accountForDeletion));
@@ -104,7 +152,6 @@ public class ListAccountActivity extends AppCompatActivity {
 
         for (Transfer transfer : MyUtils.transferList) {
             if (transfer.getToAccount().equals(accountForDeletion) || transfer.getFromAccount().equals(accountForDeletion)) {
-                Log.e(TAG, "FROMACC: " + transfer.getFromAccount().getName() + " TOACC: " + transfer.getToAccount().getName());
                 databaseHelper.deleteTransfer(databaseHelper.getTransferID(transfer));
             }
         }

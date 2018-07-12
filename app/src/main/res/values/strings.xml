@@ -111,4 +111,14 @@
     <string name="takeMeThere">Take me there</string>
     <string name="tryAgain">Try Again</string>
     <string name="errorInputZero">Amount cannot be zero</string>
+    <string name="addExpense">Add Expense</string>
+    <string name="addTransfer">Make transfer</string>
+    <string name="addIncome">Add income</string>
+    <string name="cancel">Cancel</string>
+    <string name="ok">OK</string>
+    <string name="filterCategories">Filter Categories</string>
+    <string name="debt">Debt</string>
+    <string name="undo">Undo</string>
+    <string name="balanceAccount">Balance Account</string>
+    <string name="deleted">Deleted</string>
 </resources>

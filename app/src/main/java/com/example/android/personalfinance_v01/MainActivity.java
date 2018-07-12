@@ -38,7 +38,9 @@ public class MainActivity extends AppCompatActivity {
     //TODO https://github.com/evernote/android-job
 
     public static final int TYPE_TRANSFER = 3;
-    public static final int ERROR_INPUT_ZERO = -1;
+    public static final int ERROR_INPUT_ZERO_EXP = -1;
+    public static final int ERROR_INPUT_ZERO_INC = -2;
+    public static final int ERROR_INPUT_ZERO_TRA = -3;
     public static final int BUDGET_HALF_SPENT = 10;
     public static final int BUDGET_EXCEEDED = 20;
     public static final int BUDGET_ALREADY_EXCEEDED = 30;
@@ -309,17 +311,37 @@ public class MainActivity extends AppCompatActivity {
 
         int code = bundle.getInt(AddExpIncomeTabbedActivity.DONE_CODE);
         Budget budget = (Budget) bundle.getSerializable(AddExpIncomeTabbedActivity.NOTIF_BUDGET);
+        Snackbar snackbar;
 
         switch (code) {
             case 0:
                 return;
-            case ERROR_INPUT_ZERO:
-                Snackbar snackbar = MyUtils.makeSnackbarError(findViewById(R.id.mainDrawerLayout), getString(R.string.errorInputZero), Snackbar.LENGTH_SHORT);
+            case ERROR_INPUT_ZERO_EXP:
+                snackbar = MyUtils.makeSnackbarError(findViewById(R.id.mainDrawerLayout), getString(R.string.errorInputZero), Snackbar.LENGTH_SHORT);
                 snackbar.setAction(R.string.tryAgain, new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        //TODO CHANGE TYPE DEPENDING ON THE FRAGMENT USER CAME FROM
                         MyUtils.startActivityWithCode(MainActivity.this, AddExpIncomeTabbedActivity.class, ExpenseIncome.TYPE_EXPENSE);
+                    }
+                });
+                snackbar.show();
+                break;
+            case ERROR_INPUT_ZERO_INC:
+                snackbar = MyUtils.makeSnackbarError(findViewById(R.id.mainDrawerLayout), getString(R.string.errorInputZero), Snackbar.LENGTH_SHORT);
+                snackbar.setAction(R.string.tryAgain, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                            MyUtils.startActivityWithCode(MainActivity.this, AddExpIncomeTabbedActivity.class, ExpenseIncome.TYPE_INCOME);
+                    }
+                });
+                snackbar.show();
+                break;
+            case ERROR_INPUT_ZERO_TRA:
+                snackbar = MyUtils.makeSnackbarError(findViewById(R.id.mainDrawerLayout), getString(R.string.errorInputZero), Snackbar.LENGTH_SHORT);
+                snackbar.setAction(R.string.tryAgain, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        MyUtils.startActivityWithCode(MainActivity.this, AddExpIncomeTabbedActivity.class, TYPE_TRANSFER);
                     }
                 });
                 snackbar.show();

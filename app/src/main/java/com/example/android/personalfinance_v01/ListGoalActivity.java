@@ -1,8 +1,10 @@
 package com.example.android.personalfinance_v01;
 
+import android.content.DialogInterface;
+import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -14,8 +16,8 @@ import android.widget.PopupMenu;
 import com.example.android.personalfinance_v01.CustomAdapters.GoalAdapter;
 import com.example.android.personalfinance_v01.DataPersistance.DatabaseHelper;
 import com.example.android.personalfinance_v01.MyClasses.Goal;
-import com.github.clans.fab.FloatingActionButton;
 import com.example.android.personalfinance_v01.MyClasses.MyUtils;
+import com.github.clans.fab.FloatingActionButton;
 
 public class ListGoalActivity extends AppCompatActivity {
 
@@ -56,7 +58,7 @@ public class ListGoalActivity extends AppCompatActivity {
                     public boolean onMenuItemClick(MenuItem menuItem) {
                         switch (menuItem.getItemId()) {
                             case R.id.goalListMenuSave:
-                                View dialogView = getLayoutInflater().inflate(R.layout.dialog_enter_amount, listView,false);
+                                View dialogView = getLayoutInflater().inflate(R.layout.dialog_enter_amount, listView, false);
                                 alertDialog = initAlertDialog(dialogView);
                                 initAlertDialogButtons(dialogView, alertDialog, currentGoal);
                                 alertDialog.show();
@@ -71,7 +73,25 @@ public class ListGoalActivity extends AppCompatActivity {
                                 reachGoal(currentGoal, currentGoal.getGoalAmount());
                                 break;
                             case R.id.goalListMenuDelete:
-                                deleteGoal(currentGoal);
+                                DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        switch (which) {
+                                            case DialogInterface.BUTTON_POSITIVE:
+                                                goalAdapter.remove(currentGoal);
+                                                goalAdapter.notifyDataSetChanged();
+                                                showUndoSnackbar(currentGoal, goalAdapter, i);
+                                                break;
+
+                                            case DialogInterface.BUTTON_NEGATIVE:
+                                                break;
+                                        }
+                                    }
+                                };
+
+                                AlertDialog.Builder builder = new AlertDialog.Builder(ListGoalActivity.this);
+                                builder.setMessage(getString(R.string.delete) + " " + getString(R.string.goal) + "?").setPositiveButton(getString(R.string.delete), dialogClickListener)
+                                        .setNegativeButton(getString(R.string.cancel), dialogClickListener).show();
                                 break;
                         }
                         goalAdapter.notifyDataSetChanged();
@@ -87,15 +107,16 @@ public class ListGoalActivity extends AppCompatActivity {
                     public boolean onMenuItemClick(MenuItem menuItem) {
                         switch (menuItem.getItemId()) {
                             case R.id.menuDelete:
-                                deleteGoal(currentGoal);
+                                goalAdapter.remove(currentGoal);
                                 goalAdapter.notifyDataSetChanged();
+                                showUndoSnackbar(currentGoal, goalAdapter, i);
                                 break;
                         }
                         return false;
                     }
                 });
 
-                if(currentGoal.getStatus() == Goal.NOT_REACHED) {
+                if (currentGoal.getStatus() == Goal.NOT_REACHED) {
                     popupMenu.show();
                 } else {
                     popupMenuDelete.show();
@@ -105,11 +126,40 @@ public class ListGoalActivity extends AppCompatActivity {
         });
     }
 
+    private void showUndoSnackbar(final Goal goal, final GoalAdapter goalAdapter, final int index) {
+        Snackbar snackbar = MyUtils.makeSnackbar(findViewById(R.id.goalListRelLay), getString(R.string.goal) + " " + getString(R.string.deleted), Snackbar.LENGTH_LONG);
+        snackbar.setAction(getString(R.string.undo), new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Undo clicked - add the item back
+                goalAdapter.insert(goal, index);
+                goalAdapter.notifyDataSetChanged();
+            }
+        });
+
+        snackbar.addCallback(new Snackbar.Callback() {
+
+            @Override
+            public void onDismissed(Snackbar snackbar, int event) {
+                if (event != Snackbar.Callback.DISMISS_EVENT_ACTION) {
+                    //Undo not clicked - delete item from db
+                    deleteGoal(goal);
+                }
+            }
+
+            @Override
+            public void onShown(Snackbar snackbar) {
+            }
+        });
+
+        snackbar.show();
+    }
+
     @Override
     protected void onPause() {
         super.onPause();
 
-        if(alertDialog != null)
+        if (alertDialog != null)
             alertDialog.dismiss();
     }
 
@@ -117,7 +167,7 @@ public class ListGoalActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
 
-        if(alertDialog != null)
+        if (alertDialog != null)
             alertDialog.dismiss();
     }
 
@@ -135,7 +185,7 @@ public class ListGoalActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 double amountInput = MyUtils.getDoubleFromEditText(amountEt);
-                if(amountInput < 0 ) {
+                if (amountInput < 0) {
                     return;
                 }
                 int goalId = new DatabaseHelper(ListGoalActivity.this).getGoalId(goalForUpdate);

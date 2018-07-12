@@ -223,7 +223,7 @@ public class AddTransferFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 switchAccounts();
-                updateTextView();
+                updateTextViews();
             }
         });
     }
