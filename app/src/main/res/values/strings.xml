@@ -13,6 +13,8 @@
     <string name="month">Month</string>
     <string name="year">Year</string>
     <string name="custom">Custom</string>
+    <string name="cancel">Cancel</string>
+    <string name="ok">OK</string>
     <string name="img">Image</string>
     <string name="paid">Paid</string>
     <string name="initial">Initial</string>
@@ -39,6 +41,8 @@
     <string name="endDate">End Date</string>
     <string name="save">Save</string>
     <string name="amount">Amount</string>
+    <string name="deleted">Deleted</string>
+    <string name="undo">Undo</string>
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
     <string name="submit">Submit</string>
@@ -48,6 +52,9 @@
     <string name="addSavedAmount">Add saved amount</string>
     <string name="neverUsed">Never used</string>
     <string name="lastUsed">Last used %1$s</string>
+    <string name="takeMeThere">Take me there</string>
+    <string name="tryAgain">Try Again</string>
+    <string name="filterCategories">Filter Categories</string>
 
     <!-- BalanceAccount -->
     <string name="accounts">Accounts</string>
@@ -59,12 +66,17 @@
     <string name="title_activity_detailed_account_history">DetailedAccountHistoryActivity</string>
     <string name="see_acc_history">See Account history</string>
     <string name="initial_balance">Initial balance</string>
+    <string name="balanceAccount">Balance Account</string>
+    <string name="account_updated">Account updated</string>
     <string name="currency">Currency</string>
 
     <!-- ExpenseIncome / Transfer -->
     <string name="income">Income</string>
     <string name="expense">Expense</string>
     <string name="transfer">Transfer</string>
+    <string name="addExpense">Add Expense</string>
+    <string name="addTransfer">Make transfer</string>
+    <string name="addIncome">Add income</string>
     <string name="record_created">Record created</string>
     <string name="addExpenseIncome">Add expense or income</string>
     <string name="to">To</string>
@@ -83,17 +95,20 @@
     <string name="notificationAlreadyExceededBudgetTitle">Slow down!</string>
     <string name="notificationAlreadyExceededBudgetBody">You already exceeded your %1$s%2$s budget</string>
     <string name="category">Category</string>
+    <string name="budgetAdded">Budget added</string>
 
     <!-- Goal -->
     <string name="addGoal">Add Goal</string>
     <string name="goalAdded">Goal added</string>
     <string name="goalReached">Set goal as reached</string>
     <string name="seeGoalDetails">See Goal Details</string>
-    <string name="goal">Goal amount</string>
+    <string name="goalAmount">Goal amount</string>
+    <string name="goal">Goal</string>
     <string name="target_amount">Target amount</string>
     <string name="saved_amount">Saved already</string>
 
     <!-- Debt -->
+    <string name="debt">Debt</string>
     <string name="payDebtAmount">Pay amount</string>
     <string name="createDebt">Add Debt</string>
     <string name="debt_added">Debt created</string>
@@ -101,24 +116,16 @@
     <string name="seeDebtDetails">See Debt Details</string>
     <string name="type">Type</string>
     <string name="toFrom">To/From</string>
+    <string name="debtClosed">Debt closed</string>
 
     <!-- Error Strings -->
     <string name="error">Error occurred</string>
     <string name="error_account_create">Error creating account</string>
     <string name="error_account_update">Error updating account</string>
+    <string name="error_name">Name cannot be empty</string>
     <string name="error_debt">Error adding debt</string>
     <string name="errorGoal">Error adding goal</string>
-    <string name="takeMeThere">Take me there</string>
-    <string name="tryAgain">Try Again</string>
     <string name="errorInputZero">Amount cannot be zero</string>
-    <string name="addExpense">Add Expense</string>
-    <string name="addTransfer">Make transfer</string>
-    <string name="addIncome">Add income</string>
-    <string name="cancel">Cancel</string>
-    <string name="ok">OK</string>
-    <string name="filterCategories">Filter Categories</string>
-    <string name="debt">Debt</string>
-    <string name="undo">Undo</string>
-    <string name="balanceAccount">Balance Account</string>
-    <string name="deleted">Deleted</string>
+    <string name="error_amount">Amount cannot be empty</string>
+
 </resources>

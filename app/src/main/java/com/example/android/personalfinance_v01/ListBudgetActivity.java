@@ -1,7 +1,9 @@
 package com.example.android.personalfinance_v01;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -17,7 +19,6 @@ import com.example.android.personalfinance_v01.CustomAdapters.BudgetAdapter;
 import com.example.android.personalfinance_v01.DataPersistance.DatabaseHelper;
 import com.example.android.personalfinance_v01.MyClasses.Budget;
 import com.example.android.personalfinance_v01.MyClasses.MyUtils;
-import com.github.clans.fab.FloatingActionButton;
 
 public class ListBudgetActivity extends AppCompatActivity {
     BudgetAdapter budgetAdapter;
@@ -41,6 +42,8 @@ public class ListBudgetActivity extends AppCompatActivity {
         });
 
         initListView();
+
+        showSnackbarIfNeeded();
     }
 
     public void initListView() {
@@ -171,5 +174,34 @@ public class ListBudgetActivity extends AppCompatActivity {
         databaseHelper.deleteBudget(databaseHelper.getBudgetId(budgetForDeletion));
 
         MyUtils.getBudgetsFromDatabase(ListBudgetActivity.this);
+    }
+
+    private void showSnackbarIfNeeded() {
+        Intent intent = getIntent();
+        if (intent == null) {
+            return;
+        }
+
+        int code = intent.getIntExtra(MyUtils.INTENT_KEY, 0);
+        Snackbar snackbar;
+
+        switch (code) {
+            case 0:
+                return;
+            case AddBudgetActivity.ERROR_AMOUNT:
+                snackbar = MyUtils.makeSnackbarError(findViewById(R.id.budgetListRelLay), getString(R.string.error_amount), Snackbar.LENGTH_LONG);
+                snackbar.setAction(R.string.tryAgain, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        MyUtils.startActivity(ListBudgetActivity.this, AddBudgetActivity.class);
+                    }
+                });
+                snackbar.show();
+                break;
+            case AddBudgetActivity.SUCCESS_ADD_BUDGET:
+                snackbar = MyUtils.makeSnackbar(findViewById(R.id.budgetListRelLay), getString(R.string.budgetAdded), Snackbar.LENGTH_SHORT);
+                snackbar.show();
+                break;
+        }
     }
 }

@@ -9,7 +9,7 @@ import java.util.ArrayList;
  * Created by iacob on 09-Mar
  */
 
-public class Debt implements Serializable{
+public class Debt implements Serializable {
     public static final int I_LEND = 0;
     public static final int I_BORROW = 1;
 
@@ -52,10 +52,6 @@ public class Debt implements Serializable{
         this.addedAmountsDates.addAll(timesList);
     }
 
-    public void setAmountPaidBack(double amountPaidBack) {
-        this.amountPaidBack = amountPaidBack;
-    }
-
     public int getType() {
         return type;
     }
@@ -72,8 +68,16 @@ public class Debt implements Serializable{
         return amountPaidBack;
     }
 
+    public void setAmountPaidBack(double amountPaidBack) {
+        this.amountPaidBack = amountPaidBack;
+    }
+
     public int isClosed() {
         return closed;
+    }
+
+    public void setClosed(int closed) {
+        this.closed = closed;
     }
 
     public long getCreationDate() {

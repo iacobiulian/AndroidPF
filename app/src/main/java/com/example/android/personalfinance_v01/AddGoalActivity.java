@@ -21,8 +21,9 @@ import java.util.GregorianCalendar;
 
 public class AddGoalActivity extends AppCompatActivity {
 
-    Toolbar toolbar;
-
+    public static final int ERROR_ADD_GOAL = -1;
+    public static final int SUCCESS_ADD_GOAL = 10;
+    private int doneCode = 0;
     private EditText nameEt;
     private EditText targetAmountEt;
     private EditText savedAlreadyEt;
@@ -36,7 +37,7 @@ public class AddGoalActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_goal);
 
         //Toolbar
-        toolbar = findViewById(R.id.addGoalToolbar);
+        Toolbar toolbar = findViewById(R.id.addGoalToolbar);
         setSupportActionBar(toolbar);
 
         initViews();
@@ -61,7 +62,7 @@ public class AddGoalActivity extends AppCompatActivity {
         switch (id) {
             case R.id.actionDone:
                 insertGoalIntoDb();
-                MyUtils.startActivity(AddGoalActivity.this, ListGoalActivity.class);
+                MyUtils.startActivityWithCode(AddGoalActivity.this, ListGoalActivity.class, doneCode);
                 break;
         }
 
@@ -76,10 +77,10 @@ public class AddGoalActivity extends AppCompatActivity {
         savedAlreadyEt.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean hasFocus) {
-                if(hasFocus) {
+                if (hasFocus) {
                     savedAlreadyEt.setText("");
                 } else {
-                    if(TextUtils.isEmpty(savedAlreadyEt.getText().toString())) {
+                    if (TextUtils.isEmpty(savedAlreadyEt.getText().toString())) {
                         savedAlreadyEt.setText("0");
                     }
                 }
@@ -142,12 +143,11 @@ public class AddGoalActivity extends AppCompatActivity {
             boolean inserted = databaseHelper.addGoalData(newGoal);
 
             if (inserted)
-                Toast.makeText(this, R.string.goalAdded, Toast.LENGTH_SHORT).show();
+                doneCode = SUCCESS_ADD_GOAL;
             else
-                Toast.makeText(this, "INSERTION FAILED", Toast.LENGTH_SHORT).show();
-
+                doneCode = ERROR_ADD_GOAL;
         } else {
-            MyUtils.makeToast(this, getResources().getString(R.string.errorGoal));
+            doneCode = ERROR_ADD_GOAL;
         }
     }
 }

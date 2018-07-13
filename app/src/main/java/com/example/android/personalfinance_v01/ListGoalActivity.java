@@ -1,7 +1,9 @@
 package com.example.android.personalfinance_v01;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -17,12 +19,13 @@ import com.example.android.personalfinance_v01.CustomAdapters.GoalAdapter;
 import com.example.android.personalfinance_v01.DataPersistance.DatabaseHelper;
 import com.example.android.personalfinance_v01.MyClasses.Goal;
 import com.example.android.personalfinance_v01.MyClasses.MyUtils;
-import com.github.clans.fab.FloatingActionButton;
 
 public class ListGoalActivity extends AppCompatActivity {
 
     private ListView listView;
     private AlertDialog alertDialog;
+
+    private double savedReachedGoal = 0.0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +73,9 @@ public class ListGoalActivity extends AppCompatActivity {
                                         bundle);
                                 break;
                             case R.id.goalListMenuReached:
-                                reachGoal(currentGoal, currentGoal.getGoalAmount());
+                                reachGoal(currentGoal);
+                                goalAdapter.notifyDataSetChanged();
+                                showUndoReachedSnackbar(currentGoal, goalAdapter);
                                 break;
                             case R.id.goalListMenuDelete:
                                 DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
@@ -100,13 +105,19 @@ public class ListGoalActivity extends AppCompatActivity {
                 });
 
                 final PopupMenu popupMenuDelete = new PopupMenu(ListGoalActivity.this, view);
-                popupMenuDelete.getMenuInflater().inflate(R.menu.menu_delete_item, popupMenuDelete.getMenu());
+                popupMenuDelete.getMenuInflater().inflate(R.menu.menu_goal_delete_details, popupMenuDelete.getMenu());
 
                 popupMenuDelete.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem menuItem) {
                         switch (menuItem.getItemId()) {
-                            case R.id.menuDelete:
+                            case R.id.menuGoalDetails:
+                                Bundle bundle = new Bundle();
+                                bundle.putSerializable("goal", currentGoal);
+                                MyUtils.startActivityWithBundle(ListGoalActivity.this, DetailedGoalTabbedActivity.class,
+                                        bundle);
+                                break;
+                            case R.id.menuGoalDelete:
                                 goalAdapter.remove(currentGoal);
                                 goalAdapter.notifyDataSetChanged();
                                 showUndoSnackbar(currentGoal, goalAdapter, i);
@@ -124,6 +135,38 @@ public class ListGoalActivity extends AppCompatActivity {
 
             }
         });
+
+        showSnackbarIfNeeded();
+    }
+
+    private void showUndoReachedSnackbar(final Goal goal, final GoalAdapter goalAdapter) {
+        Snackbar snackbar = MyUtils.makeSnackbar(findViewById(R.id.goalListRelLay), getString(R.string.goalReached), Snackbar.LENGTH_LONG);
+        snackbar.setAction(getString(R.string.undo), new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Undo clicked - unreach the goal
+                goal.setStatus(Goal.NOT_REACHED);
+                goal.setSavedAmount(savedReachedGoal);
+                goalAdapter.notifyDataSetChanged();
+            }
+        });
+
+        snackbar.addCallback(new Snackbar.Callback() {
+
+            @Override
+            public void onDismissed(Snackbar snackbar, int event) {
+                if (event != Snackbar.Callback.DISMISS_EVENT_ACTION) {
+                    //Undo not clicked - reach goal for real
+                    reachGoalDb(goal);
+                }
+            }
+
+            @Override
+            public void onShown(Snackbar snackbar) {
+            }
+        });
+
+        snackbar.show();
     }
 
     private void showUndoSnackbar(final Goal goal, final GoalAdapter goalAdapter, final int index) {
@@ -214,13 +257,20 @@ public class ListGoalActivity extends AppCompatActivity {
         databaseHelper.updateGoalSavedAmount(goalId, newAmount);
     }
 
-    private void reachGoal(Goal reachedGoal, double targetAmount) {
+    private void reachGoal(Goal reachedGoal) {
+        double targetAmount = reachedGoal.getGoalAmount();
+        savedReachedGoal = reachedGoal.getSavedAmount();
+        reachedGoal.setSavedAmount(targetAmount);
+        reachedGoal.setStatus(Goal.REACHED);
+    }
+
+    private void reachGoalDb(Goal reachedGoal) {
         DatabaseHelper databaseHelper = new DatabaseHelper(ListGoalActivity.this);
 
         int goalId = databaseHelper.getGoalId(reachedGoal);
 
         databaseHelper.updateGoalReached(goalId);
-        databaseHelper.updateGoalSavedAmount(goalId, targetAmount);
+        databaseHelper.updateGoalSavedAmount(goalId, reachedGoal.getGoalAmount());
 
         MyUtils.getGoalsFromDatabase(ListGoalActivity.this);
     }
@@ -231,5 +281,34 @@ public class ListGoalActivity extends AppCompatActivity {
         databaseHelper.deleteGoal(databaseHelper.getGoalId(goalForDeletion));
 
         MyUtils.getGoalsFromDatabase(ListGoalActivity.this);
+    }
+
+    private void showSnackbarIfNeeded() {
+        Intent intent = getIntent();
+        if (intent == null) {
+            return;
+        }
+
+        int code = intent.getIntExtra(MyUtils.INTENT_KEY, 0);
+        Snackbar snackbar;
+
+        switch (code) {
+            case 0:
+                return;
+            case AddGoalActivity.ERROR_ADD_GOAL:
+                snackbar = MyUtils.makeSnackbarError(findViewById(R.id.goalListRelLay), getString(R.string.errorGoal), Snackbar.LENGTH_LONG);
+                snackbar.setAction(R.string.tryAgain, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        MyUtils.startActivity(ListGoalActivity.this, AddGoalActivity.class);
+                    }
+                });
+                snackbar.show();
+                break;
+            case AddGoalActivity.SUCCESS_ADD_GOAL:
+                snackbar = MyUtils.makeSnackbar(findViewById(R.id.goalListRelLay), getString(R.string.goalAdded), Snackbar.LENGTH_SHORT);
+                snackbar.show();
+                break;
+        }
     }
 }

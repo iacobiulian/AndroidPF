@@ -1,6 +1,7 @@
 package com.example.android.personalfinance_v01;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
@@ -17,13 +18,11 @@ import com.example.android.personalfinance_v01.MyClasses.BalanceAccount;
 import com.example.android.personalfinance_v01.MyClasses.ExpenseIncome;
 import com.example.android.personalfinance_v01.MyClasses.MyUtils;
 import com.example.android.personalfinance_v01.MyClasses.Transfer;
-import com.github.clans.fab.FloatingActionButton;
 
 public class ListAccountActivity extends AppCompatActivity {
 
-    private static final String TAG = "ListAccountActivity";
     ListView listView;
-    FloatingActionButton fab;
+    android.support.design.widget.FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +58,7 @@ public class ListAccountActivity extends AppCompatActivity {
                     public boolean onMenuItemClick(MenuItem menuItem) {
                         switch (menuItem.getItemId()) {
                             case R.id.optionMenuEdit:
-                                editBalanceAccount(adapterView, i);
+                                editBalanceAccount(currentAccount);
                                 break;
                             case R.id.optionMenuHistory:
                                 BalanceAccount balanceAccount = (BalanceAccount) adapterView.getItemAtPosition(i);
@@ -97,6 +96,8 @@ public class ListAccountActivity extends AppCompatActivity {
                 popupMenu.show();
             }
         });
+
+        showSnackbarIfNeeded();
     }
 
     private void showUndoSnackbar(final BalanceAccount balanceAccount, final BalanceAccountAdapter balanceAccountAdapter, final int index) {
@@ -128,8 +129,7 @@ public class ListAccountActivity extends AppCompatActivity {
         snackbar.show();
     }
 
-    private void editBalanceAccount(AdapterView<?> adapterView, int index) {
-        BalanceAccount accountForEdit = (BalanceAccount) adapterView.getItemAtPosition(index);
+    private void editBalanceAccount(BalanceAccount accountForEdit) {
         DatabaseHelper databaseHelper = new DatabaseHelper(ListAccountActivity.this);
 
         Bundle bundle = new Bundle();
@@ -157,5 +157,49 @@ public class ListAccountActivity extends AppCompatActivity {
         }
 
         MyUtils.getBalanceAccountsFromDatabase(ListAccountActivity.this);
+    }
+
+    private void showSnackbarIfNeeded() {
+        Intent intent = getIntent();
+        if (intent == null) {
+            return;
+        }
+
+        Bundle bundle = getIntent().getExtras();
+
+        if (bundle == null) {
+            return;
+        }
+
+        int code = bundle.getInt(MyUtils.DONE_CODE);
+        final BalanceAccount balanceAccount = (BalanceAccount) bundle.getSerializable(AddAccountActivity.ACCOUNT_FOR_EDIT);
+        Snackbar snackbar;
+
+        switch (code) {
+            case 0:
+                return;
+            case AddAccountActivity.ERROR_INPUT_NO_NAME:
+                snackbar = MyUtils.makeSnackbarError(findViewById(R.id.accountListRelLay), getString(R.string.error_name), Snackbar.LENGTH_LONG);
+                snackbar.setAction(R.string.tryAgain, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (balanceAccount != null) {
+                            editBalanceAccount(balanceAccount);
+                        } else {
+                            MyUtils.startActivity(ListAccountActivity.this, AddAccountActivity.class);
+                        }
+                    }
+                });
+                snackbar.show();
+                break;
+            case AddAccountActivity.SUCCESS_CREATE_ACCOUNT:
+                snackbar = MyUtils.makeSnackbar(findViewById(R.id.accountListRelLay), getString(R.string.account_added), Snackbar.LENGTH_SHORT);
+                snackbar.show();
+                break;
+            case AddAccountActivity.SUCCESS_UPDATE_ACCOUNT:
+                snackbar = MyUtils.makeSnackbar(findViewById(R.id.accountListRelLay), getString(R.string.account_updated), Snackbar.LENGTH_SHORT);
+                snackbar.show();
+                break;
+        }
     }
 }

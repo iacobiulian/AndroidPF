@@ -1,7 +1,9 @@
 package com.example.android.personalfinance_v01;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -17,12 +19,13 @@ import com.example.android.personalfinance_v01.CustomAdapters.DebtAdapter;
 import com.example.android.personalfinance_v01.DataPersistance.DatabaseHelper;
 import com.example.android.personalfinance_v01.MyClasses.Debt;
 import com.example.android.personalfinance_v01.MyClasses.MyUtils;
-import com.github.clans.fab.FloatingActionButton;
 
 public class ListDebtActivity extends AppCompatActivity {
 
     private ListView listView;
     private AlertDialog alertDialog;
+
+    private double paidTowardsDebt = 0.0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +75,7 @@ public class ListDebtActivity extends AppCompatActivity {
                             case R.id.debtListMenuClose:
                                 closeDebt(currentDebt);
                                 debtAdapter.notifyDataSetChanged();
+                                showUndoReachedSnackbar(currentDebt, debtAdapter);
                                 break;
                             case R.id.debtListMenuDelete:
                                 DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
@@ -100,13 +104,19 @@ public class ListDebtActivity extends AppCompatActivity {
                 });
 
                 final PopupMenu popupMenuDelete = new PopupMenu(ListDebtActivity.this, view);
-                popupMenuDelete.getMenuInflater().inflate(R.menu.menu_delete_item, popupMenuDelete.getMenu());
+                popupMenuDelete.getMenuInflater().inflate(R.menu.menu_debt_delete_details, popupMenuDelete.getMenu());
 
                 popupMenuDelete.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem menuItem) {
                         switch (menuItem.getItemId()) {
-                            case R.id.menuDelete:
+                            case R.id.menuDebtDetails:
+                                Bundle bundle = new Bundle();
+                                bundle.putSerializable("debt", currentDebt);
+                                MyUtils.startActivityWithBundle(ListDebtActivity.this, DetailedDebtTabbedActivity.class,
+                                        bundle);
+                                break;
+                            case R.id.menuDebtDelete:
                                 debtAdapter.remove(currentDebt);
                                 debtAdapter.notifyDataSetChanged();
                                 showUndoSnackbar(currentDebt, debtAdapter, i);
@@ -124,6 +134,38 @@ public class ListDebtActivity extends AppCompatActivity {
 
             }
         });
+
+        showSnackbarIfNeeded();
+    }
+
+    private void showUndoReachedSnackbar(final Debt debt, final DebtAdapter debtAdapter) {
+        Snackbar snackbar = MyUtils.makeSnackbar(findViewById(R.id.debtRelLay), getString(R.string.debtClosed), Snackbar.LENGTH_LONG);
+        snackbar.setAction(getString(R.string.undo), new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Undo clicked - reopen the debt
+                debt.setClosed(Debt.NOT_CLOSED);
+                debt.setAmountPaidBack(paidTowardsDebt);
+                debtAdapter.notifyDataSetChanged();
+            }
+        });
+
+        snackbar.addCallback(new Snackbar.Callback() {
+
+            @Override
+            public void onDismissed(Snackbar snackbar, int event) {
+                if (event != Snackbar.Callback.DISMISS_EVENT_ACTION) {
+                    //Undo not clicked - close debt for real
+                    closeDebtDb(debt);
+                }
+            }
+
+            @Override
+            public void onShown(Snackbar snackbar) {
+            }
+        });
+
+        snackbar.show();
     }
 
     private void showUndoSnackbar(final Debt debt, final DebtAdapter debtAdapter, final int index) {
@@ -215,6 +257,13 @@ public class ListDebtActivity extends AppCompatActivity {
     }
 
     private void closeDebt(Debt debtToBeClosed) {
+        double debtAmount = debtToBeClosed.getAmount();
+        paidTowardsDebt = debtToBeClosed.getAmountPaidBack();
+        debtToBeClosed.setAmountPaidBack(debtAmount);
+        debtToBeClosed.setClosed(Debt.CLOSED);
+    }
+
+    private void closeDebtDb(Debt debtToBeClosed) {
         DatabaseHelper databaseHelper = new DatabaseHelper(ListDebtActivity.this);
         int id = databaseHelper.getDebtID(debtToBeClosed);
 
@@ -230,5 +279,34 @@ public class ListDebtActivity extends AppCompatActivity {
         databaseHelper.deleteDebt(databaseHelper.getDebtID(debtForDeletion));
 
         MyUtils.getDebtsFromDatabase(ListDebtActivity.this);
+    }
+
+    private void showSnackbarIfNeeded() {
+        Intent intent = getIntent();
+        if (intent == null) {
+            return;
+        }
+
+        int code = intent.getIntExtra(MyUtils.INTENT_KEY, 0);
+        Snackbar snackbar;
+
+        switch (code) {
+            case 0:
+                return;
+            case AddDebtActivity.ERROR_ADD_DEBT:
+                snackbar = MyUtils.makeSnackbarError(findViewById(R.id.debtRelLay), getString(R.string.error_debt), Snackbar.LENGTH_LONG);
+                snackbar.setAction(R.string.tryAgain, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        MyUtils.startActivity(ListDebtActivity.this, AddDebtActivity.class);
+                    }
+                });
+                snackbar.show();
+                break;
+            case AddDebtActivity.SUCCESS_ADD_DEBT:
+                snackbar = MyUtils.makeSnackbar(findViewById(R.id.debtRelLay), getString(R.string.debt_added), Snackbar.LENGTH_SHORT);
+                snackbar.show();
+                break;
+        }
     }
 }

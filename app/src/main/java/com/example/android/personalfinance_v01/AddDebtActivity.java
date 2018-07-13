@@ -24,6 +24,10 @@ import java.util.GregorianCalendar;
 
 public class AddDebtActivity extends AppCompatActivity {
 
+    public static final int ERROR_ADD_DEBT = -1;
+    public static final int SUCCESS_ADD_DEBT = 10;
+    private int doneCode = 0;
+
     Toolbar toolbar;
 
     Spinner spinner;
@@ -73,7 +77,7 @@ public class AddDebtActivity extends AppCompatActivity {
         switch (id) {
             case R.id.actionDone:
                 insertDebtIntoDb();
-                MyUtils.startActivity(AddDebtActivity.this, ListDebtActivity.class);
+                MyUtils.startActivityWithCode(AddDebtActivity.this, ListDebtActivity.class, doneCode);
                 break;
         }
 
@@ -98,9 +102,9 @@ public class AddDebtActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 if(i == 0) {
-                    payeeTv.setText("To");
+                    payeeTv.setText(getString(R.string.to));
                 } else {
-                    payeeTv.setText("From");
+                    payeeTv.setText(getString(R.string.from));
                 }
             }
 
@@ -173,12 +177,12 @@ public class AddDebtActivity extends AppCompatActivity {
             boolean inserted = databaseHelper.addDebtData(newDebt);
 
             if (inserted)
-                Toast.makeText(this, R.string.debt_added, Toast.LENGTH_SHORT).show();
+                doneCode = SUCCESS_ADD_DEBT;
             else
-                Toast.makeText(this, "INSERTION FAILED", Toast.LENGTH_SHORT).show();
+                doneCode = ERROR_ADD_DEBT;
 
         } else {
-            MyUtils.makeToast(this, getResources().getString(R.string.error_debt));
+            doneCode = ERROR_ADD_DEBT;
         }
     }
 }

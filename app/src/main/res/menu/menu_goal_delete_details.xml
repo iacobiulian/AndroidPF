@@ -1,0 +1,12 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.android.personalfinance_v01.MainActivity">
+
+    <item
+        android:id="@+id/menuGoalDetails"
+        android:title="@string/seeGoalDetails" />
+
+    <item
+        android:id="@+id/menuGoalDelete"
+        android:title="@string/delete" />
+</menu>

@@ -22,12 +22,16 @@ import com.example.android.personalfinance_v01.MyClasses.MyUtils;
 import java.util.Date;
 
 public class AddBudgetActivity extends AppCompatActivity {
-    private static final String TAG = "AddBudgetActivity";
 
     Spinner typeSpinner;
     Spinner categorySpinner;
     Category currentCategory;
     private EditText amountEt;
+
+    public static final int ERROR_AMOUNT = -1;
+    public static final int SUCCESS_ADD_BUDGET = 10;
+
+    private int doneCode = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +60,7 @@ public class AddBudgetActivity extends AppCompatActivity {
         switch (id) {
             case R.id.actionDone:
                 insertBudgetIntoDb();
-                MyUtils.startActivity(AddBudgetActivity.this, ListBudgetActivity.class);
+                MyUtils.startActivityWithCode(AddBudgetActivity.this, ListBudgetActivity.class, doneCode);
                 break;
         }
 
@@ -132,11 +136,11 @@ public class AddBudgetActivity extends AppCompatActivity {
             boolean inserted = databaseHelper.addBudgetData(newBudget);
 
             if (inserted)
-                Toast.makeText(this, R.string.addBudget, Toast.LENGTH_SHORT).show();
+                doneCode = SUCCESS_ADD_BUDGET;
             else
-                Toast.makeText(this, "INSERTION FAILED", Toast.LENGTH_SHORT).show();
+                doneCode = ERROR_AMOUNT;
         } else {
-            MyUtils.makeToast(this, getResources().getString(R.string.error_debt));
+            doneCode = ERROR_AMOUNT;
         }
     }
 

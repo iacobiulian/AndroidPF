@@ -20,6 +20,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -46,6 +47,7 @@ public class MyUtils {
     public static final String MINUS_SIGN = "-";
     public static final String INTENT_KEY = "intentCode";
     private static final String STRING_DELIMITER = ",";
+    public static final String DONE_CODE = "doneCode";
 
     //Global Balance Account list
     public static ArrayList<BalanceAccount> accountList = new ArrayList<>();
@@ -502,24 +504,10 @@ public class MyUtils {
         return snackbar;
     }
 
-    public static Snackbar makeSnackbarCenterText(View rootView, String message, int length) {
-        Snackbar snackbar = Snackbar.make(rootView, message, length);
-        View view = snackbar.getView();
-        TextView tv = view.findViewById(android.support.design.R.id.snackbar_text);
-        tv.setTextSize(16f);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-            tv.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-        } else {
-            tv.setGravity(Gravity.CENTER_HORIZONTAL);
-        }
-        return snackbar;
-    }
-
     public static Snackbar makeSnackbarError(View rootView, String message, int length) {
         Snackbar snackbar = Snackbar.make(rootView, message, length);
         View view = snackbar.getView();
-        view.setBackgroundColor(Color.RED);
+        view.setBackgroundColor(Color.parseColor("#d6131d"));
         TextView tv = view.findViewById(android.support.design.R.id.snackbar_text);
         tv.setTextColor(Color.WHITE);
         tv.setTextSize(16f);

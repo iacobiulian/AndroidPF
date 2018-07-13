@@ -40,14 +40,11 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
-            android:layout_marginBottom="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
             fab:menu_animationDelayPerItem="50"
             fab:menu_backgroundColor="@android:color/transparent"
             fab:menu_buttonSpacing="0dp"
-            fab:menu_colorNormal="#DA4336"
-            fab:menu_colorPressed="#E75043"
+            fab:menu_colorNormal="@color/colorAccent"
+            fab:menu_colorPressed="@color/colorAccent"
             fab:menu_colorRipple="#99FFFFFF"
             fab:menu_fab_hide_animation="@anim/hide_to_bottom"
             fab:menu_fab_show_animation="@anim/show_from_bottom"
@@ -62,7 +59,7 @@
             fab:menu_labels_margin="0dp"
             fab:menu_labels_maxLines="-1"
             fab:menu_labels_padding="8dp"
-            fab:menu_labels_paddingBottom="4dp"
+            fab:menu_labels_paddingBottom="0dp"
             fab:menu_labels_paddingLeft="8dp"
             fab:menu_labels_paddingRight="8dp"
             fab:menu_labels_paddingTop="4dp"
@@ -84,6 +81,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_right_arrow"
+                app:fab_colorNormal="@color/colorAccent"
                 fab:fab_label="@string/transfer"
                 fab:fab_size="normal" />
 
@@ -92,6 +90,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_plus"
+                app:fab_colorNormal="@color/colorAccent"
                 fab:fab_label="@string/income"
                 fab:fab_size="normal" />
 
@@ -100,6 +99,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_minus"
+                app:fab_colorNormal="@color/colorAccent"
                 fab:fab_label="@string/expense"
                 fab:fab_size="normal" />
 

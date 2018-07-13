@@ -63,6 +63,10 @@ public class Goal implements Serializable{
         return status;
     }
 
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
     public ArrayList<Double> getAddedAmounts() {
         return addedAmounts;
     }
