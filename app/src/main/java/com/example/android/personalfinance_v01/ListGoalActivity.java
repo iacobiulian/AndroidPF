@@ -22,9 +22,10 @@ import com.example.android.personalfinance_v01.MyClasses.MyUtils;
 
 public class ListGoalActivity extends AppCompatActivity {
 
+    GoalAdapter goalAdapter;
+    FloatingActionButton fab;
     private ListView listView;
     private AlertDialog alertDialog;
-
     private double savedReachedGoal = 0.0;
 
     @Override
@@ -33,7 +34,7 @@ public class ListGoalActivity extends AppCompatActivity {
         setContentView(R.layout.activity_list_goal);
 
         //Floating action button
-        FloatingActionButton fab = findViewById(R.id.goalListFab);
+        fab = findViewById(R.id.goalListFab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -44,7 +45,7 @@ public class ListGoalActivity extends AppCompatActivity {
         //ListView
         MyUtils.getGoalsFromDatabase(ListGoalActivity.this);
         listView = findViewById(R.id.goalListView);
-        final GoalAdapter goalAdapter = new GoalAdapter(this, MyUtils.goalList);
+        goalAdapter = new GoalAdapter(this, MyUtils.goalList);
         listView.setEmptyView(findViewById(R.id.goalListEmptyView));
         listView.setAdapter(goalAdapter);
 
@@ -86,6 +87,7 @@ public class ListGoalActivity extends AppCompatActivity {
                                                 goalAdapter.remove(currentGoal);
                                                 goalAdapter.notifyDataSetChanged();
                                                 showUndoSnackbar(currentGoal, goalAdapter, i);
+                                                MyUtils.changeFabAnchor(fab, goalAdapter, R.id.goalListEmptyView, R.id.goalListView);
                                                 break;
 
                                             case DialogInterface.BUTTON_NEGATIVE:
@@ -136,6 +138,8 @@ public class ListGoalActivity extends AppCompatActivity {
             }
         });
 
+        MyUtils.changeFabAnchor(fab, goalAdapter, R.id.goalListEmptyView, R.id.goalListView);
+
         showSnackbarIfNeeded();
     }
 
@@ -177,6 +181,7 @@ public class ListGoalActivity extends AppCompatActivity {
                 //Undo clicked - add the item back
                 goalAdapter.insert(goal, index);
                 goalAdapter.notifyDataSetChanged();
+                MyUtils.changeFabAnchor(fab, goalAdapter, R.id.goalListEmptyView, R.id.goalListView);
             }
         });
 

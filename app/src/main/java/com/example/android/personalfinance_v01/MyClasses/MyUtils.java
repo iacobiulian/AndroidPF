@@ -8,6 +8,8 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
@@ -16,6 +18,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -617,4 +620,14 @@ public class MyUtils {
         return daysBetween;
     }
     //endregion
+
+    public static void changeFabAnchor(FloatingActionButton fab, ArrayAdapter arrayAdapter, int anchorEmptyId, int anchorListViewId) {
+        CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
+        if(arrayAdapter.isEmpty()) {
+            p.setAnchorId(anchorEmptyId);
+        } else {
+            p.setAnchorId(anchorListViewId);
+        }
+        fab.setLayoutParams(p);
+    }
 }

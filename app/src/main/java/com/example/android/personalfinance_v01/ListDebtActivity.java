@@ -22,9 +22,10 @@ import com.example.android.personalfinance_v01.MyClasses.MyUtils;
 
 public class ListDebtActivity extends AppCompatActivity {
 
+    DebtAdapter debtAdapter;
+    FloatingActionButton fab;
     private ListView listView;
     private AlertDialog alertDialog;
-
     private double paidTowardsDebt = 0.0;
 
     @Override
@@ -33,7 +34,7 @@ public class ListDebtActivity extends AppCompatActivity {
         setContentView(R.layout.activity_list_debt);
 
         //Floating action button
-        FloatingActionButton fab = findViewById(R.id.debtListFab);
+        fab = findViewById(R.id.debtListFab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -44,7 +45,7 @@ public class ListDebtActivity extends AppCompatActivity {
         //List View
         MyUtils.getDebtsFromDatabase(ListDebtActivity.this);
         listView = findViewById(R.id.debtListView);
-        final DebtAdapter debtAdapter = new DebtAdapter(this, MyUtils.debtList);
+        debtAdapter = new DebtAdapter(this, MyUtils.debtList);
         listView.setEmptyView(findViewById(R.id.debtListEmptyView));
         listView.setAdapter(debtAdapter);
 
@@ -86,6 +87,7 @@ public class ListDebtActivity extends AppCompatActivity {
                                                 debtAdapter.remove(currentDebt);
                                                 debtAdapter.notifyDataSetChanged();
                                                 showUndoSnackbar(currentDebt, debtAdapter, i);
+                                                MyUtils.changeFabAnchor(fab, debtAdapter, R.id.debtListEmptyView, R.id.debtListView);
                                                 break;
 
                                             case DialogInterface.BUTTON_NEGATIVE:
@@ -135,6 +137,8 @@ public class ListDebtActivity extends AppCompatActivity {
             }
         });
 
+        MyUtils.changeFabAnchor(fab, debtAdapter, R.id.debtListEmptyView, R.id.debtListView);
+
         showSnackbarIfNeeded();
     }
 
@@ -176,6 +180,7 @@ public class ListDebtActivity extends AppCompatActivity {
                 //Undo clicked - add the item back
                 debtAdapter.insert(debt, index);
                 debtAdapter.notifyDataSetChanged();
+                MyUtils.changeFabAnchor(fab, debtAdapter, R.id.debtListEmptyView, R.id.debtListView);
             }
         });
 

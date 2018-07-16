@@ -22,6 +22,7 @@ import com.example.android.personalfinance_v01.MyClasses.MyUtils;
 
 public class ListBudgetActivity extends AppCompatActivity {
     BudgetAdapter budgetAdapter;
+    FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +34,7 @@ public class ListBudgetActivity extends AppCompatActivity {
         budgetAdapter = new BudgetAdapter(ListBudgetActivity.this, MyUtils.budgetList);
 
         //Floating action button
-        FloatingActionButton fab = findViewById(R.id.budgetListFab);
+        fab = findViewById(R.id.budgetListFab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -42,6 +43,8 @@ public class ListBudgetActivity extends AppCompatActivity {
         });
 
         initListView();
+
+        MyUtils.changeFabAnchor(fab, budgetAdapter, R.id.budgetListEmptyView, R.id.budgetListView);
 
         showSnackbarIfNeeded();
     }
@@ -85,6 +88,7 @@ public class ListBudgetActivity extends AppCompatActivity {
                                                 budgetAdapter.remove(currentBudget);
                                                 budgetAdapter.notifyDataSetChanged();
                                                 showUndoSnackbar(currentBudget, budgetAdapter, i);
+                                                MyUtils.changeFabAnchor(fab, budgetAdapter, R.id.budgetListEmptyView, R.id.budgetListView);
                                                 break;
 
                                             case DialogInterface.BUTTON_NEGATIVE:
@@ -117,6 +121,7 @@ public class ListBudgetActivity extends AppCompatActivity {
                 //Undo clicked - add the item back
                 budgetAdapter.insert(budget, index);
                 budgetAdapter.notifyDataSetChanged();
+                MyUtils.changeFabAnchor(fab, budgetAdapter, R.id.budgetListEmptyView, R.id.budgetListView);
             }
         });
 

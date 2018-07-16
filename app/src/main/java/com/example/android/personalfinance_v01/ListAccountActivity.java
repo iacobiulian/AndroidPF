@@ -22,6 +22,7 @@ import com.example.android.personalfinance_v01.MyClasses.Transfer;
 public class ListAccountActivity extends AppCompatActivity {
 
     ListView listView;
+    BalanceAccountAdapter balanceAccountAdapter;
     android.support.design.widget.FloatingActionButton fab;
 
     @Override
@@ -42,7 +43,7 @@ public class ListAccountActivity extends AppCompatActivity {
         MyUtils.getBalanceAccountsFromDatabase(ListAccountActivity.this);
 
         listView = findViewById(R.id.accountListView);
-        final BalanceAccountAdapter balanceAccountAdapter = new BalanceAccountAdapter(this, MyUtils.accountList);
+        balanceAccountAdapter = new BalanceAccountAdapter(this, MyUtils.accountList);
         listView.setEmptyView(findViewById(R.id.accountListEmptyView));
         listView.setAdapter(balanceAccountAdapter);
 
@@ -76,6 +77,7 @@ public class ListAccountActivity extends AppCompatActivity {
                                                 balanceAccountAdapter.remove(currentAccount);
                                                 balanceAccountAdapter.notifyDataSetChanged();
                                                 showUndoSnackbar(currentAccount, balanceAccountAdapter, i);
+                                                MyUtils.changeFabAnchor(fab, balanceAccountAdapter, R.id.accountListEmptyView, R.id.accountListView);
                                                 break;
 
                                             case DialogInterface.BUTTON_NEGATIVE:
@@ -97,6 +99,8 @@ public class ListAccountActivity extends AppCompatActivity {
             }
         });
 
+        MyUtils.changeFabAnchor(fab, balanceAccountAdapter, R.id.accountListEmptyView, R.id.accountListView);
+
         showSnackbarIfNeeded();
     }
 
@@ -108,6 +112,7 @@ public class ListAccountActivity extends AppCompatActivity {
                 //Undo clicked - add the item back
                 balanceAccountAdapter.insert(balanceAccount, index);
                 balanceAccountAdapter.notifyDataSetChanged();
+                MyUtils.changeFabAnchor(fab, balanceAccountAdapter, R.id.accountListEmptyView, R.id.accountListView);
             }
         });
 
