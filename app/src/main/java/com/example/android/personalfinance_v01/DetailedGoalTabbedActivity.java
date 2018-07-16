@@ -42,14 +42,10 @@ import static com.example.android.personalfinance_v01.MyClasses.MyUtils.formatDe
 
 public class DetailedGoalTabbedActivity extends AppCompatActivity {
 
-    private static final String TAG = "DetailedGoalTabbedActiv";
-    private static final int FRAGMENT_CHART = 0;
-    private static final int FRAGMENT_HISTORY = 1;
     ArrayList<HistoryItem> theList = new ArrayList<>();
     boolean wasDeleted = false;
     Goal currentGoal;
     private int CHART_SIZE;
-    private ViewPager viewPager;
     private DetailedGoalChartFragment chartFragment;
     private DetailedGoalHistoryFragment historyFragment;
 
@@ -78,7 +74,7 @@ public class DetailedGoalTabbedActivity extends AppCompatActivity {
 
         initTheList();
 
-        viewPager = findViewById(R.id.detailedGoalHistoryViewPager);
+        ViewPager viewPager = findViewById(R.id.detailedGoalHistoryViewPager);
         initViewPager(viewPager);
 
         TabLayout tabLayout = findViewById(R.id.detailedGoalHistoryTabLayout);

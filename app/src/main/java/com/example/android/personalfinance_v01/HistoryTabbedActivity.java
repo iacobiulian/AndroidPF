@@ -2,6 +2,7 @@ package com.example.android.personalfinance_v01;
 
 import android.app.DatePickerDialog;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
@@ -48,7 +49,7 @@ public class HistoryTabbedActivity extends AppCompatActivity {
     private ViewPager viewPager;
     private HistoryExpenseFragment expenseHistoryFragment;
     private HistoryIncomeFragment incomeHistoryFragment;
-    private ExpenseIncomeFilter expenseIncomeFilter = new ExpenseIncomeFilter(ALL_ACCOUNTS_OPTION, 0);
+    private ExpenseIncomeFilter expenseIncomeFilter = new ExpenseIncomeFilter(HistoryTabbedActivity.this, ALL_ACCOUNTS_OPTION, 0);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -208,7 +209,8 @@ public class HistoryTabbedActivity extends AppCompatActivity {
                 if (!expenseIncomeFilter.isBadCustomDate()) {
                     expenseIncomeFilter.setEndDate(calendar.getTimeInMillis() + oneDay);
                 } else {
-                    MyUtils.makeToast(HistoryTabbedActivity.this, "Start date can not be after end date");
+                    Snackbar snackbar = MyUtils.makeSnackbarError(findViewById(R.id.historyLinLay), getString(R.string.startDateEndDate), Snackbar.LENGTH_LONG);
+                    snackbar.show();
                 }
 
                 updateLists();

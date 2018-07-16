@@ -4,29 +4,24 @@ import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
-import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.android.personalfinance_v01.DataPersistance.DatabaseHelper;
-import com.example.android.personalfinance_v01.HistoryTabbedActivity;
 import com.example.android.personalfinance_v01.R;
 
 import java.text.DateFormat;
@@ -37,18 +32,16 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Random;
 
 /**
  * Created by iacob on 21 Feb
  */
 
 public class MyUtils {
-    public static final String PLUS_SIGN = "+";
-    public static final String MINUS_SIGN = "-";
     public static final String INTENT_KEY = "intentCode";
-    private static final String STRING_DELIMITER = ",";
     public static final String DONE_CODE = "doneCode";
-
+    private static final String STRING_DELIMITER = ",";
     //Global Balance Account list
     public static ArrayList<BalanceAccount> accountList = new ArrayList<>();
     //Global expense/income list
@@ -61,6 +54,12 @@ public class MyUtils {
     public static ArrayList<Debt> debtList = new ArrayList<>();
     //Global Goal list
     public static ArrayList<Goal> goalList = new ArrayList<>();
+    //Global expense category list
+    private static ArrayList<Category> expenseCategories = new ArrayList<>();
+    //Global income category list
+    private static ArrayList<Category> incomeCategories = new ArrayList<>();
+
+    //region parsing cursors
 
     public static List<BalanceAccount> parseAccountCursor(Cursor cursor) {
 
@@ -94,9 +93,9 @@ public class MyUtils {
 
             Category category;
             if (type == ExpenseIncome.TYPE_INCOME) {
-                category = searchIncomeCategoryList(categoryName);
+                category = searchIncomeCategoryList(categoryName, context);
             } else {
-                category = searchExpenseCategoryList(categoryName);
+                category = searchExpenseCategoryList(categoryName, context);
             }
 
             ExpenseIncome expenseIncome = new ExpenseIncome(balance, type, category, date, balanceAccount);
@@ -178,7 +177,7 @@ public class MyUtils {
         return list;
     }
 
-    private static List<Budget> parseBudgetCursor(Cursor cursor) {
+    private static List<Budget> parseBudgetCursor(Cursor cursor, Context context) {
 
         ArrayList<Budget> list = new ArrayList<>();
 
@@ -190,11 +189,15 @@ public class MyUtils {
             long dateCreated = cursor.getLong(5);
             long resetDate = cursor.getLong(6);
 
-            list.add(new Budget(type, searchExpenseCategoryList(categoryName), totalAmount, currentAmount, dateCreated, resetDate));
+            list.add(new Budget(type, searchExpenseCategoryList(categoryName, context), totalAmount, currentAmount, dateCreated, resetDate));
         }
 
         return list;
     }
+
+    //endregion
+
+    //region get data from the database
 
     /**
      * Fetches the accounts from the database into the global accountList
@@ -319,14 +322,12 @@ public class MyUtils {
         Cursor budgetData = databaseHelper.getBudgetData();
 
         budgetList.clear();
-        budgetList.addAll(parseBudgetCursor(budgetData));
+        budgetList.addAll(parseBudgetCursor(budgetData, context));
 
         if (!budgetData.isClosed()) {
             budgetData.close();
         }
     }
-
-    //region Categories
 
     public static void modifyBudgetCurrentAmount(Context context, Budget budgetModified, double newCurrentAmount) {
         DatabaseHelper databaseHelper = new DatabaseHelper(context);
@@ -340,31 +341,36 @@ public class MyUtils {
         databaseHelper.updateBudgetResetDate(databaseHelper.getBudgetId(budgetModified), newResetDate);
     }
 
-    public static List<Category> getExpenseCategories() {
-        List<Category> expenseCategories = new ArrayList<>();
-        expenseCategories.add(new Category("Communication, PC", R.drawable.categ_pc));
-        expenseCategories.add(new Category("Fees, Fines", R.drawable.categ_fees_fines));
-        expenseCategories.add(new Category("Food", R.drawable.categ_food));
-        expenseCategories.add(new Category("Health care", R.drawable.categ_health));
-        expenseCategories.add(new Category("Hobbies", R.drawable.categ_free_time));
-        expenseCategories.add(new Category("Housing", R.drawable.categ_housing));
-        expenseCategories.add(new Category("Transportation", R.drawable.categ_travel));
-        expenseCategories.add(new Category("Vehicle", R.drawable.categ_vehicle));
-        expenseCategories.add(new Category("Other", R.drawable.ic_dollar_sign));
+    //endregion
+
+    //region Categories
+
+    public static List<Category> getExpenseCategories(Context context) {
+        if (expenseCategories.isEmpty()) {
+            expenseCategories.add(new Category(context.getResources().getString(R.string.communicationPC), R.drawable.categ_pc));
+            expenseCategories.add(new Category(context.getResources().getString(R.string.feesFines), R.drawable.categ_fees_fines));
+            expenseCategories.add(new Category(context.getResources().getString(R.string.food), R.drawable.categ_food));
+            expenseCategories.add(new Category(context.getResources().getString(R.string.healthCare), R.drawable.categ_health));
+            expenseCategories.add(new Category(context.getResources().getString(R.string.hobbies), R.drawable.categ_free_time));
+            expenseCategories.add(new Category(context.getResources().getString(R.string.housing), R.drawable.categ_housing));
+            expenseCategories.add(new Category(context.getResources().getString(R.string.transport), R.drawable.categ_travel));
+            expenseCategories.add(new Category(context.getResources().getString(R.string.vehicle), R.drawable.categ_vehicle));
+            expenseCategories.add(new Category(context.getResources().getString(R.string.other), R.drawable.ic_dollar_sign));
+        }
         return expenseCategories;
     }
 
-    public static HashMap<String, Boolean> getExpCategoriesMap() {
+    public static HashMap<String, Boolean> getExpCategoriesMap(Context context) {
         HashMap<String, Boolean> hashMap = new HashMap<>();
-        for (Category item : getExpenseCategories()) {
+        for (Category item : getExpenseCategories(context)) {
             hashMap.put(item.getName(), true);
         }
 
         return hashMap;
     }
 
-    private static Category searchExpenseCategoryList(String categoryName) {
-        for (Category item : getExpenseCategories()) {
+    private static Category searchExpenseCategoryList(String categoryName, Context context) {
+        for (Category item : getExpenseCategories(context)) {
             if (item.getName().equals(categoryName)) {
                 return item;
             }
@@ -372,42 +378,44 @@ public class MyUtils {
         return null;
     }
 
-    public static List<Category> getIncomeCategories() {
-        List<Category> incomeCategories = new ArrayList<>();
-        incomeCategories.add(new Category("Wage", R.drawable.categ_wage));
-        incomeCategories.add(new Category("Gifts", R.drawable.categ_gift));
-        incomeCategories.add(new Category("Sale", R.drawable.categ_sale));
-        incomeCategories.add(new Category("Gambling", R.drawable.categ_gambling));
-        incomeCategories.add(new Category("Other", R.drawable.ic_dollar_sign));
+    public static List<Category> getIncomeCategories(Context context) {
+        if (incomeCategories.isEmpty()) {
+            incomeCategories.add(new Category(context.getResources().getString(R.string.wage), R.drawable.categ_wage));
+            incomeCategories.add(new Category(context.getResources().getString(R.string.gifts), R.drawable.categ_gift));
+            incomeCategories.add(new Category(context.getResources().getString(R.string.sale), R.drawable.categ_sale));
+            incomeCategories.add(new Category(context.getResources().getString(R.string.gambling), R.drawable.categ_gambling));
+            incomeCategories.add(new Category(context.getResources().getString(R.string.other), R.drawable.ic_dollar_sign));
+        }
         return incomeCategories;
     }
 
-    public static HashMap<String, Boolean> getIncCategoriesMap() {
+    public static HashMap<String, Boolean> getIncCategoriesMap(Context context) {
         HashMap<String, Boolean> hashMap = new HashMap<>();
-        for (Category item : getIncomeCategories()) {
+        for (Category item : getIncomeCategories(context)) {
             hashMap.put(item.getName(), true);
         }
 
         return hashMap;
     }
+
+    private static Category searchIncomeCategoryList(String categoryName, Context context) {
+        for (Category item : getIncomeCategories(context)) {
+            if (item.getName().equals(categoryName)) {
+                return item;
+            }
+        }
+        return null;
+    }
+
     //endregion
 
     //region Utility functions
 
-    private static Category searchIncomeCategoryList(String categoryName) {
-        for (Category item : getIncomeCategories()) {
-            if (item.getName().equals(categoryName)) {
-                return item;
-            }
-        }
-        return null;
-    }
-
-    public static void createNotification(Context context, Intent intent, String title, String content, int iconId) {
+    public static void createNotification(Context context, Activity backActivity, Intent intent, String title, String body, int iconId) {
         //TODO NOTIFICATIONS WHERE NEEDED
 
         //When budget resets without exceeding it: *smiley face* Congratulations
-        Intent backIntent = new Intent(context, HistoryTabbedActivity.class);
+        Intent backIntent = new Intent(context, backActivity.getClass());
         backIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.setFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
         PendingIntent pendingIntent = PendingIntent.getActivities(context, 0,
@@ -416,7 +424,7 @@ public class MyUtils {
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context, "default")
                 .setSmallIcon(iconId)
                 .setContentTitle(title)
-                .setContentText(content)
+                .setContentText(body)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true);
@@ -424,7 +432,8 @@ public class MyUtils {
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
 
         // notificationId is a unique int for each notification that you must define
-        notificationManager.notify(1, mBuilder.build());
+        Random r = new Random();
+        notificationManager.notify(r.nextInt(10000), mBuilder.build());
     }
 
     public static String formatDecimalOnePlace(double numberToFormat) {
@@ -441,7 +450,8 @@ public class MyUtils {
      * @return current unix time
      */
     public static long getCurrentDateTime() {
-        return Calendar.getInstance().getTime().getTime() + 10800000;
+        //return Calendar.getInstance().getTime().getTime() + 10800000;
+        return Calendar.getInstance().getTime().getTime();
     }
 
     public static long subtractDaysFromCurrentDateTime(int days) {
@@ -597,6 +607,14 @@ public class MyUtils {
         }
 
         return arr;
+    }
+
+    public static int daysBetween(Long past, Long future) {
+        int daysBetween;
+        long diff = future - past;
+        long diffDays = diff / (24 * 60 * 60 * 1000) + 1;
+        daysBetween = (int) diffDays;
+        return daysBetween;
     }
     //endregion
 }

@@ -2,6 +2,7 @@ package com.example.android.personalfinance_v01;
 
 import android.app.DatePickerDialog;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
@@ -38,7 +39,7 @@ import java.util.Map;
 public class ChartsActivity extends AppCompatActivity {
 
     public static BalanceAccount ALL_ACCOUNTS_OPTION = new BalanceAccount("All accounts", 0.0, "");
-    private ExpenseIncomeFilter chartsFilter = new ExpenseIncomeFilter(ALL_ACCOUNTS_OPTION, 0);
+    private ExpenseIncomeFilter chartsFilter = new ExpenseIncomeFilter(ChartsActivity.this, ALL_ACCOUNTS_OPTION, 0);
     private ViewPager viewPager;
     private StatsExpenseFragment statsExpenseFragment;
     private StatsIncomeFragment statsIncomeFragment;
@@ -118,7 +119,6 @@ public class ChartsActivity extends AppCompatActivity {
                 int radioButtonID = radioGroup.getCheckedRadioButtonId();
                 RadioButton radioButton = radioGroup.findViewById(radioButtonID);
                 int selectedIndex = radioGroup.indexOfChild(radioButton);
-                MyUtils.makeToast(getApplicationContext(), "Index: " + selectedIndex);
                 long currentTime = MyUtils.getCurrentDateTime();
                 switch (selectedIndex) {
                     case 0:
@@ -199,7 +199,8 @@ public class ChartsActivity extends AppCompatActivity {
                 chartsFilter.setEndDate(calendar.getTimeInMillis() + oneDay);
 
                 if (chartsFilter.isBadCustomDate()) {
-                    MyUtils.makeToast(ChartsActivity.this, "Start date can not be after end date");
+                    Snackbar snackbar = MyUtils.makeSnackbarError(findViewById(R.id.chartsLinLay), getString(R.string.startDateEndDate), Snackbar.LENGTH_LONG);
+                    snackbar.show();
                 }
 
                 updateCharts();
@@ -269,7 +270,7 @@ public class ChartsActivity extends AppCompatActivity {
 
         boolean allCategsChecked = true;
         for (Map.Entry<String, Boolean> e : chartsFilter.getIncCategoryMap().entrySet()) {
-            if(!e.getValue())
+            if (!e.getValue())
                 allCategsChecked = false;
         }
 
@@ -333,7 +334,7 @@ public class ChartsActivity extends AppCompatActivity {
 
         boolean allCategsChecked = true;
         for (Map.Entry<String, Boolean> e : chartsFilter.getIncCategoryMap().entrySet()) {
-            if(!e.getValue())
+            if (!e.getValue())
                 allCategsChecked = false;
         }
 

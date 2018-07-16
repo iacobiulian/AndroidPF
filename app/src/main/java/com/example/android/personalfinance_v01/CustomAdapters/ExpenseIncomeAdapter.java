@@ -1,6 +1,7 @@
 package com.example.android.personalfinance_v01.CustomAdapters;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -24,8 +25,11 @@ import java.util.List;
  */
 
 public class ExpenseIncomeAdapter extends ArrayAdapter<ExpenseIncome> {
+    private Context context;
+
     public ExpenseIncomeAdapter(Context context, List<ExpenseIncome> expenseIncomeList) {
         super(context, 0, expenseIncomeList);
+        this.context = context;
     }
 
     @NonNull
@@ -57,12 +61,12 @@ public class ExpenseIncomeAdapter extends ArrayAdapter<ExpenseIncome> {
 
             TextView signTv = convertView.findViewById(R.id.historySignTv);
             if (expenseIncome.getType() == ExpenseIncome.TYPE_INCOME) {
-                signTv.setText(MyUtils.PLUS_SIGN);
+                signTv.setText(context.getResources().getString(R.string.plusSign));
                 signTv.setTextColor(ContextCompat.getColor(getContext(), R.color.colorIncome));
                 amountTv.setTextColor(ContextCompat.getColor(getContext(), R.color.colorIncome));
                 currencyTv.setTextColor(ContextCompat.getColor(getContext(), R.color.colorIncome));
             } else {
-                signTv.setText(MyUtils.MINUS_SIGN);
+                signTv.setText(context.getResources().getString(R.string.minusSign));
                 signTv.setTextColor(ContextCompat.getColor(getContext(), R.color.colorExpense));
                 amountTv.setTextColor(ContextCompat.getColor(getContext(), R.color.colorExpense));
                 currencyTv.setTextColor(ContextCompat.getColor(getContext(), R.color.colorExpense));

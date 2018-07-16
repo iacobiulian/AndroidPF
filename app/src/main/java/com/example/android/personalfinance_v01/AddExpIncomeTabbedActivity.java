@@ -263,12 +263,13 @@ public class AddExpIncomeTabbedActivity extends AppCompatActivity {
     }
 
     private void makeBudgetNotification(Budget budget, int titleStringId, int bodyStringId) {
+        ListBudgetActivity listBudgetActivity = new ListBudgetActivity();
         Intent intent = new Intent(getApplicationContext(), DetailedBudgetTabbedActivity.class);
         intent.putExtra("budget", budget);
         String title = getResources().getString(titleStringId);
         String body = String.format(getResources().getString(bodyStringId),
                 budget.getTypeString(), budget.getCategory().getName());
-        MyUtils.createNotification(AddExpIncomeTabbedActivity.this, intent, title, body, budget.getCategory().getIconID());
+        MyUtils.createNotification(AddExpIncomeTabbedActivity.this, listBudgetActivity, intent, title, body, budget.getCategory().getIconID());
     }
 }
 

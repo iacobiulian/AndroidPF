@@ -177,7 +177,8 @@ public class TransferHistoryActivity extends AppCompatActivity {
                 if (!transferFilter.isBadCustomDate()) {
                     transferFilter.setEndDate(calendar.getTimeInMillis() + oneDay);
                 } else {
-                    MyUtils.makeToast(TransferHistoryActivity.this, "Start date can not be after end date");
+                    Snackbar snackbar = MyUtils.makeSnackbarError(findViewById(R.id.chartsLinLay), getString(R.string.startDateEndDate), Snackbar.LENGTH_LONG);
+                    snackbar.show();
                 }
 
                 updateTransferList();
@@ -311,8 +312,6 @@ public class TransferHistoryActivity extends AppCompatActivity {
                 filteredList.add(item);
             }
         }
-
-        MyUtils.makeToast(this, "Showing " + filteredList.size() + " items");
 
         return filteredList;
     }

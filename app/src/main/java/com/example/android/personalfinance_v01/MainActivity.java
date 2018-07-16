@@ -4,6 +4,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -25,17 +26,18 @@ import android.widget.TextView;
 import com.example.android.personalfinance_v01.CustomAdapters.BalanceAccountAdapterMain;
 import com.example.android.personalfinance_v01.MyClasses.BalanceAccount;
 import com.example.android.personalfinance_v01.MyClasses.Budget;
+import com.example.android.personalfinance_v01.MyClasses.Debt;
 import com.example.android.personalfinance_v01.MyClasses.ExpenseIncome;
+import com.example.android.personalfinance_v01.MyClasses.Goal;
 import com.example.android.personalfinance_v01.MyClasses.MyUtils;
 import com.example.android.personalfinance_v01.MyClasses.Transfer;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 
+import java.util.Calendar;
 import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
-
-    //TODO https://github.com/evernote/android-job
 
     public static final int TYPE_TRANSFER = 3;
     public static final int ERROR_INPUT_ZERO_EXP = -1;
@@ -84,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
         initFab();
 
         //Budgets
-        checkBudgetsReset();
+        runOncePerDay();
 
         //Jobs
         //scheduleJobs();
@@ -188,7 +190,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (MyUtils.accountList.size() < 1) {
-                    MyUtils.makeToast(MainActivity.this, getResources().getString(R.string.error));
+                    Snackbar snackbar = MyUtils.makeSnackbar(findViewById(R.id.mainDrawerLayout), getString(R.string.error), Snackbar.LENGTH_LONG);
+                    snackbar.show();
                 } else {
                     MyUtils.startActivityWithCode(MainActivity.this, AddExpIncomeTabbedActivity.class, ExpenseIncome.TYPE_EXPENSE);
                 }
@@ -200,7 +203,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (MyUtils.accountList.size() < 1) {
-                    MyUtils.makeToast(MainActivity.this, getResources().getString(R.string.error));
+                    Snackbar snackbar = MyUtils.makeSnackbar(findViewById(R.id.mainDrawerLayout), getString(R.string.error), Snackbar.LENGTH_LONG);
+                    snackbar.show();
                 } else {
                     MyUtils.startActivityWithCode(MainActivity.this, AddExpIncomeTabbedActivity.class, ExpenseIncome.TYPE_INCOME);
                 }
@@ -284,19 +288,6 @@ public class MainActivity extends AppCompatActivity {
         return dateExp > dateTrans ? dateExp : dateTrans;
     }
 
-    private void checkBudgetsReset() {
-        MyUtils.getBudgetsFromDatabase(MainActivity.this);
-
-        for (Budget item : MyUtils.budgetList) {
-            if (item.isResetBudget()) {
-                MyUtils.modifyBudgetCurrentAmount(MainActivity.this, item, 0.0);
-                MyUtils.modifyBudgetResetDate(MainActivity.this, item, item.getResetDate());
-            }
-        }
-
-        MyUtils.getBudgetsFromDatabase(MainActivity.this);
-    }
-
     private void showSnackbarIfNeeded() {
         Intent intent = getIntent();
         if (intent == null) {
@@ -331,7 +322,7 @@ public class MainActivity extends AppCompatActivity {
                 snackbar.setAction(R.string.tryAgain, new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                            MyUtils.startActivityWithCode(MainActivity.this, AddExpIncomeTabbedActivity.class, ExpenseIncome.TYPE_INCOME);
+                        MyUtils.startActivityWithCode(MainActivity.this, AddExpIncomeTabbedActivity.class, ExpenseIncome.TYPE_INCOME);
                     }
                 });
                 snackbar.show();
@@ -347,14 +338,92 @@ public class MainActivity extends AppCompatActivity {
                 snackbar.show();
                 break;
             case BUDGET_ALREADY_EXCEEDED:
-                makeBudgetNotificationSnackbar(budget, R.string.notificationAlreadyExceededBudgetBody);
+                //makeBudgetNotificationSnackbar(budget, R.string.notificationAlreadyExceededBudgetBody);
                 break;
             case BUDGET_EXCEEDED:
-                makeBudgetNotificationSnackbar(budget, R.string.notificationExceededBudgetBody);
+                //makeBudgetNotificationSnackbar(budget, R.string.notificationExceededBudgetBody);
                 break;
             case BUDGET_HALF_SPENT:
-                makeBudgetNotificationSnackbar(budget, R.string.notificationExceededHalfBudgetBody);
+                //makeBudgetNotificationSnackbar(budget, R.string.notificationExceededHalfBudgetBody);
                 break;
+        }
+    }
+
+    private void runOncePerDay() {
+        Calendar calendar = Calendar.getInstance();
+        int currentDay = calendar.get(Calendar.DAY_OF_MONTH);
+        SharedPreferences sharedPreferences = getSharedPreferences("PREFS", Context.MODE_PRIVATE);
+        int lastDay = sharedPreferences.getInt("day", 0);
+
+        if (lastDay != currentDay) {
+            //a day has passed
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putInt("day", currentDay);
+            editor.apply();
+
+            checkBudgetsReset();
+            makeGoalNotification();
+            makeDebtNotification();
+        }
+    }
+
+    private void checkBudgetsReset() {
+        MyUtils.getBudgetsFromDatabase(MainActivity.this);
+
+        for (Budget item : MyUtils.budgetList) {
+            if (item.isResetBudget()) {
+                MyUtils.modifyBudgetCurrentAmount(MainActivity.this, item, 0.0);
+                MyUtils.modifyBudgetResetDate(MainActivity.this, item, item.getResetDate());
+            }
+        }
+
+        MyUtils.getBudgetsFromDatabase(MainActivity.this);
+    }
+
+    private void makeGoalNotification() {
+        MyUtils.getGoalsFromDatabase(this);
+
+        for (Goal item : MyUtils.goalList) {
+            Long lastDateLong = item.getAddedAmountsDates().get(item.getAddedAmountsDates().size() - 1);
+            Long rightNow = MyUtils.getCurrentDateTime();
+
+            int daysBetween = MyUtils.daysBetween(lastDateLong, rightNow);
+
+            ListGoalActivity listGoalActivity = new ListGoalActivity();
+
+            if (daysBetween > 29 && daysBetween % 15 == 0) {
+                Intent intent = new Intent(getApplicationContext(), DetailedGoalTabbedActivity.class);
+                intent.putExtra("goal", item);
+
+                String title = String.format(getString(R.string.rememberGoal), item.getName());
+                MyUtils.createNotification(MainActivity.this, listGoalActivity, intent, title, getString(R.string.goalNotAddInAWHile), R.drawable.notif_warning);
+            }
+        }
+    }
+
+    private void makeDebtNotification() {
+        MyUtils.getDebtsFromDatabase(this);
+
+        for (Debt item : MyUtils.debtList) {
+            Long lastDateLong = item.getAddedAmountsDates().get(item.getAddedAmountsDates().size() - 1);
+            Long rightNow = MyUtils.getCurrentDateTime();
+
+            int daysBetween = MyUtils.daysBetween(lastDateLong, rightNow);
+
+            ListDebtActivity listDebtActivity = new ListDebtActivity();
+
+            if (daysBetween > 29 && daysBetween % 15 == 0) {
+                Intent intent = new Intent(getApplicationContext(), DetailedDebtTabbedActivity.class);
+                intent.putExtra("debt", item);
+
+                String title;
+                if (item.getType() == Debt.I_BORROW) {
+                    title = String.format(getString(R.string.rememberDebtTo), item.getPayee());
+                } else {
+                    title = String.format(getString(R.string.rememberDebtFrom), item.getPayee());
+                }
+                MyUtils.createNotification(MainActivity.this, listDebtActivity, intent, title, getString(R.string.debtNotAddInAWHile), R.drawable.notif_warning);
+            }
         }
     }
 
@@ -374,12 +443,3 @@ public class MainActivity extends AppCompatActivity {
         snackbar.show();
     }
 }
-
-
-
-
-
-
-
-
-

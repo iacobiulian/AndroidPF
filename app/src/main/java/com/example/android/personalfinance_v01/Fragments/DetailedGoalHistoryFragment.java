@@ -12,11 +12,8 @@ import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
-import com.example.android.personalfinance_v01.CustomAdapters.ExpenseIncomeAdapter;
 import com.example.android.personalfinance_v01.CustomAdapters.HistoryItemGoalDebtAdapter;
-import com.example.android.personalfinance_v01.DetailedBudgetTabbedActivity;
 import com.example.android.personalfinance_v01.DetailedGoalTabbedActivity;
-import com.example.android.personalfinance_v01.MyClasses.ExpenseIncome;
 import com.example.android.personalfinance_v01.MyClasses.HistoryItem;
 import com.example.android.personalfinance_v01.R;
 

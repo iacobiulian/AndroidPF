@@ -13,10 +13,8 @@ import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
-import com.example.android.personalfinance_v01.CustomAdapters.DebtAdapter;
 import com.example.android.personalfinance_v01.CustomAdapters.ExpenseIncomeAdapter;
 import com.example.android.personalfinance_v01.HistoryTabbedActivity;
-import com.example.android.personalfinance_v01.MyClasses.Debt;
 import com.example.android.personalfinance_v01.MyClasses.ExpenseIncome;
 import com.example.android.personalfinance_v01.MyClasses.MyUtils;
 import com.example.android.personalfinance_v01.R;
@@ -113,7 +111,7 @@ public class HistoryExpenseFragment extends Fragment {
     }
 
     public void updateListView(ArrayList<ExpenseIncome> expenseIncomeList) {
-        if(!expenseIncomeAdapter.isEmpty()) {
+        if (!expenseIncomeAdapter.isEmpty()) {
             expenseIncomeAdapter.clear();
         }
         expenseIncomeAdapter.addAll(expenseIncomeList);

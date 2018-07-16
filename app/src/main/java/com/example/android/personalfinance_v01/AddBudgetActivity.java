@@ -90,7 +90,7 @@ public class AddBudgetActivity extends AppCompatActivity {
 
         CategoryAdapter categoryAdapter;
 
-        categoryAdapter = new CategoryAdapter(AddBudgetActivity.this, MyUtils.getExpenseCategories());
+        categoryAdapter = new CategoryAdapter(AddBudgetActivity.this, MyUtils.getExpenseCategories(AddBudgetActivity.this));
         categorySpinner.setAdapter(categoryAdapter);
 
         categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

@@ -60,7 +60,7 @@ public class AddIncomeFragment extends Fragment {
 
         CategoryAdapter categoryAdapter;
 
-        categoryAdapter = new CategoryAdapter(getContext(), MyUtils.getIncomeCategories());
+        categoryAdapter = new CategoryAdapter(getContext(), MyUtils.getIncomeCategories(getContext()));
         spinner.setAdapter(categoryAdapter);
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

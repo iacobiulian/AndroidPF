@@ -1,5 +1,7 @@
 package com.example.android.personalfinance_v01.MyClasses;
 
+import android.content.Context;
+
 import com.example.android.personalfinance_v01.ChartsActivity;
 
 import java.util.HashMap;
@@ -14,7 +16,7 @@ public class ExpenseIncomeFilter {
     private HashMap<String, Boolean> expCategoryMap;
     private HashMap<String, Boolean> incCategoryMap;
 
-    public ExpenseIncomeFilter(BalanceAccount balanceAccount, int radioButtonIndex) {
+    public ExpenseIncomeFilter(Context context, BalanceAccount balanceAccount, int radioButtonIndex) {
         this.balanceAccount = balanceAccount;
         this.radioButtonIndex = radioButtonIndex;
         this.startDate = 0;
@@ -22,10 +24,10 @@ public class ExpenseIncomeFilter {
         expenseIncomeType = ExpenseIncome.TYPE_EXPENSE;
 
         expCategoryMap = new HashMap<>();
-        expCategoryMap.putAll(MyUtils.getExpCategoriesMap());
+        expCategoryMap.putAll(MyUtils.getExpCategoriesMap(context));
 
         incCategoryMap = new HashMap<>();
-        incCategoryMap.putAll(MyUtils.getIncCategoriesMap());
+        incCategoryMap.putAll(MyUtils.getIncCategoriesMap(context));
     }
 
     public HashMap<String, Boolean> getExpCategoryMap() {

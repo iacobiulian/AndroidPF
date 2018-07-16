@@ -60,7 +60,7 @@ public class AddExpenseFragment extends Fragment {
 
         CategoryAdapter categoryAdapter;
 
-        categoryAdapter = new CategoryAdapter(getContext(), MyUtils.getExpenseCategories());
+        categoryAdapter = new CategoryAdapter(getContext(), MyUtils.getExpenseCategories(getContext()));
         spinner.setAdapter(categoryAdapter);
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

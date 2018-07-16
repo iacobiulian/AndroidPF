@@ -9,7 +9,7 @@ import java.util.ArrayList;
  * Created by iacob on 14-Mar
  */
 
-public class Goal implements Serializable{
+public class Goal implements Serializable {
     public static final int REACHED = 0;
     public static final int NOT_REACHED = 1;
 
@@ -55,6 +55,10 @@ public class Goal implements Serializable{
         return savedAmount;
     }
 
+    public void setSavedAmount(double savedAmount) {
+        this.savedAmount = savedAmount;
+    }
+
     public long getTargetDate() {
         return targetDate;
     }
@@ -73,10 +77,6 @@ public class Goal implements Serializable{
 
     public ArrayList<Long> getAddedAmountsDates() {
         return addedAmountsDates;
-    }
-
-    public void setSavedAmount(double savedAmount) {
-        this.savedAmount = savedAmount;
     }
 
     public boolean isValid() {

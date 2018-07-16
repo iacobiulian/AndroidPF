@@ -15,6 +15,8 @@
     <string name="custom">Custom</string>
     <string name="cancel">Cancel</string>
     <string name="ok">OK</string>
+    <string name="plusSign">+</string>
+    <string name="minusSign">-</string>
     <string name="img">Image</string>
     <string name="paid">Paid</string>
     <string name="initial">Initial</string>
@@ -82,6 +84,22 @@
     <string name="to">To</string>
     <string name="from">From</string>
 
+    <!-- Categories -->
+    <string name="category">Category</string>
+    <string name="communicationPC">Communication, PC</string>
+    <string name="feesFines">Fees, Fines</string>
+    <string name="food">Food</string>
+    <string name="healthCare">Health care</string>
+    <string name="hobbies">Hobbies</string>
+    <string name="housing">Housing</string>
+    <string name="transport">Transportation</string>
+    <string name="vehicle">Vehicle</string>
+    <string name="other">Other</string>
+    <string name="wage">Wage</string>
+    <string name="gifts">Gifts</string>
+    <string name="sale">Sale</string>
+    <string name="gambling">Gambling</string>
+
     <!-- Budget -->
     <string name="budget">Budget</string>
     <string name="addBudget">Add budget</string>
@@ -94,7 +112,6 @@
     <string name="notificationExceededBudgetBody">You exceeded your %1$s%2$s budget</string>
     <string name="notificationAlreadyExceededBudgetTitle">Slow down!</string>
     <string name="notificationAlreadyExceededBudgetBody">You already exceeded your %1$s%2$s budget</string>
-    <string name="category">Category</string>
     <string name="budgetAdded">Budget added</string>
 
     <!-- Goal -->
@@ -106,6 +123,8 @@
     <string name="goal">Goal</string>
     <string name="target_amount">Target amount</string>
     <string name="saved_amount">Saved already</string>
+    <string name="rememberGoal">Remember your %1$s goal</string>
+    <string name="goalNotAddInAWHile">You have not put money towards your goal in a while</string>
 
     <!-- Debt -->
     <string name="debt">Debt</string>
@@ -117,6 +136,9 @@
     <string name="type">Type</string>
     <string name="toFrom">To/From</string>
     <string name="debtClosed">Debt closed</string>
+    <string name="rememberDebtTo">Remember your debt to %1$s</string>
+    <string name="rememberDebtFrom">Remember the debt %1$s has to you</string>
+    <string name="debtNotAddInAWHile">Money has not been put towards this debt in a while</string>
 
     <!-- Error Strings -->
     <string name="error">Error occurred</string>
@@ -127,5 +149,5 @@
     <string name="errorGoal">Error adding goal</string>
     <string name="errorInputZero">Amount cannot be zero</string>
     <string name="error_amount">Amount cannot be empty</string>
-
+    <string name="startDateEndDate">Start date can not be after end date</string>
 </resources>

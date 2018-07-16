@@ -1,7 +1,5 @@
 package com.example.android.personalfinance_v01.MyClasses;
 
-import android.util.Log;
-
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
@@ -67,6 +65,10 @@ public class Budget implements Serializable {
         return resetDate;
     }
 
+    private void setResetDate(long resetDate) {
+        this.resetDate = resetDate;
+    }
+
     public Category getCategory() {
         return category;
     }
@@ -91,7 +93,7 @@ public class Budget implements Serializable {
         Date rightNow = calendar.getTime();
         long currentResetDate = this.resetDate;
 
-        if(rightNow.after(new Date(this.resetDate))) {
+        if (rightNow.after(new Date(this.resetDate))) {
             setResetDate(getNextResetDate(currentResetDate));
             return true;
         }
@@ -164,9 +166,5 @@ public class Budget implements Serializable {
         }
 
         return date.after(calendar.getTime());
-    }
-
-    private void setResetDate(long resetDate) {
-        this.resetDate = resetDate;
     }
 }

@@ -1,13 +1,8 @@
 package com.example.android.personalfinance_v01.Fragments;
 
-import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
-import android.content.res.ColorStateList;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,22 +10,9 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.example.android.personalfinance_v01.CustomAdapters.MyXAxisValueFormatter;
 import com.example.android.personalfinance_v01.DetailedBudgetTabbedActivity;
-import com.example.android.personalfinance_v01.MyClasses.Budget;
 import com.example.android.personalfinance_v01.R;
 import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.components.Description;
-import com.github.mikephil.charting.components.Legend;
-import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.data.BarData;
-import com.github.mikephil.charting.data.BarDataSet;
-import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.utils.ColorTemplate;
-
-import java.util.ArrayList;
-
-import static com.example.android.personalfinance_v01.MyClasses.MyUtils.formatDecimalTwoPlaces;
 
 public class DetailedBudgetChartFragment extends Fragment {
 
